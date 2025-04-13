@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "minestrel:block/keyboard_single",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "minestrel:block/keyboard_single"
+    },
+    "facing=south": {
+      "model": "minestrel:block/keyboard_single",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "minestrel:block/keyboard_single",
+      "y": 270
+    }
+  }
+}

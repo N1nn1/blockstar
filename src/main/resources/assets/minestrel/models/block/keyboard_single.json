@@ -1,0 +1,22 @@
+{
+	"parent": "minestrel:block/keyboard_template",
+	"textures": {
+		"top": "minestrel:block/keyboard_top_single",
+		"bottom": "minestrel:block/keyboard_bottom_single",
+		"side": "minestrel:block/keyboard_single",
+		"back": "minestrel:block/keyboard_single",
+		"front": "minestrel:block/keyboard_front_single"
+	},
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 1.75],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 45, 0],
+			"translation": [0, 3.5, 0],
+			"scale": [0.4, 0.4, 0.4]
+		}
+	}
+}
