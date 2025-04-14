@@ -1,15 +1,19 @@
 package com.ninni.minestrel.client.gui;
 
-
+import com.ninni.minestrel.server.soundfont.SoundfontManager;
+import com.ninni.minestrel.server.soundfont.SoundfontSound;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class PianoKey {
     public final int note;
+    public final float velocity;
     public final int x, y, width, height;
     public final boolean isBlack;
     public boolean isPressed = false;
@@ -50,10 +54,12 @@ public class PianoKey {
             Map.entry(GLFW.GLFW_KEY_0, 75), //D#5
             Map.entry(GLFW.GLFW_KEY_P, 76)  //E5
     );
+    private final Map<Integer, SoundfontSound> activeSounds = new HashMap<>();
 
 
-    public PianoKey(int note, int x, int y, boolean isBlack) {
+    public PianoKey(int note, float velocity, int x, int y, boolean isBlack) {
         this.note = note;
+        this.velocity = velocity;
         this.x = x;
         this.y = y;
         this.isBlack = isBlack;
@@ -65,10 +71,33 @@ public class PianoKey {
         return mouseX >= (leftPos + x) && mouseX <= (leftPos + x) + width && mouseY >= (topPos + y) && mouseY <= (topPos + y) + height;
     }
 
-    void handleKeyPress(NoteBlockInstrument noteBlockInstrument) {
-        double pitch = Math.pow(2, (this.note - 60) / 12.0);
-        Minecraft.getInstance().player.playSound(noteBlockInstrument.getSoundEvent().get(),2.0F, ((float) pitch));
-        isPressed = true;
+    void handleKeyPress(SoundfontManager.SoundfontDefinition soundfont, boolean sustainPedalPressed) {
+        if (!isPressed) {
+            SoundfontSound sound = getSoundfontSound(soundfont);
+            Minecraft.getInstance().getSoundManager().play(sound);
+            activeSounds.put(note, sound);
+            isPressed = true;
+        } else {
+            if (!sustainPedalPressed) stopKeySound(note);
+            isPressed = false;
+        }
+    }
+
+    void stopKeySound(int note) {
+        SoundfontSound sound = activeSounds.get(note);
+        if (sound != null) {
+            Minecraft.getInstance().getSoundManager().stop(sound);
+            activeSounds.remove(note);
+        }
+    }
+
+    private @NotNull SoundfontSound getSoundfontSound(SoundfontManager.SoundfontDefinition soundfont) {
+        int sampleNote = soundfont.getClosestSampleNote(note);
+        float pitch = (float) Math.pow(2, (note - sampleNote) / 12.0);
+        int velocity = 2;
+        ResourceLocation resourceLocation = new ResourceLocation(soundfont.soundPrefix().getNamespace(), soundfont.soundPrefix().getPath().replace("/", ".") + "." + sampleNote + "_" + velocity);
+        SoundfontSound sound = new SoundfontSound(resourceLocation, 1.0f, pitch, Minecraft.getInstance().player, note);
+        return sound;
     }
 
     static void initPianoKeys(List<PianoKey> pianoKeys) {
@@ -98,7 +127,7 @@ public class PianoKey {
                 int note = startingNote + octaveOffset * 12 + whiteNoteOffset;
                 if (note > maxNote) break;
 
-                pianoKeys.add(new PianoKey(note, baseX + whiteKeyX, baseY, false));
+                pianoKeys.add(new PianoKey(note, 1, baseX + whiteKeyX, baseY, false));
                 whiteKeyX += 8;
                 midiNote = note + 1;
             }
@@ -117,7 +146,7 @@ public class PianoKey {
                     int blackNote = whiteNote + 1;
                     if (blackNote <= maxNote) {
                         int x = baseX + whiteKeyX + 5;
-                        pianoKeys.add(new PianoKey(blackNote, x, baseY, true));
+                        pianoKeys.add(new PianoKey(blackNote, 1, x, baseY, true));
                     }
                 }
 

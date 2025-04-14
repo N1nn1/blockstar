@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 @Mod(Minestrel.MODID)
 public class Minestrel {
     public static final String MODID = "minestrel";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
     public static CommonProxy PROXY = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 
     public Minestrel() {
@@ -26,6 +26,7 @@ public class Minestrel {
         MBlockEntityRegistry.DEF_REG.register(modEventBus);
         MCreativeModeTabRegistry.DEF_REG.register(modEventBus);
         MMenuRegistry.DEF_REG.register(modEventBus);
+        MSoundEventRegistry.DEF_REG.register(modEventBus);
         PROXY.init();
     }
 

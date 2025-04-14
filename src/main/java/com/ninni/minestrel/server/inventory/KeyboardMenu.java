@@ -10,11 +10,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 public class KeyboardMenu extends AbstractContainerMenu {
-    Runnable slotUpdateListener = () -> {
-    };
     private final Container container;
     final Slot instrumentSlot;
     final Slot sheetMusicSlot;
@@ -105,10 +102,6 @@ public class KeyboardMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(Player p_38874_) {
         return this.container.stillValid(p_38874_);
-    }
-
-    public void registerUpdateListener(Runnable p_39879_) {
-        this.slotUpdateListener = p_39879_;
     }
 
     public Slot getInstrumentSlot() {

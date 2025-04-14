@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = Minestrel.MODID, value = Dist.CLIENT)
-public class MClientEventHandler {
+public class ClientEventHandler {
 
 
 }

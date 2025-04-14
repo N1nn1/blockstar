@@ -1,14 +1,14 @@
 package com.ninni.minestrel.client.gui;
 
 import com.ninni.minestrel.Minestrel;
+import com.ninni.minestrel.server.event.CommonEventHandler;
 import com.ninni.minestrel.server.inventory.KeyboardMenu;
+import com.ninni.minestrel.server.soundfont.SoundfontManager;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -54,27 +54,25 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
         }
 
         for (PianoKey key : pianoKeys) {
-            if (key.isBlack) {
-                guiGraphics.blit(TEXTURE_WIDGETS, i + key.x, j + key.y, key.isPressed ? 25 : 18, 0, key.width, 16);
-            } else {
-                guiGraphics.blit(TEXTURE_WIDGETS, i + key.x,j + key.y, key.isPressed ? 9 : 0, 0, key.width, 24);
-            }
+            if (key.isBlack) guiGraphics.blit(TEXTURE_WIDGETS, i + key.x, j + key.y, key.isPressed ? 25 : 18, 0, key.width, 16);
+            else guiGraphics.blit(TEXTURE_WIDGETS, i + key.x,j + key.y, key.isPressed ? 9 : 0, 0, key.width, 24);
         }
     }
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == GLFW.GLFW_KEY_SPACE && !sustainPedalPressed) {
+            sustainPedalPressed = true;
+            return true;
+        }
+
         if (PianoKey.KEY_TO_NOTE.containsKey(keyCode)) {
             int note = PianoKey.KEY_TO_NOTE.get(keyCode);
             for (PianoKey key : pianoKeys) {
                 if (key.note == note && !key.isPressed) {
-                    key.handleKeyPress(getKeyboardInstrument());
+                    key.handleKeyPress(getKeyboardSoundfont(), sustainPedalPressed);
                 }
             }
-            return true;
-        }
-        if (keyCode == GLFW.GLFW_KEY_SPACE && !sustainPedalPressed) {
-            sustainPedalPressed = true;
             return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
@@ -82,17 +80,23 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
 
     @Override
     public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
-        if (PianoKey.KEY_TO_NOTE.containsKey(keyCode)) {
-            int note = PianoKey.KEY_TO_NOTE.get(keyCode);
+        if (keyCode == GLFW.GLFW_KEY_SPACE && sustainPedalPressed) {
+            sustainPedalPressed = false;
             for (PianoKey key : pianoKeys) {
-                if (key.note == note) {
-                    key.isPressed = false;
+                if (!key.isPressed) {
+                    key.stopKeySound(key.note);
                 }
             }
             return true;
         }
-        if (keyCode == GLFW.GLFW_KEY_SPACE && sustainPedalPressed) {
-            sustainPedalPressed = false;
+
+        if (PianoKey.KEY_TO_NOTE.containsKey(keyCode)) {
+            int note = PianoKey.KEY_TO_NOTE.get(keyCode);
+            for (PianoKey key : pianoKeys) {
+                if (key.note == note) {
+                    key.handleKeyPress(getKeyboardSoundfont(), sustainPedalPressed);
+                }
+            }
             return true;
         }
         return super.keyReleased(keyCode, scanCode, modifiers);
@@ -107,8 +111,9 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
                     .findFirst()
                     .ifPresent(pianoKey -> {
                         lastMouseKey = pianoKey.note;
-                        pianoKey.handleKeyPress(getKeyboardInstrument());
+                        pianoKey.handleKeyPress(getKeyboardSoundfont(), sustainPedalPressed);
                     });
+
 
         }
         return super.mouseClicked(mouseX, mouseY, button);
@@ -119,7 +124,7 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
         if (button == 0) {
             for (PianoKey key : pianoKeys) {
                 if (key.note == lastMouseKey) {
-                    key.isPressed = false;
+                    key.handleKeyPress(getKeyboardSoundfont(), sustainPedalPressed);
                     lastMouseKey = -1;
                 }
             }
@@ -127,7 +132,7 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
         return super.mouseReleased(mouseX, mouseY, button);
     }
 
-    public NoteBlockInstrument getKeyboardInstrument() {
-        return this.menu.getInstrumentSlot().getItem().getItem() instanceof BlockItem blockItem && !blockItem.getBlock().defaultBlockState().instrument().worksAboveNoteBlock() ? blockItem.getBlock().defaultBlockState().instrument() : NoteBlockInstrument.HARP;
+    public SoundfontManager.SoundfontDefinition getKeyboardSoundfont() {
+        return CommonEventHandler.SOUNDFONTS.get(new ResourceLocation(Minestrel.MODID, "base"));
     }
 }
