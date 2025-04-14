@@ -1,8 +1,10 @@
 package com.ninni.minestrel.server.block.entity;
 
 import com.ninni.minestrel.registry.MBlockEntityRegistry;
+import com.ninni.minestrel.server.inventory.KeyboardMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.Container;
@@ -23,12 +25,28 @@ public class KeyboardBlockEntity extends BaseContainerBlockEntity {
 
     @Override
     protected AbstractContainerMenu createMenu(int i, Inventory inventory) {
-        return null;
+        return new KeyboardMenu(i, inventory, this);
     }
 
     @Override
     protected Component getDefaultName() {
-        return Component.translatable("minestrel.container.keyboard").withStyle(Style.EMPTY.withColor(0x412818));
+        return Component.translatable("minestrel.container.keyboard");
+    }
+
+    @Override
+    public Component getDisplayName() {
+        return super.getDisplayName().copy().withStyle(Style.EMPTY.withColor(0x412818));
+    }
+
+    public void load(CompoundTag p_155496_) {
+        super.load(p_155496_);
+        this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        ContainerHelper.loadAllItems(p_155496_, this.items);
+    }
+
+    protected void saveAdditional(CompoundTag p_187498_) {
+        super.saveAdditional(p_187498_);
+        ContainerHelper.saveAllItems(p_187498_, this.items);
     }
 
     @Override

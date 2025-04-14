@@ -1,22 +1,19 @@
 package com.ninni.minestrel.server.block;
 
 import com.ninni.minestrel.server.block.entity.KeyboardBlockEntity;
-import com.ninni.minestrel.server.inventory.KeyboardMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -45,12 +42,31 @@ public class KeyboardBlock extends BaseEntityBlock implements SimpleWaterloggedB
             return InteractionResult.SUCCESS;
         } else {
             BlockEntity blockentity = level.getBlockEntity(pos);
-            if (blockentity instanceof KeyboardBlockEntity) {
-                player.openMenu(state.getMenuProvider(level, pos));
-
+            if (blockentity instanceof KeyboardBlockEntity keyboardBlockEntity) {
+                player.openMenu(keyboardBlockEntity);
                 //player.awardStat(Stats.INTERACT_WITH_FURNACE);
             }
             return InteractionResult.CONSUME;
+        }
+    }
+
+    public void setPlacedBy(Level p_52676_, BlockPos p_52677_, BlockState p_52678_, LivingEntity p_52679_, ItemStack p_52680_) {
+        if (p_52680_.hasCustomHoverName()) {
+            BlockEntity blockentity = p_52676_.getBlockEntity(p_52677_);
+            if (blockentity instanceof KeyboardBlockEntity keyboardBlockEntity) {
+                keyboardBlockEntity.setCustomName(p_52680_.getHoverName());
+            }
+        }
+    }
+
+    public void onRemove(BlockState blockState, Level level, BlockPos pos, BlockState state, boolean b) {
+        if (!blockState.is(state.getBlock())) {
+            BlockEntity blockentity = level.getBlockEntity(pos);
+            if (blockentity instanceof KeyboardBlockEntity keyboardBlockEntity) {
+                Containers.dropContents(level, pos, keyboardBlockEntity);
+                level.updateNeighbourForOutputSignal(pos, this);
+            }
+            super.onRemove(blockState, level, pos, state, b);
         }
     }
 
@@ -93,10 +109,5 @@ public class KeyboardBlock extends BaseEntityBlock implements SimpleWaterloggedB
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new KeyboardBlockEntity(pos, state);
-    }
-
-    @Override
-    public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
-        return new SimpleMenuProvider((i, inv, player) -> new KeyboardMenu(i, inv, ContainerLevelAccess.create(level, pos)), level.getBlockEntity(pos) instanceof BaseContainerBlockEntity baseContainerBlockEntity ? baseContainerBlockEntity.getDisplayName() : Component.empty());
     }
 }

@@ -16,7 +16,6 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
 
     public KeyboardScreen(KeyboardMenu menu, Inventory inventory, Component component) {
         super(menu, inventory, component);
-        menu.registerUpdateListener(this::containerChanged);
         this.imageWidth = 183;
         this.imageHeight = 254;
         this.inventoryLabelY = 161;
@@ -26,6 +25,7 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
@@ -40,6 +40,4 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
         if (!this.menu.getInstrumentSlot().hasItem()) guiGraphics.blit(TEXTURE_WIDGETS, i + 7, j + 43, 32, 32, 16, 16);
         if (!this.menu.getSheetMusicSlot().hasItem()) guiGraphics.blit(TEXTURE_WIDGETS, i + 160, j + 43, 48, 32, 16, 16);
     }
-
-    private void containerChanged() {}
 }

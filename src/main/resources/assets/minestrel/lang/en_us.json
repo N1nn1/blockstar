@@ -1,6 +1,9 @@
 {
   "itemGroup.minestrel.minestrel": "Minestrel",
 
+  "item.minestrel.sheet_music": "Sheet Music",
+  "item.minestrel.staff_paper": "Staff Paper",
+
   "block.minestrel.keyboard": "Keyboard",
   "minestrel.container.keyboard": "Keyboard"
 }
