@@ -1,0 +1,10 @@
+{
+	"parent": "minestrel:block/keyboard_template_stand",
+	"textures": {
+		"top": "minestrel:block/keyboard_top_single",
+		"bottom": "minestrel:block/keyboard_bottom_single",
+		"side": "minestrel:block/keyboard_single",
+		"back": "minestrel:block/keyboard_single",
+		"front": "minestrel:block/keyboard_front_single"
+	}
+}
