@@ -1,12 +1,22 @@
 package com.ninni.minestrel.server.block;
 
 import com.ninni.minestrel.server.block.entity.KeyboardBlockEntity;
+import com.ninni.minestrel.server.inventory.KeyboardMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -15,6 +25,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -27,6 +38,20 @@ public class KeyboardBlock extends BaseEntityBlock implements SimpleWaterloggedB
     public KeyboardBlock() {
         super(Properties.of().strength(2.0F, 3.0F).sound(SoundType.WOOD).ignitedByLava());
         this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false).setValue(FACING, Direction.NORTH));
+    }
+
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (level.isClientSide) {
+            return InteractionResult.SUCCESS;
+        } else {
+            BlockEntity blockentity = level.getBlockEntity(pos);
+            if (blockentity instanceof KeyboardBlockEntity) {
+                player.openMenu(state.getMenuProvider(level, pos));
+
+                //player.awardStat(Stats.INTERACT_WITH_FURNACE);
+            }
+            return InteractionResult.CONSUME;
+        }
     }
 
     public FluidState getFluidState(BlockState p_56397_) {
@@ -68,5 +93,10 @@ public class KeyboardBlock extends BaseEntityBlock implements SimpleWaterloggedB
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new KeyboardBlockEntity(pos, state);
+    }
+
+    @Override
+    public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
+        return new SimpleMenuProvider((i, inv, player) -> new KeyboardMenu(i, inv, ContainerLevelAccess.create(level, pos)), level.getBlockEntity(pos) instanceof BaseContainerBlockEntity baseContainerBlockEntity ? baseContainerBlockEntity.getDisplayName() : Component.empty());
     }
 }

@@ -1,4 +1,6 @@
 {
   "itemGroup.minestrel.minestrel": "Minestrel",
-  "block.minestrel.keyboard": "Keyboard"
+
+  "block.minestrel.keyboard": "Keyboard",
+  "minestrel.container.keyboard": "Keyboard"
 }
