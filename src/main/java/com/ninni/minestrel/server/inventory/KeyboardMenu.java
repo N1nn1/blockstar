@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -28,7 +29,7 @@ public class KeyboardMenu extends AbstractContainerMenu {
 
         instrumentSlot = this.addSlot(new Slot(this.container, 0, 7, 43) {
             public boolean mayPlace(ItemStack stack) {
-                return stack.is(Items.GOLD_BLOCK);
+                return stack.getItem() instanceof BlockItem blockItem && !blockItem.getBlock().defaultBlockState().instrument().worksAboveNoteBlock();
             }
             public int getMaxStackSize() {
                 return 1;
@@ -70,7 +71,7 @@ public class KeyboardMenu extends AbstractContainerMenu {
                     if (!this.moveItemStackTo(itemstack1, this.sheetMusicSlot.index, this.sheetMusicSlot.index + 1, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (itemstack1.is(Items.GOLD_BLOCK)) {
+                } else if (itemstack1.getItem() instanceof BlockItem blockItem && !blockItem.getBlock().defaultBlockState().instrument().worksAboveNoteBlock()) {
                     if (!this.moveItemStackTo(itemstack1, this.instrumentSlot.index, this.instrumentSlot.index + 1, false)) {
                         return ItemStack.EMPTY;
                     }
