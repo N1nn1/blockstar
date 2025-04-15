@@ -58,5 +58,19 @@
   "soundfont.keyboard.base.65_3": {
     "category": "record",
     "sounds": ["minestrel:soundfont/keyboard/base/60_3"]
+  },
+
+
+  "soundfont.keyboard.meow.48": {
+    "category": "record",
+    "sounds": ["minestrel:soundfont/keyboard/meow/48"]
+  },
+  "soundfont.keyboard.meow.60": {
+    "category": "record",
+    "sounds": ["minestrel:soundfont/keyboard/meow/60"]
+  },
+  "soundfont.keyboard.meow.72": {
+    "category": "record",
+    "sounds": ["minestrel:soundfont/keyboard/meow/72"]
   }
 }

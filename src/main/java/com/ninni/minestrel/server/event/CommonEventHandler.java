@@ -1,7 +1,7 @@
 package com.ninni.minestrel.server.event;
 
 import com.ninni.minestrel.Minestrel;
-import com.ninni.minestrel.server.soundfont.SoundfontManager;
+import com.ninni.minestrel.server.data.SoundfontManager;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

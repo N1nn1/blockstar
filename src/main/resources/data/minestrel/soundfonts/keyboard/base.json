@@ -1,5 +1,6 @@
 {
-  "sound_prefix": "minestrel:soundfont/keyboard/base",
+  "instrument_type": "minestrel:keyboard",
+  "name": "minestrel:base",
   "note_map": {
     "48": "C3",
     "53": "F3",
@@ -8,5 +9,5 @@
     "72": "C5"
   },
   "velocity_layers": 3,
-  "sustain": true
+  "held": true
 }

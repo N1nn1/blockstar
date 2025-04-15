@@ -1,9 +1,10 @@
 package com.ninni.minestrel.client.gui;
 
 import com.ninni.minestrel.Minestrel;
+import com.ninni.minestrel.client.sound.key.PianoKey;
 import com.ninni.minestrel.server.event.CommonEventHandler;
 import com.ninni.minestrel.server.inventory.KeyboardMenu;
-import com.ninni.minestrel.server.soundfont.SoundfontManager;
+import com.ninni.minestrel.server.data.SoundfontManager;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -84,7 +85,7 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
             sustainPedalPressed = false;
             for (PianoKey key : pianoKeys) {
                 if (!key.isPressed) {
-                    key.stopKeySound(key.note);
+                    key.stopKeySound(getKeyboardSoundfont(), key.note);
                 }
             }
             return true;
@@ -107,7 +108,7 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
         if (button == 0) {
             pianoKeys.stream()
                     .sorted((a, b) -> Boolean.compare(b.isBlack, a.isBlack))
-                    .filter(key -> key.isInside(leftPos, topPos, mouseX, mouseY))
+                    .filter(key -> key.isMouseHoveringOver(leftPos, topPos, mouseX, mouseY))
                     .findFirst()
                     .ifPresent(pianoKey -> {
                         lastMouseKey = pianoKey.note;
@@ -133,6 +134,6 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
     }
 
     public SoundfontManager.SoundfontDefinition getKeyboardSoundfont() {
-        return CommonEventHandler.SOUNDFONTS.get(new ResourceLocation(Minestrel.MODID, "base"));
+        return CommonEventHandler.SOUNDFONTS.get(new ResourceLocation(Minestrel.MODID, "keyboard/base"));
     }
 }

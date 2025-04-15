@@ -1,4 +1,4 @@
-package com.ninni.minestrel.server.soundfont;
+package com.ninni.minestrel.client.sound;
 
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
@@ -8,15 +8,13 @@ import net.minecraft.sounds.SoundSource;
 
 public class SoundfontSound extends AbstractTickableSoundInstance {
     private final ResourceLocation soundLocation;
-    private final int note;
 
-    public SoundfontSound(ResourceLocation soundLocation, float volume, float pitch, LocalPlayer player, int note) {
+    public SoundfontSound(ResourceLocation soundLocation, float volume, float pitch, LocalPlayer player) {
         super(SoundEvent.createVariableRangeEvent(soundLocation), SoundSource.RECORDS, player.getRandom());
         this.soundLocation = soundLocation;
         this.volume = volume;
         this.pitch = pitch;
         this.looping = false;
-        this.note = note;
 
         this.x = player.getX();
         this.y = player.getY();
@@ -25,10 +23,6 @@ public class SoundfontSound extends AbstractTickableSoundInstance {
 
     @Override
     public void tick() {
-    }
-
-    public int getNote() {
-        return note;
     }
 
     @Override
