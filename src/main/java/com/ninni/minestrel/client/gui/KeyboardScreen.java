@@ -1,6 +1,6 @@
 package com.ninni.minestrel.client.gui;
 
-import com.ninni.minestrel.Minestrel;
+import com.ninni.minestrel.Blockstar;
 import com.ninni.minestrel.client.sound.key.PianoKey;
 import com.ninni.minestrel.server.event.CommonEventHandler;
 import com.ninni.minestrel.server.inventory.KeyboardMenu;
@@ -16,10 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
-    public static final ResourceLocation TEXTURE_BG = new ResourceLocation(Minestrel.MODID, "textures/gui/keyboard/bg.png");
-    public static final ResourceLocation TEXTURE_BG_SHEET_MUSIC = new ResourceLocation(Minestrel.MODID, "textures/gui/keyboard/bg_sheet_music.png");
-    public static final ResourceLocation TEXTURE_PAUSE = new ResourceLocation(Minestrel.MODID, "textures/gui/keyboard/pause.png");
-    public static final ResourceLocation TEXTURE_WIDGETS = new ResourceLocation(Minestrel.MODID, "textures/gui/keyboard/widgets.png");
+    public static final ResourceLocation TEXTURE_BG = new ResourceLocation(Blockstar.MODID, "textures/gui/keyboard/bg.png");
+    public static final ResourceLocation TEXTURE_BG_SHEET_MUSIC = new ResourceLocation(Blockstar.MODID, "textures/gui/keyboard/bg_sheet_music.png");
+    public static final ResourceLocation TEXTURE_PAUSE = new ResourceLocation(Blockstar.MODID, "textures/gui/keyboard/pause.png");
+    public static final ResourceLocation TEXTURE_WIDGETS = new ResourceLocation(Blockstar.MODID, "textures/gui/keyboard/widgets.png");
     private final List<PianoKey> pianoKeys = new ArrayList<>();
     private int lastMouseKey;
     private boolean sustainPedalPressed;
@@ -111,11 +111,11 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
                     .filter(key -> key.isMouseHoveringOver(leftPos, topPos, mouseX, mouseY))
                     .findFirst()
                     .ifPresent(pianoKey -> {
-                        lastMouseKey = pianoKey.note;
-                        pianoKey.handleKeyPress(getKeyboardSoundfont(), sustainPedalPressed);
+                        if (!pianoKey.isPressed) {
+                            lastMouseKey = pianoKey.note;
+                            pianoKey.handleKeyPress(getKeyboardSoundfont(), sustainPedalPressed);
+                        }
                     });
-
-
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
@@ -134,6 +134,6 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
     }
 
     public SoundfontManager.SoundfontDefinition getKeyboardSoundfont() {
-        return CommonEventHandler.SOUNDFONTS.get(new ResourceLocation(Minestrel.MODID, "keyboard/base"));
+        return CommonEventHandler.SOUNDFONTS.get(new ResourceLocation(Blockstar.MODID, "keyboard/meow"));
     }
 }

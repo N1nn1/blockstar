@@ -1,10 +1,9 @@
 package com.ninni.minestrel.client.sound.key;
 
 import com.ninni.minestrel.client.sound.SoundfontSound;
-import com.ninni.minestrel.registry.MInstrumentTypeRegistry;
+import com.ninni.minestrel.registry.BInstrumentTypeRegistry;
 import com.ninni.minestrel.server.data.SoundfontManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
@@ -94,7 +93,7 @@ public abstract class Key {
         float pitch = (float) Math.pow(2, (note - sampleNote) / 12.0);
 
         String velocity = soundfont.velocityLayers().isPresent() ? "_" + 2 : "";
-        ResourceLocation resourceLocation = new ResourceLocation(soundfont.name().getNamespace(), "soundfont." + MInstrumentTypeRegistry.get(soundfont.instrumentType()).getPath() + "." + soundfont.name().getPath() + "." + sampleNote + velocity);
+        ResourceLocation resourceLocation = new ResourceLocation(soundfont.name().getNamespace(), "soundfont." + BInstrumentTypeRegistry.get(soundfont.instrumentType()).getPath() + "." + soundfont.name().getPath() + "." + sampleNote + velocity);
         SoundfontSound sound = new SoundfontSound(resourceLocation, 1.0f, pitch, Minecraft.getInstance().player);
         return sound;
     }

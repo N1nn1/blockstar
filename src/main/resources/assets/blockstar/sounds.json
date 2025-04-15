@@ -1,0 +1,76 @@
+{
+  "soundfont.keyboard.base.48_1": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/base/48_1"]
+  },
+  "soundfont.keyboard.base.48_2": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/base/48_2"]
+  },
+  "soundfont.keyboard.base.48_3": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/base/48_3"]
+  },
+  "soundfont.keyboard.base.60_1": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/base/60_1"]
+  },
+  "soundfont.keyboard.base.60_2": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/base/60_2"]
+  },
+  "soundfont.keyboard.base.60_3": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/base/60_3"]
+  },
+  "soundfont.keyboard.base.72_1": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/base/72_1"]
+  },
+  "soundfont.keyboard.base.72_2": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/base/72_2"]
+  },
+  "soundfont.keyboard.base.72_3": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/base/72_3"]
+  },
+  "soundfont.keyboard.base.53_1": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/base/53_1"]
+  },
+  "soundfont.keyboard.base.53_2": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/base/53_2"]
+  },
+  "soundfont.keyboard.base.53_3": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/base/53_3"]
+  },
+  "soundfont.keyboard.base.65_1": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/base/65_1"]
+  },
+  "soundfont.keyboard.base.65_2": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/base/65_2"]
+  },
+  "soundfont.keyboard.base.65_3": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/base/60_3"]
+  },
+
+
+  "soundfont.keyboard.meow.48": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/meow/48"]
+  },
+  "soundfont.keyboard.meow.60": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/meow/60"]
+  },
+  "soundfont.keyboard.meow.72": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/meow/72"]
+  }
+}

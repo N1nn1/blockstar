@@ -1,0 +1,132 @@
+{
+  "variants": {
+    "facing=east,type=single,bottom=true": {
+      "model": "blockstar:block/keyboard_single",
+      "y": 90
+    },
+    "facing=north,type=single,bottom=true": {
+      "model": "blockstar:block/keyboard_single"
+    },
+    "facing=south,type=single,bottom=true": {
+      "model": "blockstar:block/keyboard_single",
+      "y": 180
+    },
+    "facing=west,type=single,bottom=true": {
+      "model": "blockstar:block/keyboard_single",
+      "y": 270
+    },
+
+    "facing=east,type=left,bottom=true": {
+      "model": "blockstar:block/keyboard_left",
+      "y": 90
+    },
+    "facing=north,type=left,bottom=true": {
+      "model": "blockstar:block/keyboard_left"
+    },
+    "facing=south,type=left,bottom=true": {
+      "model": "blockstar:block/keyboard_left",
+      "y": 180
+    },
+    "facing=west,type=left,bottom=true": {
+      "model": "blockstar:block/keyboard_left",
+      "y": 270
+    },
+
+    "facing=east,type=right,bottom=true": {
+      "model": "blockstar:block/keyboard_right",
+      "y": 90
+    },
+    "facing=north,type=right,bottom=true": {
+      "model": "blockstar:block/keyboard_right"
+    },
+    "facing=south,type=right,bottom=true": {
+      "model": "blockstar:block/keyboard_right",
+      "y": 180
+    },
+    "facing=west,type=right,bottom=true": {
+      "model": "blockstar:block/keyboard_right",
+      "y": 270
+    },
+
+    "facing=east,type=middle,bottom=true": {
+      "model": "blockstar:block/keyboard_middle",
+      "y": 90
+    },
+    "facing=north,type=middle,bottom=true": {
+      "model": "blockstar:block/keyboard_middle"
+    },
+    "facing=south,type=middle,bottom=true": {
+      "model": "blockstar:block/keyboard_middle",
+      "y": 180
+    },
+    "facing=west,type=middle,bottom=true": {
+      "model": "blockstar:block/keyboard_middle",
+      "y": 270
+    },
+
+
+    "facing=east,type=single,bottom=false": {
+      "model": "blockstar:block/keyboard_single_top",
+      "y": 90
+    },
+    "facing=north,type=single,bottom=false": {
+      "model": "blockstar:block/keyboard_single_top"
+    },
+    "facing=south,type=single,bottom=false": {
+      "model": "blockstar:block/keyboard_single_top",
+      "y": 180
+    },
+    "facing=west,type=single,bottom=false": {
+      "model": "blockstar:block/keyboard_single_top",
+      "y": 270
+    },
+
+    "facing=east,type=left,bottom=false": {
+      "model": "blockstar:block/keyboard_left_top",
+      "y": 90
+    },
+    "facing=north,type=left,bottom=false": {
+      "model": "blockstar:block/keyboard_left_top"
+    },
+    "facing=south,type=left,bottom=false": {
+      "model": "blockstar:block/keyboard_left_top",
+      "y": 180
+    },
+    "facing=west,type=left,bottom=false": {
+      "model": "blockstar:block/keyboard_left_top",
+      "y": 270
+    },
+
+    "facing=east,type=right,bottom=false": {
+      "model": "blockstar:block/keyboard_right_top",
+      "y": 90
+    },
+    "facing=north,type=right,bottom=false": {
+      "model": "blockstar:block/keyboard_right_top"
+    },
+    "facing=south,type=right,bottom=false": {
+      "model": "blockstar:block/keyboard_right_top",
+      "y": 180
+    },
+    "facing=west,type=right,bottom=false": {
+      "model": "blockstar:block/keyboard_right_top",
+      "y": 270
+    },
+
+    "facing=east,type=middle,bottom=false": {
+      "model": "blockstar:block/keyboard_middle_top",
+      "y": 90
+    },
+    "facing=north,type=middle,bottom=false": {
+      "model": "blockstar:block/keyboard_middle_top"
+    },
+    "facing=south,type=middle,bottom=false": {
+      "model": "blockstar:block/keyboard_middle_top",
+      "y": 180
+    },
+    "facing=west,type=middle,bottom=false": {
+      "model": "blockstar:block/keyboard_middle_top",
+      "y": 270
+    }
+  }
+}

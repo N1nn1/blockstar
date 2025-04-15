@@ -7,8 +7,8 @@ import com.google.gson.JsonParseException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.ninni.minestrel.Minestrel;
-import com.ninni.minestrel.registry.MInstrumentTypeRegistry;
+import com.ninni.minestrel.Blockstar;
+import com.ninni.minestrel.registry.BInstrumentTypeRegistry;
 import com.ninni.minestrel.server.intstrument.InstrumentType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -36,16 +36,16 @@ public class SoundfontManager extends SimpleJsonResourceReloadListener {
 
                 List<Integer> outOfRangeNotes = def.noteMap().keySet().stream().filter(note -> !def.instrumentType().isInRange(note)).toList();
                 if (!outOfRangeNotes.isEmpty()) {
-                    Minestrel.LOGGER.error("Soundfont '{}' has notes out of range for instrument '{}': {}", entry.getKey(), MInstrumentTypeRegistry.get(def.instrumentType()), outOfRangeNotes);
+                    Blockstar.LOGGER.error("Soundfont '{}' has notes out of range for instrument '{}': {}", entry.getKey(), BInstrumentTypeRegistry.get(def.instrumentType()), outOfRangeNotes);
                 }
 
                 instruments.put(entry.getKey(), def);
             } catch (Exception e) {
-                Minestrel.LOGGER.error("Failed to load soundfont '{}': {}", entry.getKey(), e.getMessage());
+                Blockstar.LOGGER.error("Failed to load soundfont '{}': {}", entry.getKey(), e.getMessage());
             }
         }
 
-        Minestrel.LOGGER.info("Loaded {} soundfonts", instruments.size());
+        Blockstar.LOGGER.info("Loaded {} soundfonts", instruments.size());
     }
 
     public SoundfontDefinition get(ResourceLocation id) {
@@ -63,7 +63,7 @@ public class SoundfontManager extends SimpleJsonResourceReloadListener {
     public record SoundfontDefinition(InstrumentType instrumentType, ResourceLocation name, Map<String, String> noteMapRaw, Optional<Integer> velocityLayers, boolean held) {
 
         public static final Codec<SoundfontDefinition> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-                MInstrumentTypeRegistry.CODEC.fieldOf("instrument_type").forGetter(SoundfontDefinition::instrumentType),
+                BInstrumentTypeRegistry.CODEC.fieldOf("instrument_type").forGetter(SoundfontDefinition::instrumentType),
                 ResourceLocation.CODEC.fieldOf("name").forGetter(SoundfontDefinition::name),
                 Codec.unboundedMap(Codec.STRING, Codec.STRING).fieldOf("note_map").forGetter(SoundfontDefinition::noteMapRaw),
                 Codec.INT.optionalFieldOf("velocity_layers").forGetter(SoundfontDefinition::velocityLayers),

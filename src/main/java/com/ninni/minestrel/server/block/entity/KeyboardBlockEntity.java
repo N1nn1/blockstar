@@ -1,6 +1,6 @@
 package com.ninni.minestrel.server.block.entity;
 
-import com.ninni.minestrel.registry.MBlockEntityRegistry;
+import com.ninni.minestrel.registry.BBlockEntityRegistry;
 import com.ninni.minestrel.server.inventory.KeyboardMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -20,7 +20,7 @@ public class KeyboardBlockEntity extends BaseContainerBlockEntity {
     private NonNullList<ItemStack> items = NonNullList.withSize(2, ItemStack.EMPTY);
 
     public KeyboardBlockEntity(BlockPos pos, BlockState state) {
-        super(MBlockEntityRegistry.KEYBOARD.get(), pos, state);
+        super(BBlockEntityRegistry.KEYBOARD.get(), pos, state);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class KeyboardBlockEntity extends BaseContainerBlockEntity {
 
     @Override
     protected Component getDefaultName() {
-        return Component.translatable("minestrel.container.keyboard");
+        return Component.translatable("blockstar.container.keyboard");
     }
 
     @Override

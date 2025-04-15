@@ -1,0 +1,10 @@
+{
+	"parent": "blockstar:block/keyboard_template_stand",
+	"textures": {
+		"top": "blockstar:block/keyboard_top_left",
+		"bottom": "blockstar:block/keyboard_bottom_left",
+		"side": "blockstar:block/keyboard_single",
+		"back": "blockstar:block/keyboard_left",
+		"front": "blockstar:block/keyboard_front_left"
+	}
+}

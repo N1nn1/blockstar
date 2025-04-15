@@ -38,7 +38,7 @@ apply plugin: 'org.spongepowered.mixin'
 
 version = 'PREALPHA-0.0.30'
 group = 'https://github.com/N1nn1' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'minestrel'
+archivesBaseName = 'blockstar'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
@@ -54,7 +54,7 @@ minecraft {
         client {
             workingDirectory project.file('run')
             property 'mixin.env.refMapRemappingFile', "${project.projectDir}/build/createSrgToMcp/output.srg"
-            arg "-mixin.config="+"minestrel.mixins.json"
+            arg "-mixin.config="+"blockstar.mixins.json"
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -63,7 +63,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                minestrel {
+                blockstar {
                     source sourceSets.main
                 }
             }
@@ -73,13 +73,13 @@ minecraft {
             properties 'mixin.env.remapRefMap': 'true'
             property 'mixin.env.refMapRemappingFile', "${project.projectDir}/build/createSrgToMcp/output.srg"
             workingDirectory project.file('run')
-            arg "-mixin.config="+"minestrel.mixins.json"
+            arg "-mixin.config="+"blockstar.mixins.json"
 
 
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                minestrel {
+                blockstar {
                     source sourceSets.main
                 }
             }
@@ -89,13 +89,13 @@ minecraft {
             properties 'mixin.env.remapRefMap': 'true'
             property 'mixin.env.refMapRemappingFile', "${project.projectDir}/build/createSrgToMcp/output.srg"
             workingDirectory project.file('run')
-            arg "-mixin.config="+"minestrel.mixins.json"
+            arg "-mixin.config="+"blockstar.mixins.json"
 
 
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                minestrel {
+                blockstar {
                     source sourceSets.main
                 }
             }
@@ -113,14 +113,14 @@ dependencies {
 }
 
 mixin {
-    add sourceSets.main, "minestrel.refmap.json"
-    config 'minestrel.mixins.json'
+    add sourceSets.main, "blockstar.refmap.json"
+    config 'blockstar.mixins.json'
 }
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
     manifest {
         attributes([
-                "Specification-Title": "minestrel",
+                "Specification-Title": "blockstar",
                 "Specification-Vendor": "N1nn1",
                 "Specification-Version": "1.0", // We are version 1 of ourselves
                 "Implementation-Title": project.name,

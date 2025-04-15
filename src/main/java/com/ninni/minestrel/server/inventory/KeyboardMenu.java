@@ -1,6 +1,6 @@
 package com.ninni.minestrel.server.inventory;
 
-import com.ninni.minestrel.registry.MMenuRegistry;
+import com.ninni.minestrel.registry.BMenuRegistry;
 import com.ninni.minestrel.server.item.SheetMusicItem;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -21,7 +21,7 @@ public class KeyboardMenu extends AbstractContainerMenu {
     }
 
     public KeyboardMenu(int id, Inventory inventory, Container container) {
-        super(MMenuRegistry.KEYBOARD.get(), id);
+        super(BMenuRegistry.KEYBOARD.get(), id);
         this.container = container;
 
         instrumentSlot = this.addSlot(new Slot(this.container, 0, 7, 43) {

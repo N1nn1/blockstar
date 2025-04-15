@@ -1,17 +1,17 @@
 modLoader="javafml"
 loaderVersion="[46,)"
 license="GNU LESSER GENERAL PUBLIC LICENSE"
-issueTrackerURL="https://github.com/N1nn1/minestrel/issues"
+issueTrackerURL="https://github.com/N1nn1/blockstar/issues"
 [[mods]]
-modId="minestrel"
+modId="blockstar"
 version="0.0.1"
-displayName="Minestrel"
+displayName="Blockstar"
 displayURL=""
 authors="Ninni, VoidArkana"
 credits=""
 description=""
 #logoFile="assets/minestrel/textures/misc/mod_logo.png"
-[[dependencies.minestrel]]
+[[dependencies.blockstar]]
 modId="forge"
 mandatory=true
 versionRange="[47.1.3,)"
