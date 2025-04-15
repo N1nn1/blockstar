@@ -18,5 +18,5 @@ public class BItemRegistry {
     public static final RegistryObject<Item> STAFF_PAPER = DEF_REG.register("staff_paper", () -> new StaffPaperItem(new Item.Properties()));
     public static final RegistryObject<Item> SHEET_MUSIC = DEF_REG.register("sheet_music", () -> new SheetMusicItem(new Item.Properties().stacksTo(1)));
 
-    public static final RegistryObject<Item> RESONANT_PRISM = DEF_REG.register("resonant_prism", () -> new ResonantPrism(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> RESONANT_PRISM = DEF_REG.register("resonant_prism", () -> new ResonantPrism(new Item.Properties()));
 }

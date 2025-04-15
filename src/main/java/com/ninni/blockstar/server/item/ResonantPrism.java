@@ -51,8 +51,8 @@ public class ResonantPrism extends Item {
 
             if (soundfont.instrumentExclusive()) stackTag.putString("InstrumentType", BInstrumentTypeRegistry.get(soundfont.instrumentType()).toString());
             if (soundfont.rarity() != Rarity.COMMON) stackTag.putString("Rarity", soundfont.rarity().toString());
-
-            stack.setTag(stackTag);
+            ItemStack stack2 = stack.copyWithCount(1);
+            stack2.setTag(stackTag);
 
             if (player instanceof LocalPlayer localPlayer) {
                 int sampleNote = soundfont.getClosestSampleNote(60);
@@ -61,6 +61,9 @@ public class ResonantPrism extends Item {
             }
 
             stack1.shrink(1);
+            stack.shrink(1);
+            if (!player.getInventory().add(stack2)) player.drop(stack2, false);
+
             return true;
         }
 
@@ -71,6 +74,12 @@ public class ResonantPrism extends Item {
     public Rarity getRarity(ItemStack stack) {
         if (stack.hasTag() && stack.getTag().contains("Rarity")) return Rarity.valueOf(stack.getTag().getString("Rarity"));
         return super.getRarity(stack);
+    }
+
+    @Override
+    public int getMaxStackSize(ItemStack stack) {
+        if (stack.hasTag() && stack.getTag().contains("Soundfont")) return 1;
+        return super.getMaxStackSize(stack);
     }
 
     @Override

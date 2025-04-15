@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "##",
+    "NN"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:quartz"
+    },
+    "N": {
+      "item": "minecraft:note_block"
+    }
+  },
+  "result": {
+    "item": "blockstar:keyboard",
+    "count": 1
+  }
+}

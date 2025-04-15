@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " # ",
+    "#N#",
+    " # "
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "N": {
+      "item": "minecraft:note_block"
+    }
+  },
+  "result": {
+    "item": "blockstar:resonant_prism",
+    "count": 1
+  }
+}
