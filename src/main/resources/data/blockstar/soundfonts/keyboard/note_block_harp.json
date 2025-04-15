@@ -1,15 +1,10 @@
 {
   "instrument_type": "blockstar:keyboard",
-  "instrument_exclusive": true,
-  "name": "blockstar:base",
+  "name": "blockstar:note_block_harp",
   "note_map": {
     "48": "C3",
-    "53": "F3",
     "60": "C4",
-    "65": "F4",
     "72": "C5"
   },
-  "velocity_layers": 3,
-  "held": true,
   "creative_tab": false
 }

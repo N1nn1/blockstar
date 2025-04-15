@@ -4,6 +4,24 @@
   "item.blockstar.sheet_music": "Sheet Music",
   "item.blockstar.staff_paper": "Staff Paper",
 
+  "item.blockstar.resonant_prism": "Resonant Prism",
+  "blockstar.soundfont.note_block_harp": "Harp",
+  "blockstar.soundfont.note_block_banjo": "Banjo",
+  "blockstar.soundfont.note_block_bass": "Bass",
+  "blockstar.soundfont.note_block_bell": "Bell",
+  "blockstar.soundfont.note_block_bit": "Bit",
+  "blockstar.soundfont.note_block_cow_bell": "Cow bell",
+  "blockstar.soundfont.note_block_didjeridoo": "Didjeridoo",
+  "blockstar.soundfont.note_block_flute": "Flute",
+  "blockstar.soundfont.note_block_guitar": "Guitar",
+  "blockstar.soundfont.note_block_icechime": "Ice Chime",
+  "blockstar.soundfont.note_block_iron_xylophone": "Iron Xylophone",
+  "blockstar.soundfont.note_block_pling": "Pling",
+  "blockstar.soundfont.note_block_xylobone": "Xylobone",
+  "blockstar.soundfont.base": "Base",
+  "blockstar.soundfont.meow": "Meow",
+
   "block.blockstar.keyboard": "Keyboard",
-  "blockstar.container.keyboard": "Keyboard"
+  "blockstar.container.keyboard": "Keyboard",
+  "blockstar.instrument_type.keyboard": "Keyboard"
 }

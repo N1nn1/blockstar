@@ -1,7 +1,6 @@
 {
   "instrument_type": "blockstar:keyboard",
-  "instrument_exclusive": true,
-  "name": "blockstar:meow",
+  "name": "blockstar:note_block_flute",
   "note_map": {
     "48": "C3",
     "60": "C4",

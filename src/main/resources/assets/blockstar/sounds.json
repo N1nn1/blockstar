@@ -60,7 +60,6 @@
     "sounds": ["blockstar:soundfont/keyboard/base/60_3"]
   },
 
-
   "soundfont.keyboard.meow.48": {
     "category": "record",
     "sounds": ["blockstar:soundfont/keyboard/meow/48"]
@@ -72,5 +71,174 @@
   "soundfont.keyboard.meow.72": {
     "category": "record",
     "sounds": ["blockstar:soundfont/keyboard/meow/72"]
+  },
+
+  "soundfont.keyboard.note_block_harp.48": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_harp/48"]
+  },
+  "soundfont.keyboard.note_block_harp.60": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_harp/60"]
+  },
+  "soundfont.keyboard.note_block_harp.72": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_harp/72"]
+  },
+
+  "soundfont.keyboard.note_block_banjo.48": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_banjo/48"]
+  },
+  "soundfont.keyboard.note_block_banjo.60": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_banjo/60"]
+  },
+  "soundfont.keyboard.note_block_banjo.72": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_banjo/72"]
+  },
+
+  "soundfont.keyboard.note_block_bass.48": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_bass/48"]
+  },
+  "soundfont.keyboard.note_block_bass.60": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_bass/60"]
+  },
+  "soundfont.keyboard.note_block_bass.72": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_bass/72"]
+  },
+
+  "soundfont.keyboard.note_block_bell.48": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_bell/48"]
+  },
+  "soundfont.keyboard.note_block_bell.60": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_bell/60"]
+  },
+  "soundfont.keyboard.note_block_bell.72": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_bell/72"]
+  },
+
+  "soundfont.keyboard.note_block_bit.48": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_bit/48"]
+  },
+  "soundfont.keyboard.note_block_bit.60": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_bit/60"]
+  },
+  "soundfont.keyboard.note_block_bit.72": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_bit/72"]
+  },
+
+  "soundfont.keyboard.note_block_cow_bell.48": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_cow_bell/48"]
+  },
+  "soundfont.keyboard.note_block_cow_bell.60": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_cow_bell/60"]
+  },
+  "soundfont.keyboard.note_block_cow_bell.72": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_cow_bell/72"]
+  },
+
+  "soundfont.keyboard.note_block_didjeridoo.48": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_didjeridoo/48"]
+  },
+  "soundfont.keyboard.note_block_didjeridoo.60": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_didjeridoo/60"]
+  },
+  "soundfont.keyboard.note_block_didjeridoo.72": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_didjeridoo/72"]
+  },
+
+  "soundfont.keyboard.note_block_flute.48": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_flute/48"]
+  },
+  "soundfont.keyboard.note_block_flute.60": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_flute/60"]
+  },
+  "soundfont.keyboard.note_block_flute.72": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_flute/72"]
+  },
+
+  "soundfont.keyboard.note_block_guitar.48": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_guitar/48"]
+  },
+  "soundfont.keyboard.note_block_guitar.60": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_guitar/60"]
+  },
+  "soundfont.keyboard.note_block_guitar.72": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_guitar/72"]
+  },
+
+  "soundfont.keyboard.note_block_icechime.48": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_icechime/48"]
+  },
+  "soundfont.keyboard.note_block_icechime.60": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_icechime/60"]
+  },
+  "soundfont.keyboard.note_block_icechime.72": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_icechime/72"]
+  },
+
+  "soundfont.keyboard.note_block_iron_xylophone.48": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_iron_xylophone/48"]
+  },
+  "soundfont.keyboard.note_block_iron_xylophone.60": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_iron_xylophone/60"]
+  },
+  "soundfont.keyboard.note_block_iron_xylophone.72": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_iron_xylophone/72"]
+  },
+
+  "soundfont.keyboard.note_block_pling.48": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_pling/48"]
+  },
+  "soundfont.keyboard.note_block_pling.60": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_pling/60"]
+  },
+  "soundfont.keyboard.note_block_pling.72": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_pling/72"]
+  },
+
+  "soundfont.keyboard.note_block_xylobone.48": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_xylobone/48"]
+  },
+  "soundfont.keyboard.note_block_xylobone.60": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_xylobone/60"]
+  },
+  "soundfont.keyboard.note_block_xylobone.72": {
+    "category": "record",
+    "sounds": ["blockstar:soundfont/keyboard/note_block_xylobone/72"]
   }
 }
