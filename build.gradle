@@ -109,7 +109,9 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.20.1-47.3.1'
     annotationProcessor 'org.spongepowered:mixin:0.8.7:processor'
     runtimeOnly(fg.deobf("curse.maven:spark-361579:4587309"))
-
+    compileOnly(fg.deobf("mezz.jei:jei-${jei_mc_version}-common-api:${jei_version}"))
+    compileOnly(fg.deobf("mezz.jei:jei-${jei_mc_version}-forge-api:${jei_version}"))
+    runtimeOnly(fg.deobf("mezz.jei:jei-${jei_mc_version}-forge:${jei_version}"))
 }
 
 mixin {

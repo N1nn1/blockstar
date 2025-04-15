@@ -94,8 +94,7 @@ public abstract class Key {
 
         String velocity = soundfont.velocityLayers().isPresent() ? "_" + 2 : "";
         ResourceLocation resourceLocation = new ResourceLocation(soundfont.name().getNamespace(), "soundfont." + BInstrumentTypeRegistry.get(soundfont.instrumentType()).getPath() + "." + soundfont.name().getPath() + "." + sampleNote + velocity);
-        SoundfontSound sound = new SoundfontSound(resourceLocation, 1.0f, pitch, Minecraft.getInstance().player);
-        return sound;
+        return new SoundfontSound(resourceLocation, 1.0f, pitch, Minecraft.getInstance().player);
     }
 
     public boolean isMouseHoveringOver(int leftPos, int topPos, double mouseX, double mouseY) {
