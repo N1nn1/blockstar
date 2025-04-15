@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -13,7 +14,10 @@ import com.ninni.blockstar.server.intstrument.InstrumentType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -60,7 +64,17 @@ public class SoundfontManager extends SimpleJsonResourceReloadListener {
         return instruments.values();
     }
 
-    public record SoundfontDefinition(InstrumentType instrumentType, boolean instrumentExclusive, ResourceLocation name, Map<String, String> noteMapRaw, Optional<Integer> velocityLayers, boolean held, boolean creativeTab) {
+    public record SoundfontDefinition(InstrumentType instrumentType, boolean instrumentExclusive, ResourceLocation name, Map<String, String> noteMapRaw, Optional<Integer> velocityLayers, boolean held, boolean creativeTab, Rarity rarity) {
+        public static final Codec<Rarity> RARITY_CODEC = Codec.STRING.xmap(
+                string -> {
+                    try {
+                        return Rarity.valueOf(string.toUpperCase());
+                    } catch (IllegalArgumentException e) {
+                        throw new RuntimeException("Invalid rarity: " + string);
+                    }
+                },
+                Rarity::name
+        );
 
         public static final Codec<SoundfontDefinition> CODEC = RecordCodecBuilder.create(inst -> inst.group(
                 BInstrumentTypeRegistry.CODEC.fieldOf("instrument_type").forGetter(SoundfontDefinition::instrumentType),
@@ -69,7 +83,8 @@ public class SoundfontManager extends SimpleJsonResourceReloadListener {
                 Codec.unboundedMap(Codec.STRING, Codec.STRING).fieldOf("note_map").forGetter(SoundfontDefinition::noteMapRaw),
                 Codec.INT.optionalFieldOf("velocity_layers").forGetter(SoundfontDefinition::velocityLayers),
                 Codec.BOOL.fieldOf("held").orElse(false).forGetter(SoundfontDefinition::held),
-                Codec.BOOL.fieldOf("creative_tab").orElse(true).forGetter(SoundfontDefinition::held)
+                Codec.BOOL.fieldOf("creative_tab").orElse(true).forGetter(SoundfontDefinition::creativeTab),
+                RARITY_CODEC.fieldOf("rarity").orElse(Rarity.COMMON).forGetter(SoundfontDefinition::rarity)
         ).apply(inst, SoundfontDefinition::new));
 
         public Map<Integer, String> noteMap() {

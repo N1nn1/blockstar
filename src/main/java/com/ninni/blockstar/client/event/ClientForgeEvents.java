@@ -10,6 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.MutableHashedLinkedMap;
@@ -32,9 +33,10 @@ public class ClientForgeEvents {
                     CompoundTag stackTag = new CompoundTag();
                     stackTag.putString("Soundfont", data.name().toString());
                     if (data.instrumentExclusive()) stackTag.putString("InstrumentType", BInstrumentTypeRegistry.get(data.instrumentType()).toString());
+                    if (data.rarity() != Rarity.COMMON) stackTag.putString("Rarity", data.rarity().toString());
                     ItemStack stack = BItemRegistry.RESONANT_PRISM.get().getDefaultInstance();
                     stack.setTag(stackTag);
-                    entries.putAfter(BItemRegistry.RESONANT_PRISM.get().getDefaultInstance(), stack, CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
+                    entries.putAfter(BItemRegistry.RESONANT_PRISM.get().getDefaultInstance(), stack, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
                 }
             }
         }

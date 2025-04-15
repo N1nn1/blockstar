@@ -1,10 +1,12 @@
 package com.ninni.blockstar.server.inventory;
 
 import com.ninni.blockstar.Blockstar;
+import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
 import com.ninni.blockstar.registry.BItemRegistry;
 import com.ninni.blockstar.registry.BMenuRegistry;
 import com.ninni.blockstar.server.data.SoundfontManager;
 import com.ninni.blockstar.server.event.CommonEvents;
+import com.ninni.blockstar.server.intstrument.InstrumentType;
 import com.ninni.blockstar.server.item.SheetMusicItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
@@ -30,7 +32,7 @@ public class KeyboardMenu extends AbstractContainerMenu {
 
         instrumentSlot = this.addSlot(new Slot(this.container, 0, 7, 43) {
             public boolean mayPlace(ItemStack stack) {
-                return stack.hasTag() && stack.getTag().contains("Soundfont") || stack.is(BItemRegistry.RESONANT_PRISM.get());
+                return isValidSoundfontForInstrumentType(stack, BInstrumentTypeRegistry.KEYBOARD.get());
             }
             public int getMaxStackSize() {
                 return 1;
@@ -72,7 +74,7 @@ public class KeyboardMenu extends AbstractContainerMenu {
                     if (!this.moveItemStackTo(itemstack1, this.sheetMusicSlot.index, this.sheetMusicSlot.index + 1, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (itemstack1.hasTag() && itemstack1.getTag().contains("Soundfont") || itemstack1.is(BItemRegistry.RESONANT_PRISM.get())) {
+                } else if (this.isValidSoundfontForInstrumentType(itemstack1, BInstrumentTypeRegistry.KEYBOARD.get())) {
                     if (!this.moveItemStackTo(itemstack1, this.instrumentSlot.index, this.instrumentSlot.index + 1, false)) {
                         return ItemStack.EMPTY;
                     }
@@ -103,16 +105,21 @@ public class KeyboardMenu extends AbstractContainerMenu {
         return itemstack;
     }
 
+    public boolean isValidSoundfontForInstrumentType(ItemStack stack, InstrumentType type) {
+        if (stack.hasTag() && stack.getTag().contains("Soundfont")) {
+            return !stack.getTag().contains("InstrumentType") || stack.getTag().getString("InstrumentType").equals(BInstrumentTypeRegistry.get(type).toString());
+        }
+        return false;
+    }
+
     public SoundfontManager.SoundfontDefinition getKeyboardSoundfont() {
         SoundfontManager.SoundfontDefinition soundfontDefinition = null;
 
         if (this.instrumentSlot.hasItem()) {
             ItemStack stack = this.instrumentSlot.getItem();
-            if (stack.hasTag() && stack.getTag().contains("Soundfont")) {
+            if (this.isValidSoundfontForInstrumentType(stack, BInstrumentTypeRegistry.KEYBOARD.get())) {
                 ResourceLocation resourceLocation = new ResourceLocation(stack.getTag().getString("Soundfont"));
                 soundfontDefinition = CommonEvents.SOUNDFONTS.get(new ResourceLocation(resourceLocation.getNamespace(), "keyboard/" + resourceLocation.getPath()));
-            } else {
-                if (stack.is(BItemRegistry.RESONANT_PRISM.get())) soundfontDefinition = CommonEvents.SOUNDFONTS.get(new ResourceLocation(Blockstar.MODID, "keyboard/note_block_harp"));
             }
         } else {
             soundfontDefinition = CommonEvents.SOUNDFONTS.get(new ResourceLocation(Blockstar.MODID, "keyboard/base"));
