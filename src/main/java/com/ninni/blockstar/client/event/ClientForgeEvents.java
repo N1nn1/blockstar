@@ -17,10 +17,17 @@ import net.minecraftforge.common.util.MutableHashedLinkedMap;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = Blockstar.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientForgeEvents {
+
+    @SubscribeEvent
+    public static void onClientSetup(final FMLClientSetupEvent event) {
+        Blockstar.CALLBACKS.forEach(Runnable::run);
+        Blockstar.CALLBACKS.clear();
+    }
 
     @SubscribeEvent
     public static void registerCreativeModeTab(BuildCreativeModeTabContentsEvent event) {

@@ -18,10 +18,14 @@ import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegistryBuilder;
 import org.slf4j.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Mod(Blockstar.MODID)
 public class Blockstar {
     public static final String MODID = "blockstar";
     public static final Logger LOGGER = LogUtils.getLogger();
+    public static final List<Runnable> CALLBACKS = new ArrayList<>();
     public static CommonProxy PROXY = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 
     public Blockstar() {
