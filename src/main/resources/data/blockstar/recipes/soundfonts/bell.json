@@ -1,0 +1,17 @@
+{
+  "type": "blockstar:soundfont_conversion",
+  "base": {
+    "item": "blockstar:resonant_prism"
+  },
+  "ingredient": {
+    "item": "minecraft:gold_block"
+  },
+  "result": {
+    "item": "blockstar:resonant_prism",
+    "nbt": {
+      "Soundfont": "blockstar:note_block_bell"
+    }
+  },
+  "play_sound": true,
+  "shrink_inputs": true
+}

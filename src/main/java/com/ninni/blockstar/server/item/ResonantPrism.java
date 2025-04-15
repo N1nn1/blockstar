@@ -3,8 +3,10 @@ package com.ninni.blockstar.server.item;
 import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.client.sound.SoundfontSound;
 import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
+import com.ninni.blockstar.registry.BRecipeRegistry;
 import com.ninni.blockstar.server.data.SoundfontManager;
 import com.ninni.blockstar.server.event.CommonEvents;
+import com.ninni.blockstar.server.item.crafting.SoundfontConversionRecipe;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -25,6 +27,7 @@ import net.minecraftforge.fml.DistExecutor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ResonantPrism extends Item {
 
@@ -35,34 +38,33 @@ public class ResonantPrism extends Item {
 
     @Override
     public boolean overrideOtherStackedOnMe(ItemStack stack, ItemStack stack1, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess) {
+        Level level = player.level();
 
-        if (!stack.hasTag() && stack1.getItem() instanceof BlockItem blockItem) {
-            NoteBlockInstrument instrument = blockItem.getBlock().defaultBlockState().instrument();
-            SoundfontManager.SoundfontDefinition soundfont = CommonEvents.SOUNDFONTS.get(new ResourceLocation(Blockstar.MODID, "keyboard/note_block_harp"));
+        Optional<SoundfontConversionRecipe> recipe = level.getRecipeManager()
+                .getAllRecipesFor(BRecipeRegistry.SOUNDFONT_CONVERSION_TYPE.get())
+                .stream()
+                .filter(r -> r.matches(stack, stack1))
+                .findFirst();
 
-            for (SoundfontManager.SoundfontDefinition data : CommonEvents.SOUNDFONTS.getAll()) {
-                if (data.name().getPath().replace("note_block_", "").equals(instrument.getSerializedName())) {
-                    soundfont = data;
-                }
+        if (recipe.isPresent()) {
+            ItemStack result = recipe.get().assemble(stack, stack1);
+
+            if (!player.getInventory().add(result)) {
+                player.drop(result, false);
             }
 
-            CompoundTag stackTag = new CompoundTag();
-            stackTag.putString("Soundfont", soundfont.name().toString());
+            if (recipe.get().shouldShrinkInputs()) {
+                stack.shrink(1);
+                stack1.shrink(1);
+            }
 
-            if (soundfont.instrumentExclusive()) stackTag.putString("InstrumentType", BInstrumentTypeRegistry.get(soundfont.instrumentType()).toString());
-            if (soundfont.rarity() != Rarity.COMMON) stackTag.putString("Rarity", soundfont.rarity().toString());
-            ItemStack stack2 = stack.copyWithCount(1);
-            stack2.setTag(stackTag);
-
-            if (player instanceof LocalPlayer localPlayer) {
+            if (recipe.get().shouldPlaySound() && player instanceof LocalPlayer localPlayer) {
+                ResourceLocation resourceLocation = new ResourceLocation(result.getTag().getString("Soundfont"));
+                SoundfontManager.SoundfontDefinition soundfont = CommonEvents.SOUNDFONTS.get(new ResourceLocation(resourceLocation.getNamespace(), "keyboard/" + resourceLocation.getPath()));
                 int sampleNote = soundfont.getClosestSampleNote(60);
                 String velocity = soundfont.velocityLayers().isPresent() ? "_" + 2 : "";
                 Minecraft.getInstance().getSoundManager().play(new SoundfontSound(new ResourceLocation(soundfont.name().getNamespace(), "soundfont." + BInstrumentTypeRegistry.get(soundfont.instrumentType()).getPath() + "." + soundfont.name().getPath() + "." + sampleNote + velocity), 1.0f, 1, localPlayer));
             }
-
-            stack1.shrink(1);
-            stack.shrink(1);
-            if (!player.getInventory().add(stack2)) player.drop(stack2, false);
 
             return true;
         }

@@ -39,6 +39,8 @@ public class Blockstar {
         BCreativeModeTabRegistry.DEF_REG.register(modEventBus);
         BMenuRegistry.DEF_REG.register(modEventBus);
         BInstrumentTypeRegistry.DEF_REG.register(modEventBus);
+        BRecipeRegistry.DEF_REG_SERIALIZERS.register(modEventBus);
+        BRecipeRegistry.DEF_REG_TYPES.register(modEventBus);
         modEventBus.register(this);
         modEventBus.register(new ClientEvents());
         modEventBus.register(new ClientForgeEvents());
