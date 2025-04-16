@@ -27,7 +27,7 @@ import java.util.Optional;
 public class ItemMixin {
 
     @Inject(at = @At("HEAD"), method = "overrideOtherStackedOnMe", cancellable = true)
-    private void overrideOtherStackedOnMe(ItemStack stack, ItemStack stack1, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess, CallbackInfoReturnable<Boolean> cir) {
+    private void B$overrideOtherStackedOnMe(ItemStack stack, ItemStack stack1, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess, CallbackInfoReturnable<Boolean> cir) {
         Level level = player.level();
 
         if (!stack.hasTag()) {
@@ -49,13 +49,13 @@ public class ItemMixin {
                     stack1.shrink(1);
                 }
 
-                if (recipe.get().shouldPlaySound() && player instanceof LocalPlayer localPlayer) {
-                    ResourceLocation resourceLocation = new ResourceLocation(result.getTag().getString("Soundfont"));
-                    SoundfontManager.SoundfontDefinition soundfont = CommonEvents.SOUNDFONTS.get(new ResourceLocation(resourceLocation.getNamespace(), "keyboard/" + resourceLocation.getPath()));
-                    int sampleNote = soundfont.getClosestSampleNote(60);
-                    String velocity = soundfont.velocityLayers().isPresent() ? "_" + 2 : "";
-                    Minecraft.getInstance().getSoundManager().play(new SoundfontSound(new ResourceLocation(soundfont.name().getNamespace(), "soundfont." + BInstrumentTypeRegistry.get(soundfont.instrumentType()).getPath() + "." + soundfont.name().getPath() + "." + sampleNote + velocity), 1.0f, 1, localPlayer));
-                }
+                //if (recipe.get().shouldPlaySound() && player instanceof LocalPlayer localPlayer) {
+                //    ResourceLocation resourceLocation = new ResourceLocation(result.getTag().getString("Soundfont"));
+                //    SoundfontManager.SoundfontDefinition soundfont = CommonEvents.SOUNDFONTS.get(new ResourceLocation(resourceLocation.getNamespace(), "keyboard/" + resourceLocation.getPath()));
+                //    int sampleNote = soundfont.getClosestSampleNote(60);
+                //    String velocity = soundfont.velocityLayers().isPresent() ? "_" + 2 : "";
+                //    Minecraft.getInstance().getSoundManager().play(new SoundfontSound(new ResourceLocation(soundfont.name().getNamespace(), "soundfont." + BInstrumentTypeRegistry.get(soundfont.instrumentType()).getPath() + "." + soundfont.name().getPath() + "." + sampleNote + velocity), 1.0f, 1, localPlayer));
+                //}
 
                 cir.setReturnValue(true);
             }

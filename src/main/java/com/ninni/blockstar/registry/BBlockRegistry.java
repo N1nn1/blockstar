@@ -10,5 +10,5 @@ import net.minecraftforge.registries.RegistryObject;
 public class BBlockRegistry {
     public static final DeferredRegister<Block> DEF_REG = DeferredRegister.create(ForgeRegistries.BLOCKS, Blockstar.MODID);
 
-    public static final RegistryObject<Block> KEYBOARD = DEF_REG.register("keyboard", KeyboardBlock::new);
+    public static final RegistryObject<Block> KEYBOARD = DEF_REG.register("keyboard", () -> new KeyboardBlock(BInstrumentTypeRegistry.KEYBOARD));
 }

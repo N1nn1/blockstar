@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.server.intstrument.InstrumentType;
+import com.ninni.blockstar.server.intstrument.Keyboard;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -26,16 +27,12 @@ public class BInstrumentTypeRegistry {
             }
     );
 
-
-    public static final RegistryObject<InstrumentType> KEYBOARD = DEF_REG.register("keyboard", () -> new InstrumentType(48, 76));
-
-
+    public static final RegistryObject<InstrumentType> KEYBOARD = DEF_REG.register("keyboard", Keyboard::new);
     private static IForgeRegistry<InstrumentType> internalRegistry;
 
     public static void setInternalRegistry(IForgeRegistry<InstrumentType> registry) {
         internalRegistry = registry;
     }
-
     public static IForgeRegistry<InstrumentType> getInternalRegistry() {
         return internalRegistry;
     }

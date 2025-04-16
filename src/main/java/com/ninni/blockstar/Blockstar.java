@@ -3,9 +3,7 @@ package com.ninni.blockstar;
 import com.mojang.logging.LogUtils;
 import com.ninni.blockstar.client.ClientProxy;
 import com.ninni.blockstar.client.event.ClientEvents;
-import com.ninni.blockstar.client.event.ClientForgeEvents;
 import com.ninni.blockstar.registry.*;
-import com.ninni.blockstar.server.event.CommonEvents;
 import com.ninni.blockstar.server.intstrument.InstrumentType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -43,7 +41,6 @@ public class Blockstar {
         BRecipeRegistry.DEF_REG_TYPES.register(modEventBus);
         modEventBus.register(this);
         modEventBus.register(new ClientEvents());
-        modEventBus.register(new ClientForgeEvents());
         PROXY.init();
     }
 

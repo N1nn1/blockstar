@@ -3,6 +3,7 @@ package com.ninni.blockstar.client.sound.key;
 import com.ninni.blockstar.client.sound.SoundfontSound;
 import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
 import com.ninni.blockstar.server.data.SoundfontManager;
+import com.ninni.blockstar.server.inventory.KeyboardMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -68,7 +69,8 @@ public abstract class Key {
     }
 
 
-    public void handleKeyPress(SoundfontManager.SoundfontDefinition soundfont, boolean sustained) {
+    public void handleKeyPress(KeyboardMenu menu, boolean sustained) {
+        SoundfontManager.SoundfontDefinition soundfont = menu.getInstrumentType().getSoundfont(menu.getSoundfontSlot().getItem());
         if (!isPressed) {
             SoundfontSound sound = getSoundfontSound(soundfont);
             Minecraft.getInstance().getSoundManager().play(sound);

@@ -1,14 +1,11 @@
 package com.ninni.blockstar.server.inventory;
 
-import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
-import com.ninni.blockstar.registry.BItemRegistry;
 import com.ninni.blockstar.registry.BMenuRegistry;
-import com.ninni.blockstar.server.data.SoundfontManager;
-import com.ninni.blockstar.server.event.CommonEvents;
 import com.ninni.blockstar.server.intstrument.InstrumentType;
 import com.ninni.blockstar.server.item.SheetMusicItem;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -16,11 +13,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public class KeyboardMenu extends AbstractContainerMenu {
     private final Container container;
-    final Slot instrumentSlot;
+    final Slot soundfontSlot;
     final Slot sheetMusicSlot;
+    final InstrumentType instrumentType;
 
     public KeyboardMenu(int id, Inventory inventory) {
         this(id, inventory, new SimpleContainer(2));
@@ -29,16 +28,9 @@ public class KeyboardMenu extends AbstractContainerMenu {
     public KeyboardMenu(int id, Inventory inventory, Container container) {
         super(BMenuRegistry.KEYBOARD.get(), id);
         this.container = container;
+        this.instrumentType = BInstrumentTypeRegistry.KEYBOARD.get();
 
-        instrumentSlot = this.addSlot(new Slot(this.container, 0, 7, 43) {
-            public boolean mayPlace(ItemStack stack) {
-                return isValidSoundfontForInstrumentType(stack, BInstrumentTypeRegistry.KEYBOARD.get());
-            }
-            public int getMaxStackSize() {
-                return 1;
-            }
-        });
-
+        soundfontSlot = this.addSlot(new InstrumentSlot(this.container, 0, 7, 43, this.instrumentType));
         sheetMusicSlot = this.addSlot(new Slot(this.container, 1, 160, 43) {
             public boolean mayPlace(ItemStack stack) {
                 return stack.getItem() instanceof SheetMusicItem;
@@ -69,13 +61,13 @@ public class KeyboardMenu extends AbstractContainerMenu {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
 
-            if (i != this.instrumentSlot.index && i != this.sheetMusicSlot.index) {
+            if (i != this.soundfontSlot.index && i != this.sheetMusicSlot.index) {
                 if (itemstack1.getItem() instanceof SheetMusicItem) {
                     if (!this.moveItemStackTo(itemstack1, this.sheetMusicSlot.index, this.sheetMusicSlot.index + 1, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (this.isValidSoundfontForInstrumentType(itemstack1, BInstrumentTypeRegistry.KEYBOARD.get())) {
-                    if (!this.moveItemStackTo(itemstack1, this.instrumentSlot.index, this.instrumentSlot.index + 1, false)) {
+                } else if (this.instrumentType.isValidSoundfontForInstrumentType(itemstack1)) {
+                    if (!this.moveItemStackTo(itemstack1, this.soundfontSlot.index, this.soundfontSlot.index + 1, false)) {
                         return ItemStack.EMPTY;
                     }
                 } else if (i >= 2 && i < 29) {
@@ -105,40 +97,20 @@ public class KeyboardMenu extends AbstractContainerMenu {
         return itemstack;
     }
 
-    public boolean isValidSoundfontForInstrumentType(ItemStack stack, InstrumentType type) {
-        if (stack.hasTag() && stack.getTag().contains("Soundfont")) {
-            return !stack.getTag().contains("InstrumentType") || stack.getTag().getString("InstrumentType").equals(BInstrumentTypeRegistry.get(type).toString());
-        }
-        return false;
-    }
-
-    public SoundfontManager.SoundfontDefinition getKeyboardSoundfont() {
-        SoundfontManager.SoundfontDefinition soundfontDefinition = null;
-
-        if (this.instrumentSlot.hasItem()) {
-            ItemStack stack = this.instrumentSlot.getItem();
-            if (this.isValidSoundfontForInstrumentType(stack, BInstrumentTypeRegistry.KEYBOARD.get())) {
-                ResourceLocation resourceLocation = new ResourceLocation(stack.getTag().getString("Soundfont"));
-                soundfontDefinition = CommonEvents.SOUNDFONTS.get(new ResourceLocation(resourceLocation.getNamespace(), "keyboard/" + resourceLocation.getPath()));
-            }
-        } else {
-            soundfontDefinition = CommonEvents.SOUNDFONTS.get(new ResourceLocation(Blockstar.MODID, "keyboard/base"));
-        }
-
-        if (soundfontDefinition != null) return soundfontDefinition;
-        else return CommonEvents.SOUNDFONTS.get(new ResourceLocation(Blockstar.MODID, "keyboard/base"));
-    }
-
     @Override
     public boolean stillValid(Player p_38874_) {
         return this.container.stillValid(p_38874_);
     }
 
-    public Slot getInstrumentSlot() {
-        return instrumentSlot;
+    public Slot getSoundfontSlot() {
+        return soundfontSlot;
     }
 
     public Slot getSheetMusicSlot() {
         return sheetMusicSlot;
+    }
+
+    public InstrumentType getInstrumentType() {
+        return instrumentType;
     }
 }
