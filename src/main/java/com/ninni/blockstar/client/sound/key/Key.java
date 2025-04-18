@@ -1,5 +1,6 @@
 package com.ninni.blockstar.client.sound.key;
 
+import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.client.sound.SoundfontSound;
 import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
 import com.ninni.blockstar.server.data.SoundfontManager;
@@ -73,7 +74,8 @@ public abstract class Key {
         SoundfontManager.SoundfontDefinition soundfont = menu.getInstrumentType().getSoundfont(menu.getSoundfontSlot().getItem());
         if (!isPressed) {
             SoundfontSound sound = getSoundfontSound(soundfont);
-            Minecraft.getInstance().getSoundManager().play(sound);
+
+            //menu.getInstrumentType().playNoteSoundFromBlock(menu.getPos(), menu.getLevel(), menu.getLevel().getNearestPlayer(menu.getPos().getX(), menu.getPos().getY(), menu.getPos().getZ(), 20, false));
             activeSounds.put(note, sound);
             isPressed = true;
         } else {

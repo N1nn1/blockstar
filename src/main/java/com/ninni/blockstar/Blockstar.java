@@ -4,8 +4,10 @@ import com.mojang.logging.LogUtils;
 import com.ninni.blockstar.client.ClientProxy;
 import com.ninni.blockstar.client.event.ClientEvents;
 import com.ninni.blockstar.registry.*;
+import com.ninni.blockstar.server.event.CommonEvents;
 import com.ninni.blockstar.server.intstrument.InstrumentType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
@@ -39,9 +41,8 @@ public class Blockstar {
         BInstrumentTypeRegistry.DEF_REG.register(modEventBus);
         BRecipeRegistry.DEF_REG_SERIALIZERS.register(modEventBus);
         BRecipeRegistry.DEF_REG_TYPES.register(modEventBus);
-        modEventBus.register(this);
-        modEventBus.register(new ClientEvents());
         PROXY.init();
+        MinecraftForge.EVENT_BUS.register(new CommonEvents());
     }
 
     public void commonSetup(final FMLCommonSetupEvent event) {
@@ -51,7 +52,6 @@ public class Blockstar {
     public void clientSetup(final FMLClientSetupEvent event) {
         event.enqueueWork(() -> PROXY.clientSetup());
     }
-
 
     private void buildRegistries(NewRegistryEvent event) {
         RegistryBuilder<InstrumentType> instrumentTypeRegistryBuilder = new RegistryBuilder<InstrumentType>().setName(new ResourceLocation(MODID, "instrument_type")).setDefaultKey(new ResourceLocation(Blockstar.MODID, "keyboard"));

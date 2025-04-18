@@ -3,6 +3,7 @@ package com.ninni.blockstar.mixin;
 import com.ninni.blockstar.server.block.KeyboardBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,7 +23,7 @@ public abstract class EntityMixin {
         BlockPos blockpos = this.getPrimaryStepSoundBlockPos(pos);
         BlockState blockstate = this.level().getBlockState(blockpos);
         if (blockstate.getBlock() instanceof KeyboardBlock block) {
-            block.getInstrumentType().playNoteSoundFromBlock(blockpos, this.level());
+            block.getInstrumentType().playNoteSoundFromBlock(blockpos, this.level(), (Entity)(Object)this);
         }
     }
 

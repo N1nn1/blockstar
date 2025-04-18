@@ -67,7 +67,7 @@ public class KeyboardBlock extends BaseEntityBlock implements SimpleWaterloggedB
     @Override
     public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float v) {
         super.fallOn(level, state, pos, entity, v);
-        getInstrumentType().playNoteSoundFromBlock(pos, level);
+        getInstrumentType().playNoteSoundFromBlock(pos, level, entity);
     }
 
     public void setPlacedBy(Level p_52676_, BlockPos p_52677_, BlockState p_52678_, LivingEntity p_52679_, ItemStack p_52680_) {

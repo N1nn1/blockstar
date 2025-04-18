@@ -8,6 +8,8 @@ import com.ninni.blockstar.server.event.CommonEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -37,17 +39,15 @@ public abstract class InstrumentType {
         return highestNote;
     }
 
-    public abstract void playNoteSoundFromBlock(BlockPos blockpos, Level level);
+    public abstract void playNoteSoundFromBlock(BlockPos blockpos, Level level, Entity entity);
 
-    public abstract void playNoteSound(BlockPos blockpos, Level level, int note);
-
-    public static @NotNull SoundfontSound getSoundfontSound(SoundfontManager.SoundfontDefinition soundfont, int note) {
+    public static @NotNull SoundfontSound getSoundfontSound(SoundfontManager.SoundfontDefinition soundfont, int note, LivingEntity entity) {
         int sampleNote = soundfont.getClosestSampleNote(note);
         float pitch = (float) Math.pow(2, (note - sampleNote) / 12.0);
 
         String velocity = soundfont.velocityLayers().isPresent() ? "_" + 2 : "";
         ResourceLocation resourceLocation = new ResourceLocation(soundfont.name().getNamespace(), "soundfont." + BInstrumentTypeRegistry.get(soundfont.instrumentType()).getPath() + "." + soundfont.name().getPath() + "." + sampleNote + velocity);
-        return new SoundfontSound(resourceLocation, 1.0f, pitch, Minecraft.getInstance().player);
+        return new SoundfontSound(resourceLocation, 1.0f, pitch, entity);
     }
 
     public boolean isValidSoundfontForInstrumentType(ItemStack stack) {
@@ -64,13 +64,13 @@ public abstract class InstrumentType {
         if (!stack.isEmpty()) {
             if (this.isValidSoundfontForInstrumentType(stack)) {
                 ResourceLocation resourceLocation = new ResourceLocation(stack.getTag().getString("Soundfont"));
-                soundfontDefinition = CommonEvents.SOUNDFONTS.get(new ResourceLocation(resourceLocation.getNamespace(), path + "/" + resourceLocation.getPath()));
+                soundfontDefinition = Blockstar.PROXY.getSoundfontManager().get(new ResourceLocation(resourceLocation.getNamespace(), path + "/" + resourceLocation.getPath()));
             }
         } else {
-            soundfontDefinition = CommonEvents.SOUNDFONTS.get(new ResourceLocation(Blockstar.MODID, path + "/base"));
+            soundfontDefinition = Blockstar.PROXY.getSoundfontManager().get(new ResourceLocation(Blockstar.MODID, path + "/base"));
         }
 
         if (soundfontDefinition != null) return soundfontDefinition;
-        else return CommonEvents.SOUNDFONTS.get(new ResourceLocation(Blockstar.MODID, path + "/base"));
+        else return Blockstar.PROXY.getSoundfontManager().get(new ResourceLocation(Blockstar.MODID, path + "/base"));
     }
 }
