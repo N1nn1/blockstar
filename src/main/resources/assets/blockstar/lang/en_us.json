@@ -1,6 +1,10 @@
 {
   "itemGroup.blockstar.blockstar": "Blockstar",
 
+  "blockstar.options.midi.title": "MIDI Settings",
+  "blockstar.options.midi.select_midi_device": "Selected MIDI Device: ",
+  "blockstar.options.midi.pressure_sensitivity": "Pressure Sensitivity: %s",
+
   "item.blockstar.sheet_music": "Sheet Music",
   "item.blockstar.staff_paper": "Staff Paper",
 

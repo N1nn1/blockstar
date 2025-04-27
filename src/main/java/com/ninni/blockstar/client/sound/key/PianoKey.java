@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class PianoKey extends Key {
 
-    public PianoKey(int note, float velocity, int x, int y, boolean isBlack) {
+    public PianoKey(int note, int velocity, int x, int y, boolean isBlack) {
         super(note, velocity, x, y, isBlack, isBlack ? 7 : 9, isBlack ? 16 : 24);
     }
 

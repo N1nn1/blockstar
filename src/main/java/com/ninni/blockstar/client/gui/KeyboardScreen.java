@@ -21,14 +21,25 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
     private final List<PianoKey> pianoKeys = new ArrayList<>();
     private int lastMouseKey;
     private boolean sustainPedalPressed;
+    private static KeyboardScreen instance;
 
     public KeyboardScreen(KeyboardMenu menu, Inventory inventory, Component component) {
         super(menu, inventory, component);
+        instance = this;
         this.imageWidth = 183;
         this.imageHeight = 254;
         this.inventoryLabelY = 161;
         this.inventoryLabelX = 12;
         PianoKey.initPianoKeys(pianoKeys);
+    }
+
+    public static KeyboardScreen getInstance() {
+        return instance;
+    }
+    @Override
+    public void onClose() {
+        super.onClose();
+        instance = null;
     }
 
     @Override
@@ -58,6 +69,19 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
         }
     }
 
+    public void playNoteFromMidi(int note, int velocity) {
+        for (PianoKey key : pianoKeys) {
+            if (key.note == note) {
+                if (velocity > 0 && !key.isPressed) {
+                    key.handleKeyPress(menu, sustainPedalPressed, velocity);
+                } else if (velocity == 0 && key.isPressed) {
+                    key.handleKeyPress(menu, sustainPedalPressed, velocity);
+                }
+                break;
+            }
+        }
+    }
+
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == GLFW.GLFW_KEY_SPACE && !sustainPedalPressed) {
@@ -69,7 +93,7 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
             int note = PianoKey.KEY_TO_NOTE.get(keyCode);
             for (PianoKey key : pianoKeys) {
                 if (key.note == note && !key.isPressed) {
-                    key.handleKeyPress(menu, sustainPedalPressed);
+                    key.handleKeyPress(menu, sustainPedalPressed, 0);
                 }
             }
             return true;
@@ -93,7 +117,7 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
             int note = PianoKey.KEY_TO_NOTE.get(keyCode);
             for (PianoKey key : pianoKeys) {
                 if (key.note == note) {
-                    key.handleKeyPress(menu, sustainPedalPressed);
+                    key.handleKeyPress(menu, sustainPedalPressed, 0);
                 }
             }
             return true;
@@ -111,7 +135,7 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
                     .ifPresent(pianoKey -> {
                         if (!pianoKey.isPressed) {
                             lastMouseKey = pianoKey.note;
-                            pianoKey.handleKeyPress(menu, sustainPedalPressed);
+                            pianoKey.handleKeyPress(menu, sustainPedalPressed, 0);
                         }
                     });
         }
@@ -124,11 +148,22 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
         if (button == 0) {
             for (PianoKey key : pianoKeys) {
                 if (key.note == lastMouseKey) {
-                    key.handleKeyPress(menu, sustainPedalPressed);
+                    key.handleKeyPress(menu, sustainPedalPressed, 0);
                     lastMouseKey = -1;
                 }
             }
         }
         return super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    public void handleSustainPedalFromMidi(boolean pressed) {
+        if (sustainPedalPressed && !pressed) {
+            for (PianoKey key : pianoKeys) {
+                if (!key.isPressed) {
+                    key.stopKeySound(menu.getInstrumentType().getSoundfont(menu.getSoundfontSlot().getItem()), key.note);
+                }
+            }
+        }
+        sustainPedalPressed = pressed;
     }
 }
