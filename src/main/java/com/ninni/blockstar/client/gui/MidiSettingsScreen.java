@@ -22,7 +22,6 @@ import java.util.Objects;
 public class MidiSettingsScreen extends OptionsSubScreen {
     private float pressureSensitivity = 0.5f;
 
-
     public MidiSettingsScreen(Screen screen, Options options) {
         super(screen, options, Component.translatable("blockstar.options.midi.title"));
     }
@@ -61,6 +60,7 @@ public class MidiSettingsScreen extends OptionsSubScreen {
             protected void applyValue() {
                 pressureSensitivity = (float) value;
                 MidiSettingsConfig.pressureSensitivity = pressureSensitivity;
+                MidiSettingsConfig.save();
             }
         });
     }
@@ -69,5 +69,6 @@ public class MidiSettingsScreen extends OptionsSubScreen {
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(guiGraphics);
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 20, 16777215);
     }
 }

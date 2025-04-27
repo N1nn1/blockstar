@@ -118,16 +118,51 @@ public abstract class Key {
         String velocitySuffix = "";
         if (soundfont.velocityLayers().isPresent()) {
             int layers = soundfont.velocityLayers().get();
-            float adjustedVelocity = Math.min(inputVelocity * (MidiSettingsConfig.pressureSensitivity * 2), 127);
-            velocitySuffix = "_" + (Math.min((int)(adjustedVelocity * layers / 128), layers - 1) + 1);
-            if (inputVelocity == 0) velocitySuffix = "_" + (int)Math.ceil((float)layers/2);
 
-            System.out.println("pressureSensitivity: " + MidiSettingsConfig.pressureSensitivity);
-            System.out.println("adjustedVelocity: " + adjustedVelocity);
-            System.out.println("velocitySuffix: " + velocitySuffix);
+            float sensitivity = MidiSettingsConfig.pressureSensitivity * 2.0f;
+            sensitivity = Math.max(0.1f, Math.min(sensitivity, 2.0f));
+            float adjustedVelocity = Math.min(inputVelocity * sensitivity, 127);
+
+            // Soft: ~20%, Mid: ~50%, Hard: ~30%
+            float softZoneEnd = 127.0f * 0.2f;
+            float midZoneEnd = softZoneEnd + 127.0f * 0.5f;
+
+
+            int softLayers = Math.max(1, (int)(layers * 0.2f));
+            int midLayers = Math.max(1, (int)(layers * 0.5f));
+            int hardLayers = Math.max(1, layers - softLayers - midLayers);
+
+
+            int totalAssignedLayers = softLayers + midLayers + hardLayers;
+            if (totalAssignedLayers < layers) {
+                hardLayers += (layers - totalAssignedLayers);
+            } else if (totalAssignedLayers > layers) {
+                hardLayers -= (totalAssignedLayers - layers);
+            }
+
+            int layer;
+
+            if (adjustedVelocity <= softZoneEnd) {
+                float percent = adjustedVelocity / softZoneEnd;
+                layer = (int)(percent * softLayers) + 1;
+            } else if (adjustedVelocity <= midZoneEnd) {
+                float percent = (adjustedVelocity - softZoneEnd) / (midZoneEnd - softZoneEnd);
+                layer = softLayers + (int)(percent * midLayers) + 1;
+            } else {
+                float percent = (adjustedVelocity - midZoneEnd) / (127.0f - midZoneEnd);
+                layer = softLayers + midLayers + (int)(percent * hardLayers) + 1;
+            }
+
+            layer = Math.min(layer, layers);
+            if (inputVelocity == 0) layer = (int)Math.ceil((float)layers/2);
+
+            velocitySuffix = "_" + layer;
         }
         return velocitySuffix;
     }
+
+
+
 
     public boolean isMouseHoveringOver(int leftPos, int topPos, double mouseX, double mouseY) {
         return mouseX >= (leftPos + x) && mouseX <= (leftPos + x) + width && mouseY >= (topPos + y) && mouseY <= (topPos + y) + height;
