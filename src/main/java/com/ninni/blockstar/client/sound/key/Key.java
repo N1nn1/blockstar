@@ -76,6 +76,7 @@ public abstract class Key {
             SoundfontSound sound = getSoundfontSound(soundfont);
 
             //menu.getInstrumentType().playNoteSoundFromBlock(menu.getPos(), menu.getLevel(), menu.getLevel().getNearestPlayer(menu.getPos().getX(), menu.getPos().getY(), menu.getPos().getZ(), 20, false));
+            Minecraft.getInstance().getSoundManager().play(sound);
             activeSounds.put(note, sound);
             isPressed = true;
         } else {

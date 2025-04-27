@@ -1,15 +1,12 @@
 package com.ninni.blockstar;
 
-import com.ninni.blockstar.client.sound.SoundfontSound;
 import com.ninni.blockstar.server.data.SoundfontManager;
-import net.minecraft.world.entity.LivingEntity;
 
 import javax.annotation.Nullable;
-import java.util.function.Function;
 
 public class CommonProxy {
     @Nullable
-    private SoundfontManager tapestryVariantManager;
+    private SoundfontManager soundfontManager;
 
     public void init() {
     }
@@ -21,9 +18,9 @@ public class CommonProxy {
     }
 
     public SoundfontManager getSoundfontManager() {
-        if (tapestryVariantManager == null) {
-            tapestryVariantManager = new SoundfontManager();
+        if (soundfontManager == null) {
+            soundfontManager = new SoundfontManager();
         }
-        return tapestryVariantManager;
+        return soundfontManager;
     }
 }
