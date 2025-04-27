@@ -8,6 +8,9 @@
   "soundfont.keyboard.base.48_3": {
     "sounds": ["blockstar:soundfont/keyboard/base/48_3"]
   },
+  "soundfont.keyboard.base.48_4": {
+    "sounds": ["blockstar:soundfont/keyboard/base/48_4"]
+  },
   "soundfont.keyboard.base.60_1": {
     "sounds": ["blockstar:soundfont/keyboard/base/60_1"]
   },
@@ -16,6 +19,9 @@
   },
   "soundfont.keyboard.base.60_3": {
     "sounds": ["blockstar:soundfont/keyboard/base/60_3"]
+  },
+  "soundfont.keyboard.base.60_4": {
+    "sounds": ["blockstar:soundfont/keyboard/base/60_4"]
   },
   "soundfont.keyboard.base.72_1": {
     "sounds": ["blockstar:soundfont/keyboard/base/72_1"]
@@ -26,6 +32,9 @@
   "soundfont.keyboard.base.72_3": {
     "sounds": ["blockstar:soundfont/keyboard/base/72_3"]
   },
+  "soundfont.keyboard.base.72_4": {
+    "sounds": ["blockstar:soundfont/keyboard/base/72_4"]
+  },
   "soundfont.keyboard.base.53_1": {
     "sounds": ["blockstar:soundfont/keyboard/base/53_1"]
   },
@@ -35,6 +44,9 @@
   "soundfont.keyboard.base.53_3": {
     "sounds": ["blockstar:soundfont/keyboard/base/53_3"]
   },
+  "soundfont.keyboard.base.53_4": {
+    "sounds": ["blockstar:soundfont/keyboard/base/53_4"]
+  },
   "soundfont.keyboard.base.65_1": {
     "sounds": ["blockstar:soundfont/keyboard/base/65_1"]
   },
@@ -43,6 +55,9 @@
   },
   "soundfont.keyboard.base.65_3": {
     "sounds": ["blockstar:soundfont/keyboard/base/65_3"]
+  },
+  "soundfont.keyboard.base.65_4": {
+    "sounds": ["blockstar:soundfont/keyboard/base/65_4"]
   },
 
   "soundfont.keyboard.meow.48": {
