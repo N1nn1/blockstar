@@ -11,6 +11,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
 import com.ninni.blockstar.server.intstrument.InstrumentType;
+import net.minecraft.client.Options;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;

@@ -82,7 +82,7 @@ public abstract class Key {
             activeSounds.computeIfAbsent(note, k -> new ArrayList<>()).add(sound);
             isPressed = true;
         } else {
-            if (!sustained) stopKeySound(soundfont, note);
+            if (!sustained && soundfont.held()) stopKeySound(soundfont, note);
             isPressed = false;
         }
     }

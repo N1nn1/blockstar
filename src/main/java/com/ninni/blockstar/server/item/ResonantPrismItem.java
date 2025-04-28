@@ -1,11 +1,16 @@
 package com.ninni.blockstar.server.item;
 
 import com.ninni.blockstar.Blockstar;
+import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
+import com.ninni.blockstar.server.data.SoundfontManager;
+import com.ninni.blockstar.server.intstrument.InstrumentType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
@@ -13,10 +18,11 @@ import net.minecraftforge.fml.DistExecutor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
-public class ResonantPrism extends Item {
+public class ResonantPrismItem extends Item {
 
-    public ResonantPrism(Properties properties) {
+    public ResonantPrismItem(Properties properties) {
         super(properties);
         DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> Blockstar.CALLBACKS.add(() -> ItemProperties.register(this, new ResourceLocation(Blockstar.MODID, "attuned"), (stack, level, player, i) -> stack.getOrCreateTag().contains("Soundfont") ? 1.0F : 0.0F)));
     }
@@ -34,12 +40,24 @@ public class ResonantPrism extends Item {
     }
 
     @Override
+    public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
+        if (stack.hasTag() && !stack.getTag().getString("Soundfont").isEmpty()) {
+            if (!stack.getTag().getString("Soundfont").isEmpty()) {
+                return Optional.of(new SoundfontTooltip(new ResourceLocation(stack.getTag().getString("Soundfont"))));
+            }
+        }
+        return Optional.of(new SoundfontTooltip(new ResourceLocation(Blockstar.MODID, "empty")));
+    }
+
+    public record SoundfontTooltip(ResourceLocation icon) implements TooltipComponent {}
+
+    @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
         super.appendHoverText(stack, level, list, flag);
 
         if (stack.hasTag() && (stack.getTag().contains("Soundfont") && !stack.getTag().getString("Soundfont").isEmpty()
-                || stack.getTag().contains("InstrumentType") && !stack.getTag().getString("InstrumentType").isEmpty())
-        ) {
+                || stack.getTag().contains("InstrumentType") && !stack.getTag().getString("InstrumentType").isEmpty())) {
+
             if (stack.getTag().contains("Soundfont") && !stack.getTag().getString("Soundfont").isEmpty()) {
                 ResourceLocation resourceLocation = new ResourceLocation(stack.getTag().getString("Soundfont"));
                 if (resourceLocation.getPath().startsWith("note_block_")) {
