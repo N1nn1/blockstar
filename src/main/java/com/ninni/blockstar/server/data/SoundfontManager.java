@@ -64,7 +64,7 @@ public class SoundfontManager extends SimpleJsonResourceReloadListener {
         return instruments.values();
     }
 
-    public record SoundfontDefinition(InstrumentType instrumentType, boolean instrumentExclusive, ResourceLocation name, Map<String, String> noteMapRaw, Optional<Integer> velocityLayers, boolean held, boolean creativeTab, Rarity rarity) {
+    public record SoundfontDefinition(InstrumentType instrumentType, boolean instrumentExclusive, ResourceLocation name, Map<String, String> noteMapRaw, Optional<Integer> velocityLayers, boolean held, int fadeTicks, boolean creativeTab, Rarity rarity) {
         public static final Codec<Rarity> RARITY_CODEC = Codec.STRING.xmap(
                 string -> {
                     try {
@@ -83,6 +83,7 @@ public class SoundfontManager extends SimpleJsonResourceReloadListener {
                 Codec.unboundedMap(Codec.STRING, Codec.STRING).fieldOf("note_map").forGetter(SoundfontDefinition::noteMapRaw),
                 Codec.INT.optionalFieldOf("velocity_layers").forGetter(SoundfontDefinition::velocityLayers),
                 Codec.BOOL.fieldOf("held").orElse(false).forGetter(SoundfontDefinition::held),
+                Codec.INT.fieldOf("fade_ticks").orElse(0).forGetter(SoundfontDefinition::fadeTicks),
                 Codec.BOOL.fieldOf("creative_tab").orElse(true).forGetter(SoundfontDefinition::creativeTab),
                 RARITY_CODEC.fieldOf("rarity").orElse(Rarity.COMMON).forGetter(SoundfontDefinition::rarity)
         ).apply(inst, SoundfontDefinition::new));

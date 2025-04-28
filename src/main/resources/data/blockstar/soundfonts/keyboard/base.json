@@ -11,5 +11,6 @@
   },
   "velocity_layers": 4,
   "held": true,
+  "fade_ticks": 15,
   "creative_tab": false
 }

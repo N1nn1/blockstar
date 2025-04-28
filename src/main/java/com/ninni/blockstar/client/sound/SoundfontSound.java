@@ -1,6 +1,5 @@
 package com.ninni.blockstar.client.sound;
 
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -13,15 +12,17 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class SoundfontSound extends AbstractTickableSoundInstance {
     private final ResourceLocation soundLocation;
-    private final LivingEntity user;
+    private boolean fadingOut = false;
+    private int fadeOutTicks = 0;
+    private final float initialVolume;
 
     public SoundfontSound(ResourceLocation soundLocation, float volume, float pitch, LivingEntity user) {
         super(SoundEvent.createVariableRangeEvent(soundLocation), SoundSource.RECORDS, user.getRandom());
         this.soundLocation = soundLocation;
         this.volume = volume;
+        this.initialVolume = volume;
         this.pitch = pitch;
         this.looping = false;
-        this.user = user;
 
         this.x = user.getX();
         this.y = user.getY();
@@ -30,14 +31,29 @@ public class SoundfontSound extends AbstractTickableSoundInstance {
 
     @Override
     public void tick() {
+        if (this.fadingOut) {
+            if (fadeOutTicks > 0) {
+                fadeOutTicks--;
+                this.volume = initialVolume * ((float) fadeOutTicks / 20.0f);
+            } else {
+                this.stop();
+            }
+        }
+    }
+
+    public void startFadeOut(int ticks) {
+        if (ticks > 0) {
+            if (!this.fadingOut) {
+                this.fadingOut = true;
+                this.fadeOutTicks = ticks;
+            }
+        } else {
+            this.stop();
+        }
     }
 
     @Override
     public ResourceLocation getLocation() {
         return this.soundLocation;
-    }
-
-    public boolean isSameEntity(Entity user) {
-        return this.user.isAlive() && this.user.getId() == user.getId();
     }
 }

@@ -91,7 +91,7 @@ public abstract class Key {
         List<SoundfontSound> sounds = activeSounds.get(note);
         if (sounds != null) {
             for (SoundfontSound sound : sounds) {
-                if (soundfont.held()) Minecraft.getInstance().execute(() -> Minecraft.getInstance().getSoundManager().stop(sound));
+                Minecraft.getInstance().execute(() -> sound.startFadeOut(soundfont.fadeTicks()));
             }
             activeSounds.remove(note);
         }

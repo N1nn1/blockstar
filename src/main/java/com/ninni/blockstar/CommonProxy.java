@@ -3,11 +3,8 @@ package com.ninni.blockstar;
 import com.ninni.blockstar.server.data.SoundfontManager;
 import com.ninni.blockstar.server.midi.MidiInputHandler;
 
-import javax.annotation.Nullable;
-
 public class CommonProxy {
-    @Nullable
-    private SoundfontManager soundfontManager;
+    private final SoundfontManager soundfontManager = new SoundfontManager();
 
     public void init() {
         MidiInputHandler.startListening();
@@ -20,9 +17,6 @@ public class CommonProxy {
     }
 
     public SoundfontManager getSoundfontManager() {
-        if (soundfontManager == null) {
-            soundfontManager = new SoundfontManager();
-        }
         return soundfontManager;
     }
 }

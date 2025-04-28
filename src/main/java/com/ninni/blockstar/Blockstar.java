@@ -42,8 +42,8 @@ public class Blockstar {
         BRecipeRegistry.DEF_REG_SERIALIZERS.register(modEventBus);
         BRecipeRegistry.DEF_REG_TYPES.register(modEventBus);
         PROXY.init();
-        modEventBus.register(new ClientEvents());
         MinecraftForge.EVENT_BUS.register(new CommonEvents());
+        modEventBus.register(new ClientEvents());
     }
 
     public void commonSetup(final FMLCommonSetupEvent event) {
