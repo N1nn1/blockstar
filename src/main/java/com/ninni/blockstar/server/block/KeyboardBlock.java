@@ -1,7 +1,7 @@
 package com.ninni.blockstar.server.block;
 
 import com.ninni.blockstar.server.block.entity.KeyboardBlockEntity;
-import com.ninni.blockstar.server.intstrument.InstrumentType;
+import com.ninni.blockstar.server.instrument.InstrumentType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;

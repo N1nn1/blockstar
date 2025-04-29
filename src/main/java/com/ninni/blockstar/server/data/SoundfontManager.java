@@ -11,7 +11,7 @@ import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
-import com.ninni.blockstar.server.intstrument.InstrumentType;
+import com.ninni.blockstar.server.instrument.InstrumentType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;

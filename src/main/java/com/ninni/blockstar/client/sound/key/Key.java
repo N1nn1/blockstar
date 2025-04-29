@@ -1,18 +1,21 @@
 package com.ninni.blockstar.client.sound.key;
 
-import com.ninni.blockstar.client.config.MidiSettingsConfig;
+import com.ninni.blockstar.client.midi.MidiSettingsConfig;
+import com.ninni.blockstar.client.sound.SoundManagerHelper;
 import com.ninni.blockstar.client.sound.SoundfontSound;
 import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
+import com.ninni.blockstar.registry.BNetwork;
 import com.ninni.blockstar.server.data.SoundfontManager;
 import com.ninni.blockstar.server.inventory.KeyboardMenu;
+import com.ninni.blockstar.server.packet.PlaySoundPacket;
+import com.ninni.blockstar.server.packet.StopSoundPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +25,6 @@ public abstract class Key {
     public final int x, y, width, height;
     public final boolean isBlack;
     public boolean isPressed = false;
-    private final Map<Integer, List<SoundfontSound>> activeSounds = new HashMap<>();
     public static final Map<Integer, Integer> KEY_TO_NOTE = Map.ofEntries(
             Map.entry(GLFW.GLFW_KEY_Z, 48), //C3
             Map.entry(GLFW.GLFW_KEY_S, 49), //C#3
@@ -72,46 +74,59 @@ public abstract class Key {
         this.height = height;
     }
 
-
     public void handleKeyPress(KeyboardMenu menu, boolean sustained, int velocity) {
         SoundfontManager.SoundfontDefinition soundfont = menu.getInstrumentType().getSoundfont(menu.getSoundfontSlot().getItem());
         if (!isPressed) {
-            SoundfontSound sound = getSoundfontSound(menu, soundfont, velocity);
-            //menu.getInstrumentType().playNoteSoundFromBlock(menu.getPos(), menu.getLevel(), menu.getLevel().getNearestPlayer(menu.getPos().getX(), menu.getPos().getY(), menu.getPos().getZ(), 20, false));
-            Minecraft.getInstance().execute(() -> Minecraft.getInstance().getSoundManager().play(sound));
-            activeSounds.computeIfAbsent(note, k -> new ArrayList<>()).add(sound);
+            int sampleNote = soundfont.getForInstrument(menu.getInstrumentType()).getClosestSampleNote(note);
+            float pitch = (float) Math.pow(2, (note - sampleNote) / 12.0);
+
+            String velocitySuffix = getVelocity(menu, soundfont, velocity);
+
+            ResourceLocation resourceLocation = new ResourceLocation(
+                    soundfont.name().getNamespace(),
+                    "soundfont." + BInstrumentTypeRegistry.get(menu.getInstrumentType()).getPath()
+                            + "." + soundfont.name().getPath()
+                            + "." + sampleNote
+                            + velocitySuffix
+            );
+
+            LocalPlayer player = Minecraft.getInstance().player;
+
+            BNetwork.INSTANCE.send(
+                    PacketDistributor.NEAR.with(() -> PacketDistributor.TargetPoint.p(player.getX(), player.getY(), player.getZ(), 32, player.level().dimension()).get()),
+                    new PlaySoundPacket(resourceLocation, pitch, player.getId())
+            );
+
             isPressed = true;
         } else {
-            if (!sustained && soundfont.getForInstrument(menu.getInstrumentType()).held()) stopKeySound(menu, soundfont, note);
+            if (!sustained && soundfont.getForInstrument(menu.getInstrumentType()).held()) stopKeySound(menu, soundfont);
             isPressed = false;
         }
     }
 
-    public void stopKeySound(KeyboardMenu menu, SoundfontManager.SoundfontDefinition soundfont, int note) {
-        List<SoundfontSound> sounds = activeSounds.get(note);
-        if (sounds != null) {
-            for (SoundfontSound sound : sounds) {
-                Minecraft.getInstance().execute(() -> sound.startFadeOut(soundfont.getForInstrument(menu.getInstrumentType()).fadeTicks()));
-            }
-            activeSounds.remove(note);
+    public void stopKeySound(KeyboardMenu menu, SoundfontManager.SoundfontDefinition soundfont) {
+        List<SoundfontSound> sounds = SoundManagerHelper.getPlayingSounds();
+        for (SoundfontSound sound : sounds) {
+            //sound.startFadeOut(soundfont.getForInstrument(menu.getInstrumentType()).fadeTicks());
+
+            BNetwork.INSTANCE.send(
+                    PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(
+                            sound.getUser().getX(),
+                            sound.getUser().getY(),
+                            sound.getUser().getZ(),
+                            32,
+                            sound.getUser().level().dimension()
+                    )),
+                    new StopSoundPacket(
+                            sound.getLocation(),
+                            sound.getPitch(),
+                            sound.getUser().getX(),
+                            sound.getUser().getY(),
+                            sound.getUser().getZ(),
+                            soundfont.getForInstrument(menu.getInstrumentType()).fadeTicks()
+                    )
+            );
         }
-    }
-
-    private @NotNull SoundfontSound getSoundfontSound(KeyboardMenu menu, SoundfontManager.SoundfontDefinition soundfont, int inputVelocity) {
-        int sampleNote = soundfont.getForInstrument(menu.getInstrumentType()).getClosestSampleNote(note);
-        float pitch = (float) Math.pow(2, (note - sampleNote) / 12.0);
-
-        String velocitySuffix = getVelocity(menu, soundfont, inputVelocity);
-
-        ResourceLocation resourceLocation = new ResourceLocation(
-                soundfont.name().getNamespace(),
-                "soundfont." + BInstrumentTypeRegistry.get(menu.getInstrumentType()).getPath()
-                        + "." + soundfont.name().getPath()
-                        + "." + sampleNote
-                        + velocitySuffix
-        );
-
-        return new SoundfontSound(resourceLocation, 1.0f, pitch, Minecraft.getInstance().player);
     }
 
     private static @NotNull String getVelocity(KeyboardMenu menu, SoundfontManager.SoundfontDefinition soundfont, int inputVelocity) {

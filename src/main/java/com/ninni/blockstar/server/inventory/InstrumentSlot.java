@@ -1,6 +1,6 @@
 package com.ninni.blockstar.server.inventory;
 
-import com.ninni.blockstar.server.intstrument.InstrumentType;
+import com.ninni.blockstar.server.instrument.InstrumentType;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;

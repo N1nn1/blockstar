@@ -1,4 +1,4 @@
-package com.ninni.blockstar.server.intstrument;
+package com.ninni.blockstar.server.instrument;
 
 import com.ninni.blockstar.server.block.KeyboardBlock;
 import com.ninni.blockstar.server.block.entity.KeyboardBlockEntity;

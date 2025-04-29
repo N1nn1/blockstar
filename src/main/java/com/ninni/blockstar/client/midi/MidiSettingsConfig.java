@@ -1,4 +1,4 @@
-package com.ninni.blockstar.client.config;
+package com.ninni.blockstar.client.midi;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

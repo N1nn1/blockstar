@@ -1,8 +1,8 @@
 package com.ninni.blockstar.server.midi;
 
 import com.ninni.blockstar.Blockstar;
-import com.ninni.blockstar.client.config.MidiSettingsConfig;
 import com.ninni.blockstar.client.gui.KeyboardScreen;
+import com.ninni.blockstar.client.midi.MidiSettingsConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvents;

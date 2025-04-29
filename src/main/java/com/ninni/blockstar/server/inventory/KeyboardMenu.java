@@ -2,10 +2,8 @@ package com.ninni.blockstar.server.inventory;
 
 import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
 import com.ninni.blockstar.registry.BMenuRegistry;
-import com.ninni.blockstar.server.intstrument.InstrumentType;
+import com.ninni.blockstar.server.instrument.InstrumentType;
 import com.ninni.blockstar.server.item.SheetMusicItem;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -13,7 +11,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 
 public class KeyboardMenu extends AbstractContainerMenu {
     private final Container container;

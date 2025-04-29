@@ -1,22 +1,19 @@
 package com.ninni.blockstar.client.event;
 
 import com.ninni.blockstar.Blockstar;
-import com.ninni.blockstar.client.config.MidiSettingsConfig;
-import com.ninni.blockstar.client.gui.MidiSettingsScreen;
+import com.ninni.blockstar.client.midi.MidiSettingsConfig;
+import com.ninni.blockstar.client.midi.MidiSettingsScreen;
 import com.ninni.blockstar.registry.BCreativeModeTabRegistry;
-import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
 import com.ninni.blockstar.registry.BItemRegistry;
 import com.ninni.blockstar.server.data.SoundfontManager;
 import com.ninni.blockstar.server.item.ResonantPrismItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.SoundOptionsScreen;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.util.MutableHashedLinkedMap;

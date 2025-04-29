@@ -4,14 +4,11 @@ import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class SoundfontSound extends AbstractTickableSoundInstance {
     private final ResourceLocation soundLocation;
+    private final LivingEntity user;
     private boolean fadingOut = false;
     private int fadeOutTicks = 0;
     private final float initialVolume;
@@ -21,12 +18,15 @@ public class SoundfontSound extends AbstractTickableSoundInstance {
         this.soundLocation = soundLocation;
         this.volume = volume;
         this.initialVolume = volume;
+        this.user = user;
         this.pitch = pitch;
         this.looping = false;
 
         this.x = user.getX();
         this.y = user.getY();
         this.z = user.getZ();
+
+        SoundManagerHelper.register(this);
     }
 
     @Override
@@ -37,6 +37,7 @@ public class SoundfontSound extends AbstractTickableSoundInstance {
                 this.volume = initialVolume * ((float) fadeOutTicks / 20.0f);
             } else {
                 this.stop();
+                SoundManagerHelper.unregister(this);
             }
         }
     }
@@ -49,11 +50,16 @@ public class SoundfontSound extends AbstractTickableSoundInstance {
             }
         } else {
             this.stop();
+            SoundManagerHelper.unregister(this);
         }
     }
 
     @Override
     public ResourceLocation getLocation() {
         return this.soundLocation;
+    }
+
+    public LivingEntity getUser() {
+        return user;
     }
 }

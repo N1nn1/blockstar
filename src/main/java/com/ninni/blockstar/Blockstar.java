@@ -5,7 +5,7 @@ import com.ninni.blockstar.client.ClientProxy;
 import com.ninni.blockstar.client.event.ClientEvents;
 import com.ninni.blockstar.registry.*;
 import com.ninni.blockstar.server.event.CommonEvents;
-import com.ninni.blockstar.server.intstrument.InstrumentType;
+import com.ninni.blockstar.server.instrument.InstrumentType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -41,9 +41,9 @@ public class Blockstar {
         BInstrumentTypeRegistry.DEF_REG.register(modEventBus);
         BRecipeRegistry.DEF_REG_SERIALIZERS.register(modEventBus);
         BRecipeRegistry.DEF_REG_TYPES.register(modEventBus);
+        BNetwork.register();
         PROXY.init();
         MinecraftForge.EVENT_BUS.register(new CommonEvents());
-        modEventBus.register(new ClientEvents());
     }
 
     public void commonSetup(final FMLCommonSetupEvent event) {

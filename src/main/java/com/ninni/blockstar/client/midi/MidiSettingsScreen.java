@@ -1,6 +1,5 @@
-package com.ninni.blockstar.client.gui;
+package com.ninni.blockstar.client.midi;
 
-import com.ninni.blockstar.client.config.MidiSettingsConfig;
 import com.ninni.blockstar.server.midi.MidiInputHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Options;
