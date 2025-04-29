@@ -1,0 +1,12 @@
+{
+  "name": "blockstar:base",
+  "creative_tab": false,
+  "instruments": {
+    "blockstar:keyboard": {
+      "note_map": [48, 53, 60, 65, 72],
+      "velocity_layers": 4,
+      "held": true,
+      "fade_ticks": 8
+    }
+  }
+}

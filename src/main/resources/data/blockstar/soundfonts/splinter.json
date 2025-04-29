@@ -1,0 +1,13 @@
+{
+  "name": "blockstar:splinter",
+  "rarity": "UNCOMMON",
+  "color": "#8718de",
+  "instruments": {
+    "blockstar:keyboard": {
+      "note_map": [48, 53, 60, 65, 72],
+      "velocity_layers": 4,
+      "held": true,
+      "fade_ticks": 4
+    }
+  }
+}

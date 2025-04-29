@@ -39,12 +39,12 @@ public abstract class InstrumentType {
 
     public abstract void playNoteSoundFromBlock(BlockPos blockpos, Level level, Entity entity);
 
-    public static @NotNull SoundfontSound getSoundfontSound(SoundfontManager.SoundfontDefinition soundfont, int note, LivingEntity entity) {
-        int sampleNote = soundfont.getClosestSampleNote(note);
+    public @NotNull SoundfontSound getSoundfontSound(SoundfontManager.SoundfontDefinition soundfont, int note, LivingEntity entity) {
+        int sampleNote = soundfont.getForInstrument(this).getClosestSampleNote(note);
         float pitch = (float) Math.pow(2, (note - sampleNote) / 12.0);
 
-        String velocity = soundfont.velocityLayers().isPresent() ? "_" + 2 : "";
-        ResourceLocation resourceLocation = new ResourceLocation(soundfont.name().getNamespace(), "soundfont." + BInstrumentTypeRegistry.get(soundfont.instrumentType()).getPath() + "." + soundfont.name().getPath() + "." + sampleNote + velocity);
+        String velocity = soundfont.getForInstrument(this).velocityLayers().isPresent() ? "_" + 2 : "";
+        ResourceLocation resourceLocation = new ResourceLocation(soundfont.name().getNamespace(), "soundfont." + BInstrumentTypeRegistry.get(this).getPath() + "." + soundfont.name().getPath() + "." + sampleNote + velocity);
         return new SoundfontSound(resourceLocation, 1.0f, pitch, entity);
     }
 
@@ -62,12 +62,12 @@ public abstract class InstrumentType {
     public boolean isValidSoundfontForInstrumentType(ItemStack stack) {
         if (stack.hasTag() && stack.getTag().contains("Soundfont")) {
             SoundfontManager.SoundfontDefinition data = Blockstar.PROXY.getSoundfontManager().get(new ResourceLocation(stack.getTag().getString("Soundfont")));
-            return !data.instrumentExclusive() || data.instrumentType() == this;
+            return data.instrumentData().containsKey(this);
         }
         return false;
     }
 
     public SoundfontManager.SoundfontDefinition getBaseSoundFont() {
-        return Blockstar.PROXY.getSoundfontManager().get(new ResourceLocation(Blockstar.MODID, BInstrumentTypeRegistry.get(this).getPath() + "/base"));
+        return Blockstar.PROXY.getSoundfontManager().get(new ResourceLocation(Blockstar.MODID, "base"));
     }
 }

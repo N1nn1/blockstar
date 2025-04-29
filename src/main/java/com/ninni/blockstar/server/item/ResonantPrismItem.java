@@ -72,8 +72,8 @@ public class ResonantPrismItem extends Item {
 
             list.add(Component.translatable(data.name().getNamespace() + ".soundfont." + data.name().getPath()).withStyle(Style.EMPTY.withColor(data.color())));
 
-            if (data.instrumentExclusive()) {
-                ResourceLocation instrument = new ResourceLocation(BInstrumentTypeRegistry.get(data.instrumentType()).toString());
+            for (InstrumentType type : data.instrumentData().keySet()) {
+                ResourceLocation instrument = new ResourceLocation(BInstrumentTypeRegistry.get(type).toString());
                 list.add(Component.translatable(instrument.getNamespace() + ".instrument_type." + instrument.getPath()).withStyle(ChatFormatting.BLUE));
             }
         }

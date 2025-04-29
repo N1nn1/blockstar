@@ -24,7 +24,7 @@ import java.util.*;
 
 public class SoundfontManager extends SimpleJsonResourceReloadListener {
     private static final Gson GSON = new GsonBuilder().create();
-    private BiMap<ResourceLocation, SoundfontDefinition> instruments = ImmutableBiMap.of();
+    private BiMap<ResourceLocation, SoundfontDefinition> soundfonts = ImmutableBiMap.of();
 
     public SoundfontManager() {
         super(GSON, "soundfonts");
@@ -36,11 +36,18 @@ public class SoundfontManager extends SimpleJsonResourceReloadListener {
 
         for (Map.Entry<ResourceLocation, JsonElement> entry : jsons.entrySet()) {
             try {
-                SoundfontDefinition def = SoundfontDefinition.CODEC.parse(JsonOps.INSTANCE, entry.getValue()).result().orElseThrow(() -> new JsonParseException("Invalid soundfont definition"));
+                SoundfontDefinition def = SoundfontDefinition.CODEC.parse(JsonOps.INSTANCE, entry.getValue())
+                        .result()
+                        .orElseThrow(() -> new JsonParseException("Invalid soundfont definition"));
 
-                List<Integer> outOfRangeNotes = def.noteMap().stream().filter(note -> !def.instrumentType().isInRange(note)).toList();
-                if (!outOfRangeNotes.isEmpty()) {
-                    Blockstar.LOGGER.error("Soundfont '{}' has notes out of range for instrument '{}': {}", entry.getKey(), BInstrumentTypeRegistry.get(def.instrumentType()), outOfRangeNotes);
+                for (Map.Entry<InstrumentType, InstrumentSoundfontData> instrumentEntry : def.instrumentData().entrySet()) {
+                    List<Integer> outOfRangeNotes = instrumentEntry.getValue().noteMap().stream()
+                            .filter(note -> !instrumentEntry.getKey().isInRange(note))
+                            .toList();
+                    if (!outOfRangeNotes.isEmpty()) {
+                        Blockstar.LOGGER.error("Soundfont '{}' has notes out of range for instrument '{}': {}",
+                                entry.getKey(), BInstrumentTypeRegistry.get(instrumentEntry.getKey()), outOfRangeNotes);
+                    }
                 }
 
                 builder.put(entry.getKey(), def);
@@ -49,27 +56,41 @@ public class SoundfontManager extends SimpleJsonResourceReloadListener {
             }
         }
 
-        this.instruments = builder.build();
-        Blockstar.LOGGER.info("Loaded {} soundfonts", instruments.size());
+        this.soundfonts = builder.build();
+        Blockstar.LOGGER.info("Loaded {} soundfonts", soundfonts.size());
     }
 
     public SoundfontDefinition get(ResourceLocation id) {
-        return instruments.get(id);
+        return soundfonts.get(id);
     }
 
-    public ResourceLocation getLocation(SoundfontDefinition id) {
-        return instruments.inverse().get(id);
+    public ResourceLocation getLocation(SoundfontDefinition def) {
+        return soundfonts.inverse().get(def);
     }
 
     public Collection<ResourceLocation> getAllInstrumentIds() {
-        return instruments.keySet();
+        return soundfonts.keySet();
     }
 
     public Collection<SoundfontDefinition> getAll() {
-        return instruments.values();
+        return soundfonts.values();
     }
 
-    public record SoundfontDefinition(InstrumentType instrumentType, boolean instrumentExclusive, ResourceLocation name, List<Integer> noteMap, Optional<Integer> velocityLayers, boolean held, int fadeTicks, boolean creativeTab, Rarity rarity, TextColor color) {
+    public record InstrumentSoundfontData(List<Integer> noteMap, Optional<Integer> velocityLayers, boolean held, int fadeTicks) {
+
+        public static final Codec<InstrumentSoundfontData> CODEC = RecordCodecBuilder.create(inst -> inst.group(
+                Codec.list(Codec.INT).fieldOf("note_map").forGetter(InstrumentSoundfontData::noteMap),
+                Codec.INT.optionalFieldOf("velocity_layers").forGetter(InstrumentSoundfontData::velocityLayers),
+                Codec.BOOL.fieldOf("held").orElse(false).forGetter(InstrumentSoundfontData::held),
+                Codec.INT.fieldOf("fade_ticks").orElse(0).forGetter(InstrumentSoundfontData::fadeTicks)
+        ).apply(inst, InstrumentSoundfontData::new));
+
+        public int getClosestSampleNote(int targetNote) {
+            return noteMap.stream().min(Comparator.comparingInt(n -> Math.abs(n - targetNote))).orElse(targetNote);
+        }
+    }
+
+    public record SoundfontDefinition(Map<InstrumentType, InstrumentSoundfontData> instrumentData, ResourceLocation name, boolean creativeTab, Rarity rarity, TextColor color) {
         public static final Codec<Rarity> RARITY_CODEC = Codec.STRING.xmap(
                 string -> {
                     try {
@@ -82,21 +103,15 @@ public class SoundfontManager extends SimpleJsonResourceReloadListener {
         );
 
         public static final Codec<SoundfontDefinition> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-                BInstrumentTypeRegistry.CODEC.fieldOf("instrument_type").forGetter(SoundfontDefinition::instrumentType),
-                Codec.BOOL.fieldOf("instrument_exclusive").orElse(false).forGetter(SoundfontDefinition::instrumentExclusive),
+                Codec.unboundedMap(BInstrumentTypeRegistry.CODEC, InstrumentSoundfontData.CODEC).fieldOf("instruments").forGetter(SoundfontDefinition::instrumentData),
                 ResourceLocation.CODEC.fieldOf("name").forGetter(SoundfontDefinition::name),
-                Codec.list(Codec.INT).fieldOf("note_map").forGetter(SoundfontDefinition::noteMap),
-                Codec.INT.optionalFieldOf("velocity_layers").forGetter(SoundfontDefinition::velocityLayers),
-                Codec.BOOL.fieldOf("held").orElse(false).forGetter(SoundfontDefinition::held),
-                Codec.INT.fieldOf("fade_ticks").orElse(0).forGetter(SoundfontDefinition::fadeTicks),
                 Codec.BOOL.fieldOf("creative_tab").orElse(true).forGetter(SoundfontDefinition::creativeTab),
                 RARITY_CODEC.fieldOf("rarity").orElse(Rarity.COMMON).forGetter(SoundfontDefinition::rarity),
                 TextColor.CODEC.fieldOf("color").orElse(TextColor.fromLegacyFormat(ChatFormatting.GRAY)).forGetter(SoundfontDefinition::color)
         ).apply(inst, SoundfontDefinition::new));
 
-        public int getClosestSampleNote(int targetNote) {
-            return noteMap.stream().min(Comparator.comparingInt(n -> Math.abs(n - targetNote))).orElse(targetNote);
+        public InstrumentSoundfontData getForInstrument(InstrumentType type) {
+            return instrumentData.get(type);
         }
     }
-
 }

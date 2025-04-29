@@ -47,7 +47,7 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
     @Override
     protected void containerTick() {
         super.containerTick();
-        sustainPedalVisible = !this.menu.getSheetMusicSlot().hasItem() && menu.getInstrumentType().getSoundfont(menu.getSoundfontSlot().getItem()).held();
+        sustainPedalVisible = !this.menu.getSheetMusicSlot().hasItem() && menu.getInstrumentType().getSoundfont(menu.getSoundfontSlot().getItem()).getForInstrument(this.menu.getInstrumentType()).held();
     }
 
     @Override
@@ -113,7 +113,7 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
             sustainPedalPressed = false;
             for (PianoKey key : pianoKeys) {
                 if (!key.isPressed) {
-                    key.stopKeySound(menu.getInstrumentType().getSoundfont(menu.getSoundfontSlot().getItem()), key.note);
+                    key.stopKeySound(menu, menu.getInstrumentType().getSoundfont(menu.getSoundfontSlot().getItem()), key.note);
                 }
             }
             return true;
@@ -167,7 +167,7 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
             if (sustainPedalPressed && !pressed) {
                 for (PianoKey key : pianoKeys) {
                     if (!key.isPressed) {
-                        key.stopKeySound(menu.getInstrumentType().getSoundfont(menu.getSoundfontSlot().getItem()), key.note);
+                        key.stopKeySound(menu, menu.getInstrumentType().getSoundfont(menu.getSoundfontSlot().getItem()), key.note);
                     }
                 }
             }

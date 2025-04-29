@@ -1,0 +1,12 @@
+{
+  "name": "blockstar:meow",
+  "rarity": "UNCOMMON",
+  "color": "#8718de",
+  "instruments": {
+    "blockstar:keyboard": {
+      "note_map": [48, 60, 72],
+      "held": true,
+      "fade_ticks": 2
+    }
+  }
+}

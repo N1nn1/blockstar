@@ -1,9 +1,0 @@
-{
-  "instrument_type": "blockstar:keyboard",
-  "name": "blockstar:note_block-bass",
-  "note_map": [
-    48,
-    60,
-    72
-  ]
-}

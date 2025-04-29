@@ -1,0 +1,8 @@
+{
+  "name": "blockstar:note_block-xylophone",
+  "instruments": {
+    "blockstar:keyboard": {
+      "note_map": [48, 60, 72]
+    }
+  }
+}
