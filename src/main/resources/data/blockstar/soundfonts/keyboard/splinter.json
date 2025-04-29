@@ -1,0 +1,17 @@
+{
+  "instrument_type": "blockstar:keyboard",
+  "instrument_exclusive": true,
+  "name": "blockstar:splinter",
+  "note_map": {
+    "48": "C3",
+    "53": "F3",
+    "60": "C4",
+    "65": "F4",
+    "72": "C5"
+  },
+  "velocity_layers": 4,
+  "held": true,
+  "fade_ticks": 4,
+  "rarity": "UNCOMMON",
+  "color": "#8718de"
+}

@@ -1,5 +1,7 @@
 package com.ninni.blockstar.server.data;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.ImmutableBiMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -11,6 +13,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
 import com.ninni.blockstar.server.intstrument.InstrumentType;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Options;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
@@ -26,7 +29,7 @@ import java.util.stream.Collectors;
 
 public class SoundfontManager extends SimpleJsonResourceReloadListener {
     private static final Gson GSON = new GsonBuilder().create();
-    private final Map<ResourceLocation, SoundfontDefinition> instruments = new HashMap<>();
+    private BiMap<ResourceLocation, SoundfontDefinition> instruments = ImmutableBiMap.of();
 
     public SoundfontManager() {
         super(GSON, "soundfonts");
@@ -34,7 +37,7 @@ public class SoundfontManager extends SimpleJsonResourceReloadListener {
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager resourceManager, ProfilerFiller profiler) {
-        instruments.clear();
+        ImmutableBiMap.Builder<ResourceLocation, SoundfontDefinition> builder = ImmutableBiMap.builder();
 
         for (Map.Entry<ResourceLocation, JsonElement> entry : jsons.entrySet()) {
             try {
@@ -45,17 +48,22 @@ public class SoundfontManager extends SimpleJsonResourceReloadListener {
                     Blockstar.LOGGER.error("Soundfont '{}' has notes out of range for instrument '{}': {}", entry.getKey(), BInstrumentTypeRegistry.get(def.instrumentType()), outOfRangeNotes);
                 }
 
-                instruments.put(entry.getKey(), def);
+                builder.put(entry.getKey(), def);
             } catch (Exception e) {
                 Blockstar.LOGGER.error("Failed to load soundfont '{}': {}", entry.getKey(), e.getMessage());
             }
         }
 
+        this.instruments = builder.build();
         Blockstar.LOGGER.info("Loaded {} soundfonts", instruments.size());
     }
 
     public SoundfontDefinition get(ResourceLocation id) {
         return instruments.get(id);
+    }
+
+    public ResourceLocation getLocation(SoundfontDefinition id) {
+        return instruments.inverse().get(id);
     }
 
     public Collection<ResourceLocation> getAllInstrumentIds() {
@@ -66,7 +74,7 @@ public class SoundfontManager extends SimpleJsonResourceReloadListener {
         return instruments.values();
     }
 
-    public record SoundfontDefinition(InstrumentType instrumentType, boolean instrumentExclusive, ResourceLocation name, Map<String, String> noteMapRaw, Optional<Integer> velocityLayers, boolean held, int fadeTicks, boolean creativeTab, Rarity rarity, Optional<TextColor> color) {
+    public record SoundfontDefinition(InstrumentType instrumentType, boolean instrumentExclusive, ResourceLocation name, Map<String, String> noteMapRaw, Optional<Integer> velocityLayers, boolean held, int fadeTicks, boolean creativeTab, Rarity rarity, TextColor color) {
         public static final Codec<Rarity> RARITY_CODEC = Codec.STRING.xmap(
                 string -> {
                     try {
@@ -88,7 +96,7 @@ public class SoundfontManager extends SimpleJsonResourceReloadListener {
                 Codec.INT.fieldOf("fade_ticks").orElse(0).forGetter(SoundfontDefinition::fadeTicks),
                 Codec.BOOL.fieldOf("creative_tab").orElse(true).forGetter(SoundfontDefinition::creativeTab),
                 RARITY_CODEC.fieldOf("rarity").orElse(Rarity.COMMON).forGetter(SoundfontDefinition::rarity),
-                TextColor.CODEC.optionalFieldOf("color").forGetter(SoundfontDefinition::color)
+                TextColor.CODEC.fieldOf("color").orElse(TextColor.fromLegacyFormat(ChatFormatting.GRAY)).forGetter(SoundfontDefinition::color)
         ).apply(inst, SoundfontDefinition::new));
 
         public Map<Integer, String> noteMap() {

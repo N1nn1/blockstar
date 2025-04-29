@@ -4,8 +4,6 @@ import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.client.sound.SoundfontSound;
 import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
 import com.ninni.blockstar.server.data.SoundfontManager;
-import com.ninni.blockstar.server.event.CommonEvents;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -51,25 +49,20 @@ public abstract class InstrumentType {
     }
 
     public SoundfontManager.SoundfontDefinition getSoundfont(ItemStack stack) {
-        SoundfontManager.SoundfontDefinition soundfontDefinition = null;
-        String path = BInstrumentTypeRegistry.get(this).getPath();
+        SoundfontManager.SoundfontDefinition soundfontDefinition;
 
-        if (!stack.isEmpty()) {
-            if (this.isValidSoundfontForInstrumentType(stack)) {
-                ResourceLocation resourceLocation = new ResourceLocation(stack.getTag().getString("Soundfont"));
-                soundfontDefinition = Blockstar.PROXY.getSoundfontManager().get(new ResourceLocation(resourceLocation.getNamespace(), path + "/" + resourceLocation.getPath()));
-            }
-        } else {
-            soundfontDefinition = getBaseSoundFont();
+        if (!stack.isEmpty() && this.isValidSoundfontForInstrumentType(stack)) {
+            soundfontDefinition = Blockstar.PROXY.getSoundfontManager().get(new ResourceLocation(stack.getTag().getString("Soundfont")));
         }
+        else soundfontDefinition = getBaseSoundFont();
 
-        if (soundfontDefinition != null) return soundfontDefinition;
-        else return getBaseSoundFont();
+        return soundfontDefinition != null ? soundfontDefinition : getBaseSoundFont();
     }
 
     public boolean isValidSoundfontForInstrumentType(ItemStack stack) {
         if (stack.hasTag() && stack.getTag().contains("Soundfont")) {
-            return !stack.getTag().contains("InstrumentType") || stack.getTag().getString("InstrumentType").equals(BInstrumentTypeRegistry.get(this).toString());
+            SoundfontManager.SoundfontDefinition data = Blockstar.PROXY.getSoundfontManager().get(new ResourceLocation(stack.getTag().getString("Soundfont")));
+            return !data.instrumentExclusive() || data.instrumentType() == this;
         }
         return false;
     }

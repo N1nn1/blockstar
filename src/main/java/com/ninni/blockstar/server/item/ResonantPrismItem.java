@@ -31,7 +31,10 @@ public class ResonantPrismItem extends Item {
 
     @Override
     public Rarity getRarity(ItemStack stack) {
-        if (stack.hasTag() && stack.getTag().contains("Rarity")) return Rarity.valueOf(stack.getTag().getString("Rarity"));
+        if (stack.hasTag() && stack.getTag().contains("Soundfont")) {
+            SoundfontManager.SoundfontDefinition data = Blockstar.PROXY.getSoundfontManager().get(new ResourceLocation(stack.getTag().getString("Soundfont")));
+            return data.rarity();
+        }
         return super.getRarity(stack);
     }
 
@@ -43,10 +46,7 @@ public class ResonantPrismItem extends Item {
 
     public static ItemStack getPrismItemFromSoundfont(SoundfontManager.SoundfontDefinition data) {
         CompoundTag stackTag = new CompoundTag();
-        stackTag.putString("Soundfont", data.name().toString());
-        if (data.instrumentExclusive()) stackTag.putString("InstrumentType", BInstrumentTypeRegistry.get(data.instrumentType()).toString());
-        if (data.rarity() != Rarity.COMMON) stackTag.putString("Rarity", data.rarity().toString());
-        if (data.color().isPresent()) stackTag.putString("Color", data.color().get().toString());
+        stackTag.putString("Soundfont", Blockstar.PROXY.getSoundfontManager().getLocation(data).toString());
         ItemStack stack = BItemRegistry.RESONANT_PRISM.get().getDefaultInstance();
         stack.setTag(stackTag);
         return stack;
@@ -55,9 +55,8 @@ public class ResonantPrismItem extends Item {
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
         if (stack.hasTag() && !stack.getTag().getString("Soundfont").isEmpty()) {
-            if (!stack.getTag().getString("Soundfont").isEmpty()) {
-                return Optional.of(new SoundfontTooltip(new ResourceLocation(stack.getTag().getString("Soundfont"))));
-            }
+            SoundfontManager.SoundfontDefinition data = Blockstar.PROXY.getSoundfontManager().get(new ResourceLocation(stack.getTag().getString("Soundfont")));
+            return Optional.of(new SoundfontTooltip(data.name()));
         }
         return Optional.of(new SoundfontTooltip(new ResourceLocation(Blockstar.MODID, "empty")));
     }
@@ -68,20 +67,14 @@ public class ResonantPrismItem extends Item {
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
         super.appendHoverText(stack, level, list, flag);
 
-        if (stack.hasTag() && (stack.getTag().contains("Soundfont") && !stack.getTag().getString("Soundfont").isEmpty()
-                || stack.getTag().contains("InstrumentType") && !stack.getTag().getString("InstrumentType").isEmpty())) {
+        if (stack.hasTag() && stack.getTag().contains("Soundfont") && !stack.getTag().getString("Soundfont").isEmpty()) {
+            SoundfontManager.SoundfontDefinition data = Blockstar.PROXY.getSoundfontManager().get(new ResourceLocation(stack.getTag().getString("Soundfont")));
 
-            if (stack.getTag().contains("Soundfont") && !stack.getTag().getString("Soundfont").isEmpty()) {
-                ResourceLocation resourceLocation = new ResourceLocation(stack.getTag().getString("Soundfont"));
-                if (stack.getTag().contains("Color")) {
-                    list.add(Component.translatable(resourceLocation.getNamespace() + ".soundfont." + resourceLocation.getPath()).withStyle(Style.EMPTY.withColor(TextColor.parseColor(stack.getTag().getString("Color")))));
-                } else {
-                    list.add(Component.translatable(resourceLocation.getNamespace() + ".soundfont." + resourceLocation.getPath()).withStyle(ChatFormatting.GRAY));
-                }
-            }
-            if (stack.getTag().contains("InstrumentType") && !stack.getTag().getString("InstrumentType").isEmpty()) {
-                ResourceLocation resourceLocation = new ResourceLocation(stack.getTag().getString("InstrumentType"));
-                list.add(Component.translatable(resourceLocation.getNamespace() + ".instrument_type." + resourceLocation.getPath()).withStyle(ChatFormatting.GRAY));
+            list.add(Component.translatable(data.name().getNamespace() + ".soundfont." + data.name().getPath()).withStyle(Style.EMPTY.withColor(data.color())));
+
+            if (data.instrumentExclusive()) {
+                ResourceLocation instrument = new ResourceLocation(BInstrumentTypeRegistry.get(data.instrumentType()).toString());
+                list.add(Component.translatable(instrument.getNamespace() + ".instrument_type." + instrument.getPath()).withStyle(ChatFormatting.GRAY));
             }
         }
     }
