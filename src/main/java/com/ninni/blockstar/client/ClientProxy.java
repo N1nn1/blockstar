@@ -16,10 +16,10 @@ import com.ninni.blockstar.server.packet.PlaySoundPacket;
 import com.ninni.blockstar.server.packet.StopSoundPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -49,10 +49,10 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void handlePlaySoundPacket(PlaySoundPacket msg) {
         Minecraft mc = Minecraft.getInstance();
-        Player player = mc.player;
+        LocalPlayer player = mc.player;
         if (player != null) {
             Entity playerEntity = player.level().getEntity(msg.playerId);
-            if (playerEntity instanceof Player targetPlayer) {
+            if (playerEntity instanceof LocalPlayer targetPlayer) {
                 mc.getSoundManager().play(new SoundfontSound(msg.soundLocation, 1.0f, msg.pitch, targetPlayer));
             }
         }
