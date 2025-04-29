@@ -40,9 +40,9 @@ public class ItemMixin {
             if (recipe.isPresent()) {
                 ItemStack result = recipe.get().assemble(stack, stack1);
 
-                if (stack.getCount() == 1) {
+                if (stack.getCount() == 1 && recipe.get().shouldShrinkInputs()) {
                     slot.set(result);
-                    if (recipe.get().shouldShrinkInputs()) stack1.shrink(1);
+                    stack1.shrink(1);
                 } else {
 
                     if (!player.getInventory().add(result)) player.drop(result, false);
