@@ -7,6 +7,7 @@ import com.ninni.blockstar.registry.BCreativeModeTabRegistry;
 import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
 import com.ninni.blockstar.registry.BItemRegistry;
 import com.ninni.blockstar.server.data.SoundfontManager;
+import com.ninni.blockstar.server.item.ResonantPrismItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.SoundOptionsScreen;
@@ -23,6 +24,11 @@ import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = Blockstar.MODID, value = Dist.CLIENT)
 public class ClientEvents {
@@ -58,18 +64,28 @@ public class ClientEvents {
         MutableHashedLinkedMap<ItemStack, CreativeModeTab.TabVisibility> entries = event.getEntries();
 
         if (key == BCreativeModeTabRegistry.BLOCKSTAR.getKey()) {
+            List<SoundfontManager.SoundfontDefinition> uncategorized = new ArrayList<>();
+            List<SoundfontManager.SoundfontDefinition> categorized = new ArrayList<>();
+
             for (SoundfontManager.SoundfontDefinition data : Blockstar.PROXY.getSoundfontManager().getAll()) {
                 if (data.creativeTab()) {
-                    CompoundTag stackTag = new CompoundTag();
-                    stackTag.putString("Soundfont", data.name().toString());
-                    if (data.instrumentExclusive()) stackTag.putString("InstrumentType", BInstrumentTypeRegistry.get(data.instrumentType()).toString());
-                    if (data.rarity() != Rarity.COMMON) stackTag.putString("Rarity", data.rarity().toString());
-                    if (data.color().isPresent()) stackTag.putString("Color", data.color().get().toString());
-                    ItemStack stack = BItemRegistry.RESONANT_PRISM.get().getDefaultInstance();
-                    stack.setTag(stackTag);
-                    entries.putAfter(BItemRegistry.RESONANT_PRISM.get().getDefaultInstance(), stack, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+                    if (!data.name().getPath().contains("-")) uncategorized.add(data);
+                    else categorized.add(data);
                 }
+            }
+
+            categorized.sort(Comparator.comparing(data -> data.name().getPath().split("-")[0]));
+
+            Collections.reverse(uncategorized);
+            Collections.reverse(categorized);
+
+            for (SoundfontManager.SoundfontDefinition data : categorized) {
+                entries.putAfter(BItemRegistry.RESONANT_PRISM.get().getDefaultInstance(), ResonantPrismItem.getPrismItemFromSoundfont(data), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+            }
+            for (SoundfontManager.SoundfontDefinition data : uncategorized) {
+                entries.putAfter(BItemRegistry.RESONANT_PRISM.get().getDefaultInstance(), ResonantPrismItem.getPrismItemFromSoundfont(data), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
             }
         }
     }
+
 }

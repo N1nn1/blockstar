@@ -2,6 +2,7 @@ package com.ninni.blockstar.server.item;
 
 import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
+import com.ninni.blockstar.registry.BItemRegistry;
 import com.ninni.blockstar.server.data.SoundfontManager;
 import com.ninni.blockstar.server.intstrument.InstrumentType;
 import net.minecraft.ChatFormatting;
@@ -38,6 +39,17 @@ public class ResonantPrismItem extends Item {
     public int getMaxStackSize(ItemStack stack) {
         if (stack.hasTag() && stack.getTag().contains("Soundfont")) return 1;
         return super.getMaxStackSize(stack);
+    }
+
+    public static ItemStack getPrismItemFromSoundfont(SoundfontManager.SoundfontDefinition data) {
+        CompoundTag stackTag = new CompoundTag();
+        stackTag.putString("Soundfont", data.name().toString());
+        if (data.instrumentExclusive()) stackTag.putString("InstrumentType", BInstrumentTypeRegistry.get(data.instrumentType()).toString());
+        if (data.rarity() != Rarity.COMMON) stackTag.putString("Rarity", data.rarity().toString());
+        if (data.color().isPresent()) stackTag.putString("Color", data.color().get().toString());
+        ItemStack stack = BItemRegistry.RESONANT_PRISM.get().getDefaultInstance();
+        stack.setTag(stackTag);
+        return stack;
     }
 
     @Override

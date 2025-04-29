@@ -30,20 +30,18 @@ public class ResonantPrismTooltip implements ClientTooltipComponent {
 
     public void renderImage(Font font, int x, int y, GuiGraphics graphics) {
         ResourceLocation resourceLocation = new ResourceLocation(icon.getNamespace(), "textures/soundfont/" + icon.getPath() + ".png");
+
         if (icon.getPath().contains("-")) {
-            resourceLocation = new ResourceLocation(icon.getNamespace(), "textures/soundfont/" + icon.getPath().substring(icon.getPath().indexOf("-") + 1) + ".png");
+            resourceLocation = new ResourceLocation(icon.getNamespace(), "textures/soundfont/" + icon.getPath().split("-")[1] + ".png");
+            ResourceLocation noteBlockResourceLocation = new ResourceLocation(Blockstar.MODID, "textures/soundfont/base/" + icon.getPath().split("-")[0] + ".png");
+            graphics.blit(noteBlockResourceLocation, x, y - 2, 0, 0, this.getWidth(font), this.getHeight(), this.getWidth(font), this.getHeight());
+            x += 24;
         }
 
-        if (Minecraft.getInstance().getResourceManager().getResource(resourceLocation).isPresent()) {
-            if (icon.getPath().contains("-")) {
-                ResourceLocation noteBlockResourceLocation = new ResourceLocation(Blockstar.MODID, "textures/soundfont/base/" + icon.getPath().replace(icon.getPath().substring(icon.getPath().indexOf("-")), "") + ".png");
-                graphics.blit(noteBlockResourceLocation, x, y - 2, 0, 0, this.getWidth(font), this.getHeight(), this.getWidth(font), this.getHeight());
-                graphics.blit(resourceLocation, x + 28, y - 2, 0, 0, this.getWidth(font), this.getHeight(), this.getWidth(font), this.getHeight());
-            } else {
-                graphics.blit(resourceLocation, x, y - 2, 0, 0, this.getWidth(font), this.getHeight(), this.getWidth(font), this.getHeight());
-            }
-        } else {
-            graphics.blit(new ResourceLocation(Blockstar.MODID, "textures/soundfont/base/empty.png"), x, y - 2, 0, 0, this.getWidth(font), this.getHeight(), this.getWidth(font), this.getHeight());
+        if (Minecraft.getInstance().getResourceManager().getResource(resourceLocation).isEmpty()) {
+            resourceLocation = new ResourceLocation(Blockstar.MODID, "textures/soundfont/base/empty.png");
         }
+
+        graphics.blit(resourceLocation, x, y - 2, 0, 0, this.getWidth(font), this.getHeight(), this.getWidth(font), this.getHeight());
     }
 }
