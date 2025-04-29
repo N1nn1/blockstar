@@ -59,7 +59,7 @@ public class ResonantPrismItem extends Item {
                 return Optional.of(new SoundfontTooltip(new ResourceLocation(stack.getTag().getString("Soundfont"))));
             }
         }
-        return Optional.of(new SoundfontTooltip(new ResourceLocation(Blockstar.MODID, "base/empty")));
+        return Optional.of(new SoundfontTooltip(new ResourceLocation(Blockstar.MODID, "empty")));
     }
 
     public record SoundfontTooltip(ResourceLocation icon) implements TooltipComponent {}

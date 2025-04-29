@@ -50,13 +50,6 @@ public abstract class InstrumentType {
         return new SoundfontSound(resourceLocation, 1.0f, pitch, entity);
     }
 
-    public boolean isValidSoundfontForInstrumentType(ItemStack stack) {
-        if (stack.hasTag() && stack.getTag().contains("Soundfont")) {
-            return !stack.getTag().contains("InstrumentType") || stack.getTag().getString("InstrumentType").equals(BInstrumentTypeRegistry.get(this).toString());
-        }
-        return false;
-    }
-
     public SoundfontManager.SoundfontDefinition getSoundfont(ItemStack stack) {
         SoundfontManager.SoundfontDefinition soundfontDefinition = null;
         String path = BInstrumentTypeRegistry.get(this).getPath();
@@ -67,10 +60,21 @@ public abstract class InstrumentType {
                 soundfontDefinition = Blockstar.PROXY.getSoundfontManager().get(new ResourceLocation(resourceLocation.getNamespace(), path + "/" + resourceLocation.getPath()));
             }
         } else {
-            soundfontDefinition = Blockstar.PROXY.getSoundfontManager().get(new ResourceLocation(Blockstar.MODID, path + "/base"));
+            soundfontDefinition = getBaseSoundFont();
         }
 
         if (soundfontDefinition != null) return soundfontDefinition;
-        else return Blockstar.PROXY.getSoundfontManager().get(new ResourceLocation(Blockstar.MODID, path + "/base"));
+        else return getBaseSoundFont();
+    }
+
+    public boolean isValidSoundfontForInstrumentType(ItemStack stack) {
+        if (stack.hasTag() && stack.getTag().contains("Soundfont")) {
+            return !stack.getTag().contains("InstrumentType") || stack.getTag().getString("InstrumentType").equals(BInstrumentTypeRegistry.get(this).toString());
+        }
+        return false;
+    }
+
+    public SoundfontManager.SoundfontDefinition getBaseSoundFont() {
+        return Blockstar.PROXY.getSoundfontManager().get(new ResourceLocation(Blockstar.MODID, BInstrumentTypeRegistry.get(this).getPath() + "/base"));
     }
 }

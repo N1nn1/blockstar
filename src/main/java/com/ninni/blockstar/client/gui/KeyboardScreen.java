@@ -20,6 +20,7 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
     public static final ResourceLocation TEXTURE_WIDGETS = new ResourceLocation(Blockstar.MODID, "textures/gui/keyboard/widgets.png");
     private final List<PianoKey> pianoKeys = new ArrayList<>();
     private int lastMouseKey;
+    private boolean sustainPedalVisible;
     private boolean sustainPedalPressed;
     private static KeyboardScreen instance;
 
@@ -30,16 +31,24 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
         this.imageHeight = 254;
         this.inventoryLabelY = 161;
         this.inventoryLabelX = 12;
+        this.sustainPedalVisible = menu.getInstrumentType().getBaseSoundFont().held();
         PianoKey.initPianoKeys(pianoKeys);
     }
 
     public static KeyboardScreen getInstance() {
         return instance;
     }
+
     @Override
     public void onClose() {
         super.onClose();
         instance = null;
+    }
+
+    @Override
+    protected void containerTick() {
+        super.containerTick();
+        sustainPedalVisible = !this.menu.getSheetMusicSlot().hasItem() && menu.getInstrumentType().getSoundfont(menu.getSoundfontSlot().getItem()).held();
     }
 
     @Override
@@ -58,10 +67,8 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
         else guiGraphics.blit(TEXTURE_BG, i, j, 0, 0, this.imageWidth, this.imageHeight);
 
         if (!this.menu.getSoundfontSlot().hasItem()) guiGraphics.blit(TEXTURE_WIDGETS, i + 7, j + 43, 32, 32, 16, 16);
-        if (!this.menu.getSheetMusicSlot().hasItem()) {
-            guiGraphics.blit(TEXTURE_WIDGETS, i + 160, j + 43, 48, 32, 16, 16);
-            guiGraphics.blit(TEXTURE_WIDGETS, i + 84, j + 254, sustainPedalPressed ? 16 : 0, 32, 16, 16);
-        }
+        if (!this.menu.getSheetMusicSlot().hasItem()) guiGraphics.blit(TEXTURE_WIDGETS, i + 160, j + 43, 48, 32, 16, 16);
+        if (sustainPedalVisible) guiGraphics.blit(TEXTURE_WIDGETS, i + 84, j + 254, sustainPedalPressed ? 16 : 0, 32, 16, 16);
 
         for (PianoKey key : pianoKeys) {
             if (key.isBlack) guiGraphics.blit(TEXTURE_WIDGETS, i + key.x, j + key.y, key.isPressed ? 25 : 18, 0, key.width, 16);
@@ -84,7 +91,7 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_SPACE && !sustainPedalPressed) {
+        if (keyCode == GLFW.GLFW_KEY_SPACE && !sustainPedalPressed && sustainPedalVisible) {
             sustainPedalPressed = true;
             return true;
         }
@@ -157,13 +164,15 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
     }
 
     public void handleSustainPedalFromMidi(boolean pressed) {
-        if (sustainPedalPressed && !pressed) {
-            for (PianoKey key : pianoKeys) {
-                if (!key.isPressed) {
-                    key.stopKeySound(menu.getInstrumentType().getSoundfont(menu.getSoundfontSlot().getItem()), key.note);
+        if (sustainPedalVisible) {
+            if (sustainPedalPressed && !pressed) {
+                for (PianoKey key : pianoKeys) {
+                    if (!key.isPressed) {
+                        key.stopKeySound(menu.getInstrumentType().getSoundfont(menu.getSoundfontSlot().getItem()), key.note);
+                    }
                 }
             }
+            sustainPedalPressed = pressed;
         }
-        sustainPedalPressed = pressed;
     }
 }

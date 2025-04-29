@@ -33,13 +33,13 @@ public class ResonantPrismTooltip implements ClientTooltipComponent {
 
         if (icon.getPath().contains("-")) {
             resourceLocation = new ResourceLocation(icon.getNamespace(), "textures/soundfont/" + icon.getPath().split("-")[1] + ".png");
-            ResourceLocation noteBlockResourceLocation = new ResourceLocation(Blockstar.MODID, "textures/soundfont/base/" + icon.getPath().split("-")[0] + ".png");
+            ResourceLocation noteBlockResourceLocation = new ResourceLocation(Blockstar.MODID, "textures/soundfont/category/" + icon.getPath().split("-")[0] + ".png");
             graphics.blit(noteBlockResourceLocation, x, y - 2, 0, 0, this.getWidth(font), this.getHeight(), this.getWidth(font), this.getHeight());
             x += 24;
         }
 
         if (Minecraft.getInstance().getResourceManager().getResource(resourceLocation).isEmpty()) {
-            resourceLocation = new ResourceLocation(Blockstar.MODID, "textures/soundfont/base/empty.png");
+            resourceLocation = new ResourceLocation(Blockstar.MODID, "textures/soundfont/empty.png");
         }
 
         graphics.blit(resourceLocation, x, y - 2, 0, 0, this.getWidth(font), this.getHeight(), this.getWidth(font), this.getHeight());
