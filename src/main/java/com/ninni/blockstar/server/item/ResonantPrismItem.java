@@ -74,7 +74,7 @@ public class ResonantPrismItem extends Item {
 
             if (data.instrumentExclusive()) {
                 ResourceLocation instrument = new ResourceLocation(BInstrumentTypeRegistry.get(data.instrumentType()).toString());
-                list.add(Component.translatable(instrument.getNamespace() + ".instrument_type." + instrument.getPath()).withStyle(ChatFormatting.GRAY));
+                list.add(Component.translatable(instrument.getNamespace() + ".instrument_type." + instrument.getPath()).withStyle(ChatFormatting.BLUE));
             }
         }
     }

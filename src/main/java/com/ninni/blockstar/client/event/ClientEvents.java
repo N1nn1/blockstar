@@ -69,8 +69,12 @@ public class ClientEvents {
 
             for (SoundfontManager.SoundfontDefinition data : Blockstar.PROXY.getSoundfontManager().getAll()) {
                 if (data.creativeTab()) {
-                    if (!data.name().getPath().contains("-")) uncategorized.add(data);
-                    else categorized.add(data);
+                    if (!data.name().getPath().contains("-")) {
+                        if (uncategorized.stream().noneMatch(soundfontDefinition -> soundfontDefinition.name() == data.name())) uncategorized.add(data);
+                    }
+                    else {
+                        if (categorized.stream().noneMatch(soundfontDefinition -> soundfontDefinition.name() == data.name())) categorized.add(data);
+                    }
                 }
             }
 
