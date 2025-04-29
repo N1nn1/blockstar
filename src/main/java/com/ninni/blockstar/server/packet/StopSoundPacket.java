@@ -1,7 +1,6 @@
 package com.ninni.blockstar.server.packet;
 
 import com.ninni.blockstar.Blockstar;
-import com.ninni.blockstar.client.sound.SoundManagerHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent;
@@ -9,10 +8,10 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class StopSoundPacket {
-    private final ResourceLocation soundLocation;
-    private final float pitch;
-    private final double x, y, z;
-    private final int fadeTicks;
+    public final ResourceLocation soundLocation;
+    public final float pitch;
+    public final double x, y, z;
+    public final int fadeTicks;
 
     public StopSoundPacket(ResourceLocation soundLocation, float pitch, double x, double y, double z, int fadeTicks) {
         this.soundLocation = soundLocation;
@@ -37,7 +36,12 @@ public class StopSoundPacket {
     }
 
     public static void handle(StopSoundPacket msg, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> SoundManagerHelper.fadeOutMatchingSound(msg.soundLocation, msg.pitch, msg.x, msg.y, msg.z, msg.fadeTicks));
+        ctx.get().enqueueWork(() -> {
+
+            if (ctx.get().getDirection().getReceptionSide().isClient()) {
+                Blockstar.PROXY.handleStopSoundPacket(msg);
+            }
+        });
         ctx.get().setPacketHandled(true);
     }
 }

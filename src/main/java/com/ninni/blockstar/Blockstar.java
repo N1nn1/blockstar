@@ -2,7 +2,6 @@ package com.ninni.blockstar;
 
 import com.mojang.logging.LogUtils;
 import com.ninni.blockstar.client.ClientProxy;
-import com.ninni.blockstar.client.event.ClientEvents;
 import com.ninni.blockstar.registry.*;
 import com.ninni.blockstar.server.event.CommonEvents;
 import com.ninni.blockstar.server.instrument.InstrumentType;

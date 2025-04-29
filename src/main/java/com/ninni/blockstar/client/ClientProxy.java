@@ -1,16 +1,23 @@
 package com.ninni.blockstar.client;
 
+import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.CommonProxy;
 import com.ninni.blockstar.client.event.ClientEvents;
 import com.ninni.blockstar.client.midi.MidiSettingsConfig;
 import com.ninni.blockstar.client.gui.KeyboardScreen;
 import com.ninni.blockstar.client.misc.text.ResonantPrismTooltip;
+import com.ninni.blockstar.client.sound.SoundManagerHelper;
 import com.ninni.blockstar.client.sound.SoundfontSound;
+import com.ninni.blockstar.registry.BItemRegistry;
 import com.ninni.blockstar.registry.BMenuRegistry;
 import com.ninni.blockstar.server.item.ResonantPrismItem;
+import com.ninni.blockstar.server.midi.MidiInputHandler;
 import com.ninni.blockstar.server.packet.PlaySoundPacket;
+import com.ninni.blockstar.server.packet.StopSoundPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
@@ -23,6 +30,7 @@ public class ClientProxy extends CommonProxy {
     public void init() {
         MidiSettingsConfig.load();
         super.init();
+        MidiInputHandler.startListening();
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.addListener(this::registerTooltips);
@@ -32,6 +40,10 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void clientSetup() {
         MenuScreens.register(BMenuRegistry.KEYBOARD.get(), KeyboardScreen::new);
+
+        ItemProperties.register(BItemRegistry.RESONANT_PRISM.get(), new ResourceLocation(Blockstar.MODID, "attuned"), (stack, level, player, i) -> {
+            return stack.getOrCreateTag().contains("Soundfont") ? 1.0F : 0.0F;
+        });
     }
 
     @Override
@@ -44,6 +56,11 @@ public class ClientProxy extends CommonProxy {
                 mc.getSoundManager().play(new SoundfontSound(msg.soundLocation, 1.0f, msg.pitch, targetPlayer));
             }
         }
+    }
+
+    @Override
+    public void handleStopSoundPacket(StopSoundPacket msg) {
+        SoundManagerHelper.fadeOutMatchingSound(msg.soundLocation, msg.pitch, msg.x, msg.y, msg.z, msg.fadeTicks);
     }
 
     private void registerTooltips(RegisterClientTooltipComponentFactoriesEvent registry) {

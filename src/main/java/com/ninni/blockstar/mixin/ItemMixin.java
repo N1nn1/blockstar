@@ -1,14 +1,7 @@
 package com.ninni.blockstar.mixin;
 
-import com.ninni.blockstar.client.sound.SoundfontSound;
-import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
 import com.ninni.blockstar.registry.BRecipeRegistry;
-import com.ninni.blockstar.server.data.SoundfontManager;
-import com.ninni.blockstar.server.event.CommonEvents;
 import com.ninni.blockstar.server.item.crafting.SoundfontConversionRecipe;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
