@@ -9,7 +9,7 @@
   "result": {
     "item": "blockstar:resonant_prism",
     "nbt": {
-      "Soundfont": "blockstar:note_block_cow_bell"
+      "Soundfont": "blockstar:note_block-cow_bell"
     }
   },
   "play_sound": true,

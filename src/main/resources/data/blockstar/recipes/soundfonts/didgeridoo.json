@@ -9,7 +9,7 @@
   "result": {
     "item": "blockstar:resonant_prism",
     "nbt": {
-      "Soundfont": "blockstar:note_block_didgeridoo"
+      "Soundfont": "blockstar:note_block-didgeridoo"
     }
   },
   "play_sound": true,

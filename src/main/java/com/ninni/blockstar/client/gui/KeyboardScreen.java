@@ -31,7 +31,6 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
         this.imageHeight = 254;
         this.inventoryLabelY = 161;
         this.inventoryLabelX = 12;
-        this.sustainPedalVisible = menu.getInstrumentType().getBaseSoundFont().held();
         PianoKey.initPianoKeys(pianoKeys);
     }
 
