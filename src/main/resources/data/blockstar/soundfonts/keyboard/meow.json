@@ -9,5 +9,6 @@
   },
   "held": true,
   "fade_ticks": 2,
-  "rarity": "UNCOMMON"
+  "rarity": "UNCOMMON",
+  "color": "#8718de"
 }

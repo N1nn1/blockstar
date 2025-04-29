@@ -1,6 +1,6 @@
 {
   "instrument_type": "blockstar:keyboard",
-  "name": "blockstar:note_block_bass",
+  "name": "blockstar:note_block-pling",
   "note_map": {
     "48": "C3",
     "60": "C4",

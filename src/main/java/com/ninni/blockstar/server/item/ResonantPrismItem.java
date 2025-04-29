@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.*;
@@ -46,7 +47,7 @@ public class ResonantPrismItem extends Item {
                 return Optional.of(new SoundfontTooltip(new ResourceLocation(stack.getTag().getString("Soundfont"))));
             }
         }
-        return Optional.of(new SoundfontTooltip(new ResourceLocation(Blockstar.MODID, "empty")));
+        return Optional.of(new SoundfontTooltip(new ResourceLocation(Blockstar.MODID, "base/empty")));
     }
 
     public record SoundfontTooltip(ResourceLocation icon) implements TooltipComponent {}
@@ -60,10 +61,10 @@ public class ResonantPrismItem extends Item {
 
             if (stack.getTag().contains("Soundfont") && !stack.getTag().getString("Soundfont").isEmpty()) {
                 ResourceLocation resourceLocation = new ResourceLocation(stack.getTag().getString("Soundfont"));
-                if (resourceLocation.getPath().startsWith("note_block_")) {
-                    list.add(Component.translatable(resourceLocation.getNamespace() + ".soundfont." + resourceLocation.getPath()).withStyle(ChatFormatting.GRAY));
+                if (stack.getTag().contains("Color")) {
+                    list.add(Component.translatable(resourceLocation.getNamespace() + ".soundfont." + resourceLocation.getPath()).withStyle(Style.EMPTY.withColor(TextColor.parseColor(stack.getTag().getString("Color")))));
                 } else {
-                    list.add(Component.translatable(resourceLocation.getNamespace() + ".soundfont." + resourceLocation.getPath()).withStyle(Style.EMPTY.withColor(0x8718de)));
+                    list.add(Component.translatable(resourceLocation.getNamespace() + ".soundfont." + resourceLocation.getPath()).withStyle(ChatFormatting.GRAY));
                 }
             }
             if (stack.getTag().contains("InstrumentType") && !stack.getTag().getString("InstrumentType").isEmpty()) {

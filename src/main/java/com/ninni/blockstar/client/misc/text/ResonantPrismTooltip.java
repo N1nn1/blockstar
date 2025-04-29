@@ -30,17 +30,20 @@ public class ResonantPrismTooltip implements ClientTooltipComponent {
 
     public void renderImage(Font font, int x, int y, GuiGraphics graphics) {
         ResourceLocation resourceLocation = new ResourceLocation(icon.getNamespace(), "textures/soundfont/" + icon.getPath() + ".png");
+        if (icon.getPath().contains("-")) {
+            resourceLocation = new ResourceLocation(icon.getNamespace(), "textures/soundfont/" + icon.getPath().substring(icon.getPath().indexOf("-") + 1) + ".png");
+        }
 
         if (Minecraft.getInstance().getResourceManager().getResource(resourceLocation).isPresent()) {
-            if (icon.getPath().startsWith("note_block_")) {
-                ResourceLocation noteBlockResourceLocation = new ResourceLocation(Blockstar.MODID, "textures/soundfont/note_block.png");
+            if (icon.getPath().contains("-")) {
+                ResourceLocation noteBlockResourceLocation = new ResourceLocation(Blockstar.MODID, "textures/soundfont/base/" + icon.getPath().replace(icon.getPath().substring(icon.getPath().indexOf("-")), "") + ".png");
                 graphics.blit(noteBlockResourceLocation, x, y - 2, 0, 0, this.getWidth(font), this.getHeight(), this.getWidth(font), this.getHeight());
                 graphics.blit(resourceLocation, x + 28, y - 2, 0, 0, this.getWidth(font), this.getHeight(), this.getWidth(font), this.getHeight());
             } else {
                 graphics.blit(resourceLocation, x, y - 2, 0, 0, this.getWidth(font), this.getHeight(), this.getWidth(font), this.getHeight());
             }
         } else {
-            graphics.blit(new ResourceLocation(Blockstar.MODID, "textures/soundfont/empty.png"), x, y - 2, 0, 0, this.getWidth(font), this.getHeight(), this.getWidth(font), this.getHeight());
+            graphics.blit(new ResourceLocation(Blockstar.MODID, "textures/soundfont/base/empty.png"), x, y - 2, 0, 0, this.getWidth(font), this.getHeight(), this.getWidth(font), this.getHeight());
         }
     }
 }

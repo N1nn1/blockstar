@@ -40,14 +40,19 @@ public class ItemMixin {
             if (recipe.isPresent()) {
                 ItemStack result = recipe.get().assemble(stack, stack1);
 
-                if (!player.getInventory().add(result)) {
-                    player.drop(result, false);
+                if (stack.getCount() == 1) {
+                    slot.set(result);
+                    if (recipe.get().shouldShrinkInputs()) stack1.shrink(1);
+                } else {
+
+                    if (!player.getInventory().add(result)) player.drop(result, false);
+
+                    if (recipe.get().shouldShrinkInputs()) {
+                        stack.shrink(1);
+                        stack1.shrink(1);
+                    }
                 }
 
-                if (recipe.get().shouldShrinkInputs()) {
-                    stack.shrink(1);
-                    stack1.shrink(1);
-                }
 
                 //if (recipe.get().shouldPlaySound() && player instanceof LocalPlayer localPlayer) {
                 //    ResourceLocation resourceLocation = new ResourceLocation(result.getTag().getString("Soundfont"));

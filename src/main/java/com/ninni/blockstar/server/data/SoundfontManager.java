@@ -12,6 +12,7 @@ import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
 import com.ninni.blockstar.server.intstrument.InstrumentType;
 import net.minecraft.client.Options;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -65,7 +66,7 @@ public class SoundfontManager extends SimpleJsonResourceReloadListener {
         return instruments.values();
     }
 
-    public record SoundfontDefinition(InstrumentType instrumentType, boolean instrumentExclusive, ResourceLocation name, Map<String, String> noteMapRaw, Optional<Integer> velocityLayers, boolean held, int fadeTicks, boolean creativeTab, Rarity rarity) {
+    public record SoundfontDefinition(InstrumentType instrumentType, boolean instrumentExclusive, ResourceLocation name, Map<String, String> noteMapRaw, Optional<Integer> velocityLayers, boolean held, int fadeTicks, boolean creativeTab, Rarity rarity, Optional<TextColor> color) {
         public static final Codec<Rarity> RARITY_CODEC = Codec.STRING.xmap(
                 string -> {
                     try {
@@ -86,7 +87,8 @@ public class SoundfontManager extends SimpleJsonResourceReloadListener {
                 Codec.BOOL.fieldOf("held").orElse(false).forGetter(SoundfontDefinition::held),
                 Codec.INT.fieldOf("fade_ticks").orElse(0).forGetter(SoundfontDefinition::fadeTicks),
                 Codec.BOOL.fieldOf("creative_tab").orElse(true).forGetter(SoundfontDefinition::creativeTab),
-                RARITY_CODEC.fieldOf("rarity").orElse(Rarity.COMMON).forGetter(SoundfontDefinition::rarity)
+                RARITY_CODEC.fieldOf("rarity").orElse(Rarity.COMMON).forGetter(SoundfontDefinition::rarity),
+                TextColor.CODEC.optionalFieldOf("color").forGetter(SoundfontDefinition::color)
         ).apply(inst, SoundfontDefinition::new));
 
         public Map<Integer, String> noteMap() {

@@ -64,6 +64,7 @@ public class ClientEvents {
                     stackTag.putString("Soundfont", data.name().toString());
                     if (data.instrumentExclusive()) stackTag.putString("InstrumentType", BInstrumentTypeRegistry.get(data.instrumentType()).toString());
                     if (data.rarity() != Rarity.COMMON) stackTag.putString("Rarity", data.rarity().toString());
+                    if (data.color().isPresent()) stackTag.putString("Color", data.color().get().toString());
                     ItemStack stack = BItemRegistry.RESONANT_PRISM.get().getDefaultInstance();
                     stack.setTag(stackTag);
                     entries.putAfter(BItemRegistry.RESONANT_PRISM.get().getDefaultInstance(), stack, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
