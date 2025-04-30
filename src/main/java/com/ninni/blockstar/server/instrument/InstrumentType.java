@@ -63,24 +63,25 @@ public abstract class InstrumentType {
     }
 
     int[] getScaleForPlayer(LivingEntity entity, Level level) {
+        int[] major               = {0, 2, 4, 5, 7, 9, 11, 12};
+        int[] minor               = {0, 2, 3, 5, 7, 8, 10, 12};
+        int[] pentatonic          = {0, 3, 5, 7, 10, 12};
+        int[] dorian              = {0, 2, 3, 5, 7, 9, 10, 12};
+        int[] phrygian            = {0, 1, 3, 5, 7, 8, 10, 12};
+        int[] lydian              = {0, 2, 4, 6, 7, 9, 11, 12};
+        int[] mixolydian          = {0, 2, 4, 5, 7, 9, 10, 12};
+        int[] blues               = {0, 3, 5, 6, 7, 10, 12};
+        int[] harmonicMinor       = {0, 2, 3, 5, 7, 8, 11, 12};
+        int[] chromatic           = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+        int[] doubleHarmonic      = {0, 1, 4, 5, 7, 8, 11, 12};
+        int[] doubleHarmonicMinor = {0, 1, 3, 5, 7, 8, 11, 12};
+        int[] locrian             = {0, 1, 3, 5, 6, 8, 10, 12};
+        int[] superLocrian        = {0, 1, 3, 4, 6, 8, 10, 12};
 
-        int[] major          = {0, 2, 4, 5, 7, 9, 11, 12};
-        int[] minor          = {0, 2, 3, 5, 7, 8, 10, 12};
-        int[] pentatonic     = {0, 3, 5, 7, 10, 12};
-        int[] dorian         = {0, 2, 3, 5, 7, 9, 10, 12};
-        int[] phrygian       = {0, 1, 3, 5, 7, 8, 10, 12};
-        int[] lydian         = {0, 2, 4, 6, 7, 9, 11, 12};
-        int[] mixolydian     = {0, 2, 4, 5, 7, 9, 10, 12};
-        int[] blues          = {0, 3, 5, 6, 7, 10, 12};
-        int[] harmonicMinor  = {0, 2, 3, 5, 7, 8, 11, 12};
-        int[] chromatic      = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-
-        if (entity.isOnFire()) {
-            return phrygian;
-        } else if (entity.getHealth() < 2) {
-            return minor;
-        } else if (entity.isInWater()) {
-            return dorian;
+        if (entity.getHealth() < 2) {
+            return harmonicMinor;
+        } else if (level.isRaining()) {
+            return level.getBiome(entity.blockPosition()).get().getPrecipitationAt(entity.blockPosition()).name().equals("NONE") ? phrygian : dorian;
         } else if (entity.hasEffect(MobEffects.SLOW_FALLING)) {
             return pentatonic;
         } else if (entity.hasEffect(MobEffects.MOVEMENT_SPEED)) {
@@ -89,12 +90,19 @@ public abstract class InstrumentType {
             return lydian;
         } else if (level.isThundering()) {
             return blues;
-        } else if (level.getDayTime() % 24000 >= 13000) {
-            return harmonicMinor;
-        } else if (level.dimension() == Level.END) {
+        } else if (level.dimension() != Level.OVERWORLD) {
             return chromatic;
         } else {
-            return major;
+            float temperature = level.getBiome(entity.blockPosition()).value().getBaseTemperature();
+            boolean nightTime = level.getDayTime() % 24000 >= 13000;
+
+            if (temperature >= 1.0F) {
+                return nightTime ? doubleHarmonicMinor : doubleHarmonic;
+            } else if (temperature <= 0.2F) {
+                return nightTime ? superLocrian : locrian;
+            } else {
+                return nightTime ? minor : major;
+            }
         }
     }
 
