@@ -22,6 +22,9 @@ public class CommonProxy {
     public void handleStopSoundPacket(StopSoundPacket msg) {
     }
 
+    public boolean isScreenShiftDown() {
+    }
+
     public SoundfontManager getSoundfontManager() {
         return soundfontManager;
     }

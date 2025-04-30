@@ -16,6 +16,7 @@ import com.ninni.blockstar.server.packet.PlaySoundPacket;
 import com.ninni.blockstar.server.packet.StopSoundPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
@@ -56,6 +57,11 @@ public class ClientProxy extends CommonProxy {
                 mc.getSoundManager().play(new SoundfontSound(msg.note, msg.soundLocation, 1.0f, msg.pitch, targetPlayer));
             }
         }
+    }
+
+    @Override
+    public boolean isScreenShiftDown() {
+        return Screen.hasShiftDown();
     }
 
     @Override

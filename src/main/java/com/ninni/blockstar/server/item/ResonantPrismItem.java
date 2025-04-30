@@ -67,9 +67,20 @@ public class ResonantPrismItem extends Item {
 
             list.add(Component.translatable(data.name().getNamespace() + ".soundfont." + data.name().getPath()).withStyle(Style.EMPTY.withColor(data.color())));
 
-            for (InstrumentType type : data.instrumentData().keySet()) {
-                ResourceLocation instrument = new ResourceLocation(BInstrumentTypeRegistry.get(type).toString());
-                list.add(Component.translatable(instrument.getNamespace() + ".instrument_type." + instrument.getPath()).withStyle(ChatFormatting.BLUE));
+            int i = 0;
+            int j = 0;
+
+            for(InstrumentType type : data.instrumentData().keySet()) {
+                    if (i < 2 || Blockstar.PROXY.isScreenShiftDown()) {
+                        ResourceLocation instrument = new ResourceLocation(BInstrumentTypeRegistry.get(type).toString());
+                        list.add(Component.translatable(instrument.getNamespace() + ".instrument_type." + instrument.getPath()).withStyle(ChatFormatting.BLUE));
+                        ++i;
+                    }
+                ++j;
+            }
+
+            if (j - i > 0 && !Blockstar.PROXY.isScreenShiftDown()) {
+                list.add(Component.translatable("item.blockstar.resonant_prism.more", j - i).withStyle(Style.EMPTY.withColor(ChatFormatting.BLUE).withItalic(true)));
             }
         }
     }
