@@ -11,21 +11,24 @@ public class PlaySoundPacket {
     public final ResourceLocation soundLocation;
     public final float pitch;
     public final int playerId;
+    public final int note;
 
-    public PlaySoundPacket(ResourceLocation soundLocation, float pitch, int playerId) {
+    public PlaySoundPacket(ResourceLocation soundLocation, float pitch, int playerId, int note) {
         this.soundLocation = soundLocation;
         this.pitch = pitch;
         this.playerId = playerId;
+        this.note = note;
     }
 
     public static void encode(PlaySoundPacket msg, FriendlyByteBuf buf) {
         buf.writeResourceLocation(msg.soundLocation);
         buf.writeFloat(msg.pitch);
         buf.writeInt(msg.playerId);
+        buf.writeInt(msg.note);
     }
 
     public static PlaySoundPacket decode(FriendlyByteBuf buf) {
-        return new PlaySoundPacket(buf.readResourceLocation(), buf.readFloat(), buf.readInt());
+        return new PlaySoundPacket(buf.readResourceLocation(), buf.readFloat(), buf.readInt(), buf.readInt());
     }
 
     public static void handle(PlaySoundPacket msg, Supplier<NetworkEvent.Context> ctx) {

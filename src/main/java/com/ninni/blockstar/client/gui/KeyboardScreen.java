@@ -79,9 +79,9 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
         for (PianoKey key : pianoKeys) {
             if (key.note == note) {
                 if (velocity > 0 && !key.isPressed) {
-                    key.handleKeyPress(menu, sustainPedalPressed, velocity);
+                    key.press(menu, velocity);
                 } else if (velocity == 0 && key.isPressed) {
-                    key.handleKeyPress(menu, sustainPedalPressed, velocity);
+                    key.release(menu, sustainPedalPressed);
                 }
                 break;
             }
@@ -99,7 +99,7 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
             int note = PianoKey.KEY_TO_NOTE.get(keyCode);
             for (PianoKey key : pianoKeys) {
                 if (key.note == note && !key.isPressed) {
-                    key.handleKeyPress(menu, sustainPedalPressed, 0);
+                    key.press(menu, 0);
                 }
             }
             return true;
@@ -123,7 +123,9 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
             int note = PianoKey.KEY_TO_NOTE.get(keyCode);
             for (PianoKey key : pianoKeys) {
                 if (key.note == note) {
-                    key.handleKeyPress(menu, sustainPedalPressed, 0);
+                    if (key.isPressed) {
+                        key.release(menu, sustainPedalPressed);
+                    }
                 }
             }
             return true;
@@ -141,7 +143,7 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
                     .ifPresent(pianoKey -> {
                         if (!pianoKey.isPressed) {
                             lastMouseKey = pianoKey.note;
-                            pianoKey.handleKeyPress(menu, sustainPedalPressed, 0);
+                            pianoKey.press(menu, 0);
                         }
                     });
         }
@@ -154,7 +156,9 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
         if (button == 0) {
             for (PianoKey key : pianoKeys) {
                 if (key.note == lastMouseKey) {
-                    key.handleKeyPress(menu, sustainPedalPressed, 0);
+                    if (key.isPressed) {
+                        key.release(menu, sustainPedalPressed);
+                    }
                     lastMouseKey = -1;
                 }
             }

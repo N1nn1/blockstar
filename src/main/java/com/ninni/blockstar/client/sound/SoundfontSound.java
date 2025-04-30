@@ -9,13 +9,15 @@ import net.minecraft.world.entity.LivingEntity;
 public class SoundfontSound extends AbstractTickableSoundInstance {
     private final ResourceLocation soundLocation;
     private final LivingEntity user;
-    private boolean fadingOut = false;
-    private int fadeOutTicks = 0;
+    private boolean released = false;
+    private final int note;
+    private int releaseTicks = 0;
     private final float initialVolume;
 
-    public SoundfontSound(ResourceLocation soundLocation, float volume, float pitch, LivingEntity user) {
+    public SoundfontSound(int note, ResourceLocation soundLocation, float volume, float pitch, LivingEntity user) {
         super(SoundEvent.createVariableRangeEvent(soundLocation), SoundSource.RECORDS, user.getRandom());
         this.soundLocation = soundLocation;
+        this.note = note;
         this.volume = volume;
         this.initialVolume = volume;
         this.user = user;
@@ -31,10 +33,10 @@ public class SoundfontSound extends AbstractTickableSoundInstance {
 
     @Override
     public void tick() {
-        if (this.fadingOut) {
-            if (fadeOutTicks > 0) {
-                fadeOutTicks--;
-                this.volume = initialVolume * ((float) fadeOutTicks / 20.0f);
+        if (this.released) {
+            if (releaseTicks > 0) {
+                releaseTicks--;
+                this.volume = initialVolume * ((float) releaseTicks / 20.0f);
             } else {
                 this.stop();
                 SoundManagerHelper.unregister(this);
@@ -42,11 +44,11 @@ public class SoundfontSound extends AbstractTickableSoundInstance {
         }
     }
 
-    public void startFadeOut(int ticks) {
+    public void startRelease(int ticks) {
         if (ticks > 0) {
-            if (!this.fadingOut) {
-                this.fadingOut = true;
-                this.fadeOutTicks = ticks;
+            if (!this.released) {
+                this.released = true;
+                this.releaseTicks = ticks;
             }
         } else {
             this.stop();
@@ -57,6 +59,10 @@ public class SoundfontSound extends AbstractTickableSoundInstance {
     @Override
     public ResourceLocation getLocation() {
         return this.soundLocation;
+    }
+
+    public int getNote() {
+        return note;
     }
 
     public LivingEntity getUser() {

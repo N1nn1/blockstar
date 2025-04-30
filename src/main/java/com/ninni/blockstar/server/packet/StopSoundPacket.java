@@ -2,42 +2,33 @@ package com.ninni.blockstar.server.packet;
 
 import com.ninni.blockstar.Blockstar;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class StopSoundPacket {
-    public final ResourceLocation soundLocation;
-    public final float pitch;
-    public final double x, y, z;
-    public final int fadeTicks;
+    public final int note;
+    public final int releaseTicks;
+    public final int userId;
 
-    public StopSoundPacket(ResourceLocation soundLocation, float pitch, double x, double y, double z, int fadeTicks) {
-        this.soundLocation = soundLocation;
-        this.pitch = pitch;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.fadeTicks = fadeTicks;
+    public StopSoundPacket(int note, int releaseTicks, int userId) {
+        this.note = note;
+        this.releaseTicks = releaseTicks;
+        this.userId = userId;
     }
 
     public static void encode(StopSoundPacket msg, FriendlyByteBuf buf) {
-        buf.writeResourceLocation(msg.soundLocation);
-        buf.writeFloat(msg.pitch);
-        buf.writeDouble(msg.x);
-        buf.writeDouble(msg.y);
-        buf.writeDouble(msg.z);
-        buf.writeInt(msg.fadeTicks);
+        buf.writeInt(msg.note);
+        buf.writeInt(msg.releaseTicks);
+        buf.writeInt(msg.userId);
     }
 
     public static StopSoundPacket decode(FriendlyByteBuf buf) {
-        return new StopSoundPacket(buf.readResourceLocation(), buf.readFloat(), buf.readDouble(), buf.readDouble(), buf.readDouble(), buf.readInt());
+        return new StopSoundPacket(buf.readInt(), buf.readInt(), buf.readInt());
     }
 
     public static void handle(StopSoundPacket msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-
             if (ctx.get().getDirection().getReceptionSide().isClient()) {
                 Blockstar.PROXY.handleStopSoundPacket(msg);
             }
@@ -45,4 +36,5 @@ public class StopSoundPacket {
         ctx.get().setPacketHandled(true);
     }
 }
+
 
