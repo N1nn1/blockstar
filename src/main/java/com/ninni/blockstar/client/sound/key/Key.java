@@ -97,7 +97,7 @@ public abstract class Key {
 
         BNetwork.INSTANCE.send(
                 PacketDistributor.NEAR.with(() -> PacketDistributor.TargetPoint.p(player.getX(), player.getY(), player.getZ(), 32, player.level().dimension()).get()),
-                new PlaySoundPacket( resourceLocation, pitch, player.getId(), note)
+                new PlaySoundPacket(resourceLocation, pitch, player.getId(), note)
         );
 
         isPressed = true;

@@ -40,6 +40,7 @@ public class Blockstar {
         BInstrumentTypeRegistry.DEF_REG.register(modEventBus);
         BRecipeRegistry.DEF_REG_SERIALIZERS.register(modEventBus);
         BRecipeRegistry.DEF_REG_TYPES.register(modEventBus);
+        BSoundEventRegistry.DEF_REG.register(modEventBus);
         BNetwork.register();
         PROXY.init();
         MinecraftForge.EVENT_BUS.register(new CommonEvents());

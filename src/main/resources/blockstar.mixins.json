@@ -9,8 +9,8 @@
   },
   "minVersion": "0.8",
   "mixins": [
-    "ItemMixin",
-    "EntityMixin"
+    "EntityMixin",
+    "ItemMixin"
   ],
   "client": [
   ]

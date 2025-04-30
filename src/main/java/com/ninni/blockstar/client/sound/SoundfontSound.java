@@ -1,5 +1,8 @@
 package com.ninni.blockstar.client.sound;
 
+import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
+import com.ninni.blockstar.server.data.SoundfontManager;
+import com.ninni.blockstar.server.instrument.InstrumentType;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;

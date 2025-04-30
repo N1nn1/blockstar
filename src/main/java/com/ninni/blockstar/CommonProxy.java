@@ -23,6 +23,7 @@ public class CommonProxy {
     }
 
     public boolean isScreenShiftDown() {
+        return false;
     }
 
     public SoundfontManager getSoundfontManager() {

@@ -1,4 +1,13 @@
 {
+  "item.resonant_prism.tune": {
+    "sounds": [
+      "blockstar:item/resonant_prism/tune_0",
+      "blockstar:item/resonant_prism/tune_1",
+      "blockstar:item/resonant_prism/tune_2",
+      "blockstar:item/resonant_prism/tune_3"
+    ],
+    "subtitle": "subtitles.blockstar.item.resonant_prism.tune"
+  },
   "soundfont.keyboard.base.48_1": {
     "sounds": ["blockstar:soundfont/keyboard/base/48_1"]
   },
