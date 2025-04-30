@@ -8,11 +8,9 @@ import com.ninni.blockstar.server.data.SoundfontManager;
 import com.ninni.blockstar.server.packet.PlaySoundPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -30,7 +28,7 @@ public class Keyboard extends InstrumentType {
 
             int[] scale = getScaleForPlayer(livingEntity, level);
 
-            int scaleIndex = (blockpos.getX() + blockpos.getZ()) % scale.length;
+            int scaleIndex = Math.floorMod(blockpos.getX() + blockpos.getZ(), scale.length);
             int semitoneOffset = scale[scaleIndex];
             int note = 54 + semitoneOffset;
 
