@@ -12,6 +12,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
     public static final ResourceLocation TEXTURE_BG = new ResourceLocation(Blockstar.MODID, "textures/gui/keyboard/bg.png");
@@ -79,7 +80,7 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
         for (PianoKey key : pianoKeys) {
             if (key.note == note) {
                 if (velocity > 0 && !key.isPressed) {
-                    key.press(menu, velocity);
+                    key.press(menu, Optional.of(velocity));
                 } else if (velocity == 0 && key.isPressed) {
                     key.release(menu, sustainPedalPressed);
                 }
@@ -99,7 +100,7 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
             int note = PianoKey.KEY_TO_NOTE.get(keyCode);
             for (PianoKey key : pianoKeys) {
                 if (key.note == note && !key.isPressed) {
-                    key.press(menu, 0);
+                    key.press(menu, Optional.empty());
                 }
             }
             return true;
@@ -143,7 +144,7 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
                     .ifPresent(pianoKey -> {
                         if (!pianoKey.isPressed) {
                             lastMouseKey = pianoKey.note;
-                            pianoKey.press(menu, 0);
+                            pianoKey.press(menu, Optional.empty());
                         }
                     });
         }

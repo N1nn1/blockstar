@@ -76,11 +76,12 @@ public class SoundfontManager extends SimpleJsonResourceReloadListener {
         return soundfonts.values();
     }
 
-    public record InstrumentSoundfontData(List<Integer> noteMap, Optional<Integer> velocityLayers, boolean held, int releaseTicks) {
+    public record InstrumentSoundfontData(List<Integer> noteMap, Optional<Integer> velocityLayers, Optional<Integer> default_velocity, boolean held, int releaseTicks) {
 
         public static final Codec<InstrumentSoundfontData> CODEC = RecordCodecBuilder.create(inst -> inst.group(
                 Codec.list(Codec.INT).fieldOf("note_map").forGetter(InstrumentSoundfontData::noteMap),
                 Codec.INT.optionalFieldOf("velocity_layers").forGetter(InstrumentSoundfontData::velocityLayers),
+                Codec.INT.optionalFieldOf("default_velocity").forGetter(InstrumentSoundfontData::default_velocity),
                 Codec.BOOL.fieldOf("held").orElse(false).forGetter(InstrumentSoundfontData::held),
                 Codec.INT.fieldOf("release_ticks").orElse(0).forGetter(InstrumentSoundfontData::releaseTicks)
         ).apply(inst, InstrumentSoundfontData::new));

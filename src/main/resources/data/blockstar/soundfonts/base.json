@@ -5,6 +5,7 @@
     "blockstar:keyboard": {
       "note_map": [48, 53, 60, 65, 72],
       "velocity_layers": 4,
+      "default_velocity": 2,
       "held": true,
       "release_ticks": 8
     }

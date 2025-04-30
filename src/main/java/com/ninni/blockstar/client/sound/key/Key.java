@@ -11,10 +11,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.PacketDistributor;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Map;
+import java.util.Optional;
 
 public abstract class Key {
     public final int note;
@@ -71,12 +71,19 @@ public abstract class Key {
         this.height = height;
     }
 
-    public void press(KeyboardMenu menu, int velocity) {
+    public void press(KeyboardMenu menu, Optional<Integer> velocity) {
         SoundfontManager.SoundfontDefinition soundfont = menu.getInstrumentType().getSoundfont(menu.getSoundfontSlot().getItem());
-        int sampleNote = soundfont.getForInstrument(menu.getInstrumentType()).getClosestSampleNote(note);
+        SoundfontManager.InstrumentSoundfontData forInstrument = soundfont.getForInstrument(menu.getInstrumentType());
+        int sampleNote = forInstrument.getClosestSampleNote(note);
         float pitch = (float) Math.pow(2, (note - sampleNote) / 12.0);
 
-        String velocitySuffix = getVelocity(menu, soundfont, velocity);
+        String velocitySuffix = "";
+
+        if (velocity.isPresent()) {
+            velocitySuffix = getVelocity(menu, soundfont, velocity.get());
+        } else {
+            if (forInstrument.velocityLayers().isPresent()) velocitySuffix = "_" + forInstrument.default_velocity().orElse(forInstrument.velocityLayers().get());
+        }
 
         ResourceLocation resourceLocation = new ResourceLocation(
                 soundfont.name().getNamespace(),
@@ -113,8 +120,7 @@ public abstract class Key {
         );
     }
 
-    private static @NotNull String getVelocity(KeyboardMenu menu, SoundfontManager.SoundfontDefinition soundfont, int inputVelocity) {
-        String velocitySuffix = "";
+    private static String getVelocity(KeyboardMenu menu, SoundfontManager.SoundfontDefinition soundfont, int inputVelocity) {
         if (soundfont.getForInstrument(menu.getInstrumentType()).velocityLayers().isPresent()) {
             int layers = soundfont.getForInstrument(menu.getInstrumentType()).velocityLayers().get();
 
@@ -155,9 +161,9 @@ public abstract class Key {
             layer = Math.min(layer, layers);
             if (inputVelocity == 0) layer = (int)Math.ceil((float)layers/2);
 
-            velocitySuffix = "_" + layer;
+            return "_" + layer;
         }
-        return velocitySuffix;
+        return "";
     }
 
 
