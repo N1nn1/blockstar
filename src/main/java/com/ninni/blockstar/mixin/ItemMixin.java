@@ -32,7 +32,7 @@ public class ItemMixin {
     private void B$overrideOtherStackedOnMe(ItemStack stack, ItemStack stack1, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess, CallbackInfoReturnable<Boolean> cir) {
         Level level = player.level();
 
-        if (!stack.hasTag()) {
+        if (!stack.hasTag() && !stack1.hasTag()) {
             Optional<SoundfontConversionRecipe> recipe = level.getRecipeManager()
                     .getAllRecipesFor(BRecipeRegistry.SOUNDFONT_CONVERSION_TYPE.get())
                     .stream()

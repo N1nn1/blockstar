@@ -6,7 +6,6 @@
   "blockstar.options.midi.pressure_sensitivity": "Pressure Sensitivity: %s",
 
   "item.blockstar.sheet_music": "Sheet Music",
-  "item.blockstar.staff_paper": "Staff Paper",
 
   "item.blockstar.resonant_prism": "Resonant Prism",
   "item.blockstar.resonant_prism.more": "and %s more...",
