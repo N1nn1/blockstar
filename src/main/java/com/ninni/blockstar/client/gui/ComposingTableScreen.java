@@ -1,10 +1,13 @@
 package com.ninni.blockstar.client.gui;
 
 import com.ninni.blockstar.Blockstar;
+import com.ninni.blockstar.client.gui.components.CenteredEditBox;
+import com.ninni.blockstar.registry.BItemRegistry;
 import com.ninni.blockstar.registry.BNetwork;
 import com.ninni.blockstar.server.inventory.ComposingTableMenu;
 import com.ninni.blockstar.server.item.SheetMusicItem;
 import com.ninni.blockstar.server.packet.SheetNoteEditPacket;
+import com.ninni.blockstar.server.packet.SheetRenamePacket;
 import com.ninni.blockstar.server.sheetmusic.SheetNote;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -31,6 +34,8 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
     private int scrollOffsetStart = 0;
     private SheetNote draggedNote = null;
     private SheetNote lastModifiedNote = new SheetNote(1, 60, 1, 100);
+    private CenteredEditBox nameField;
+    private boolean hasNameField = false;
 
     private static final int PENTAGRAM_HEIGHT = 17;
     private static final int PENTAGRAM_SPACING = 16;
@@ -64,13 +69,53 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
     };
 
 
-
     public ComposingTableScreen(ComposingTableMenu menu, Inventory inventory, Component component) {
         super(menu, inventory, component);
         this.imageWidth = 176;
         this.imageHeight = 254;
         this.inventoryLabelY = 161;
         this.inventoryLabelX = 12;
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        this.nameField = null;
+        this.hasNameField = false;
+    }
+
+    @Override
+    protected void containerTick() {
+        super.containerTick();
+
+        ItemStack sheet = getSheetMusic();
+
+        if (!sheet.isEmpty() && sheet.getItem() == BItemRegistry.SHEET_MUSIC.get()) {
+            if (!hasNameField) {
+                this.nameField = new CenteredEditBox(this.font, this.leftPos + 28, this.topPos + 29, 120, 16, Component.literal("Sheet Name"));
+                this.nameField.setValue(sheet.getHoverName().getString());
+                this.nameField.setMaxLength(32);
+                this.nameField.setTextColor(0xffffff);
+                this.nameField.setTextColorUneditable(0xffffff);
+                this.nameField.setBordered(false);
+                this.addRenderableWidget(this.nameField);
+                hasNameField = true;
+            } else {
+                nameField.tick();
+
+                if (this.nameField != null && !this.nameField.getValue().isEmpty()) {
+                    if (!sheet.isEmpty() && sheet.getItem() == BItemRegistry.SHEET_MUSIC.get() && !this.nameField.getValue().equals(sheet.getHoverName().getString())) {
+                        BNetwork.INSTANCE.sendToServer(new SheetRenamePacket(this.nameField.getValue()));
+                    }
+                }
+            }
+        } else {
+            if (hasNameField) {
+                this.removeWidget(this.nameField);
+                this.nameField = null;
+                hasNameField = false;
+            }
+        }
     }
 
     @Override
@@ -211,6 +256,14 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
         int thumbHeight = 15;
         int thumbY = scrollBarY + (int)((116 - thumbHeight) * (scrollOffsetY / (float) maxScroll()));
 
+        if (this.nameField != null) {
+            if (this.nameField.mouseClicked(mouseX, mouseY, button)) {
+                this.nameField.setFocused(true);
+                return true;
+            }
+            this.nameField.setFocused(false);
+        }
+
         if (mouseX >= scrollBarX && mouseX < scrollBarX + 16 && mouseY >= thumbY && mouseY < thumbY + thumbHeight) {
             isDraggingScrollbar = true;
             scrollbarStartY = (int) mouseY;
@@ -260,11 +313,11 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
 
                     int duration = lastModifiedNote.duration + tick > 14 ? lastModifiedNote.duration - (lastModifiedNote.duration + tick - 14) : lastModifiedNote.duration;
 
+                    this.minecraft.player.playSound(SoundEvents.NOTE_BLOCK_HARP.get(), 1.0F, (float) Math.pow(2.0D, (pitch - 69) / 12.0D));
+                    if (getSheetMusic().is(Items.PAPER)) this.minecraft.player.playSound(SoundEvents.BOOK_PAGE_TURN, 1.0F, 1.0F);
                     BNetwork.INSTANCE.sendToServer(new SheetNoteEditPacket(
                             SheetNoteEditPacket.Action.ADD, tick, pitch, duration, lastModifiedNote.velocity
                     ));
-
-                    this.minecraft.player.playSound(SoundEvents.NOTE_BLOCK_HARP.get(), 1.0F, (float) Math.pow(2.0D, (pitch - 69) / 12.0D));
 
                     return true;
                 }
@@ -380,9 +433,32 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
         return null;
     }
 
+    @Override
+    public boolean charTyped(char codePoint, int modifiers) {
+        if (this.nameField != null && this.nameField.charTyped(codePoint, modifiers)) {
+            return true;
+        }
+        return super.charTyped(codePoint, modifiers);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (this.nameField != null && this.nameField.keyPressed(keyCode, scanCode, modifiers)) {
+            if (keyCode == 256) this.minecraft.player.closeContainer();
+            return this.nameField.keyPressed(keyCode, scanCode, modifiers);
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
     public ItemStack getSheetMusic() {
         return this.menu.getSheetMusicSlot().getItem();
     }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+    }
+
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {

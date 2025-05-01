@@ -137,7 +137,7 @@ public class SheetSettingsScreen extends Screen {
         String timeSig = timeSigField.getValue();
         if (!SheetMusicItem.isTimeSigValid(timeSig)) timeSig = "4/4";
         String key = minor ? MINOR_KEYS[selectedKeyIndex] : MAJOR_KEYS[selectedKeyIndex];
-
+        this.minecraft.player.playSound(SoundEvents.BOOK_PAGE_TURN, 1.0F, 1.0F);
         BNetwork.INSTANCE.sendToServer(new SheetSettingsUpdatePacket(bpm, timeSig, key, minor));
 
         this.minecraft.setScreen(parent);

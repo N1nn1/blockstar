@@ -23,5 +23,6 @@ public class BNetwork {
         INSTANCE.registerMessage(id++, StopSoundPacket.class, StopSoundPacket::encode, StopSoundPacket::decode, StopSoundPacket::handle);
         INSTANCE.registerMessage(id++, SheetNoteEditPacket.class, SheetNoteEditPacket::encode, SheetNoteEditPacket::decode, SheetNoteEditPacket::handle);
         INSTANCE.registerMessage(id++, SheetSettingsUpdatePacket.class, SheetSettingsUpdatePacket::encode, SheetSettingsUpdatePacket::decode, SheetSettingsUpdatePacket::handle);
+        INSTANCE.registerMessage(id++, SheetRenamePacket.class, SheetRenamePacket::encode, SheetRenamePacket::decode, SheetRenamePacket::handle);
     }
 }

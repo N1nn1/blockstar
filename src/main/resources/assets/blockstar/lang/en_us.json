@@ -6,6 +6,9 @@
   "blockstar.options.midi.pressure_sensitivity": "Pressure Sensitivity: %s",
 
   "item.blockstar.sheet_music": "Sheet Music",
+  "item.blockstar.sheet_music.bpm": "BPM: %s",
+  "item.blockstar.sheet_music.time_sig": "Time Signature: %s",
+  "item.blockstar.sheet_music.key": "Key: %s",
 
   "block.blockstar.composing_table": "Composing Table",
   "blockstar.container.composing_table": "Composing Table",

@@ -1,10 +1,13 @@
 package com.ninni.blockstar.server.packet;
 
+import com.ninni.blockstar.registry.BItemRegistry;
+import com.ninni.blockstar.registry.BNetwork;
 import com.ninni.blockstar.server.inventory.ComposingTableMenu;
 import com.ninni.blockstar.server.item.SheetMusicItem;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -39,7 +42,14 @@ public class SheetSettingsUpdatePacket {
                 ServerPlayer player = ctx.get().getSender();
                 if (player != null && ctx.get().getSender().containerMenu instanceof ComposingTableMenu menu) {
                     ItemStack stack = menu.getSheetMusicSlot().getItem();
-                    if (!stack.isEmpty() && stack.getItem() instanceof SheetMusicItem) {
+                    if (!stack.isEmpty()) {
+                        if (stack.is(Items.PAPER)) {
+                            menu.getSheetMusicSlot().set(BItemRegistry.SHEET_MUSIC.get().getDefaultInstance());
+                            BNetwork.INSTANCE.sendToServer(new SheetSettingsUpdatePacket(
+                                    msg.bpm, msg.timeSig, msg.key, msg.minor
+                            ));
+                        }
+
                         SheetMusicItem.setBPM(stack, msg.bpm);
                         SheetMusicItem.setTimeSignature(stack, SheetMusicItem.getTimeSigValues(msg.timeSig, true), SheetMusicItem.getTimeSigValues(msg.timeSig, false));
                         SheetMusicItem.setKey(stack, msg.key, msg.minor);

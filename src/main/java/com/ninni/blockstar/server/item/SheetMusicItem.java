@@ -1,10 +1,12 @@
 package com.ninni.blockstar.server.item;
 
 import com.ninni.blockstar.server.sheetmusic.SheetNote;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -98,8 +100,12 @@ public class SheetMusicItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, level, components, tooltipFlag);
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, level, list, tooltipFlag);
+
+        list.add(Component.translatable("item.blockstar.sheet_music.key", getKey(stack)).withStyle(Style.EMPTY.withColor(isKeyMinor(stack) ? 0x9672a0 : 0xd44a62)));
+        list.add(Component.translatable("item.blockstar.sheet_music.bpm", getBPM(stack)).withStyle(Style.EMPTY.withColor(0x5cb167)));
+        list.add(Component.translatable("item.blockstar.sheet_music.time_sig", getTimeSig(stack)).withStyle(Style.EMPTY.withColor(0x4f75ac)));
     }
 }
 

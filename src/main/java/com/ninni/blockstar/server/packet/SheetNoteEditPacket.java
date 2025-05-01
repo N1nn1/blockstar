@@ -1,12 +1,14 @@
 package com.ninni.blockstar.server.packet;
 
 import com.ninni.blockstar.Blockstar;
+import com.ninni.blockstar.registry.BItemRegistry;
+import com.ninni.blockstar.registry.BNetwork;
 import com.ninni.blockstar.server.inventory.ComposingTableMenu;
 import com.ninni.blockstar.server.item.SheetMusicItem;
 import com.ninni.blockstar.server.sheetmusic.SheetNote;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.List;
@@ -50,6 +52,13 @@ public class SheetNoteEditPacket {
                 if (ctx.get().getSender() != null && ctx.get().getSender().containerMenu instanceof ComposingTableMenu menu) {
                     ItemStack sheet = menu.getSheetMusicSlot().getItem();
                     if (!sheet.isEmpty()) {
+                        if (sheet.is(Items.PAPER)) {
+                            menu.getSheetMusicSlot().set(BItemRegistry.SHEET_MUSIC.get().getDefaultInstance());
+                            BNetwork.INSTANCE.sendToServer(new SheetNoteEditPacket(
+                                    msg.action, msg.tick, msg.pitch, msg.duration, msg.velocity
+                            ));
+                        }
+
                         List<SheetNote> notes = SheetMusicItem.getNotes(sheet);
 
                         if (msg.action == Action.ADD) {

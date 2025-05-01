@@ -2,6 +2,7 @@ package com.ninni.blockstar;
 
 import com.mojang.logging.LogUtils;
 import com.ninni.blockstar.client.ClientProxy;
+import com.ninni.blockstar.client.event.ClientForgeEvents;
 import com.ninni.blockstar.registry.*;
 import com.ninni.blockstar.server.event.CommonEvents;
 import com.ninni.blockstar.server.instrument.InstrumentType;
@@ -43,6 +44,7 @@ public class Blockstar {
         BSoundEventRegistry.DEF_REG.register(modEventBus);
         BNetwork.register();
         PROXY.init();
+        MinecraftForge.EVENT_BUS.register(new ClientForgeEvents());
         MinecraftForge.EVENT_BUS.register(new CommonEvents());
     }
 
