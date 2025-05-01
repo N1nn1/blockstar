@@ -3,6 +3,7 @@ package com.ninni.blockstar.server.block.entity;
 import com.ninni.blockstar.registry.BBlockEntityRegistry;
 import com.ninni.blockstar.server.inventory.ComposingTableMenu;
 import com.ninni.blockstar.server.inventory.KeyboardMenu;
+import com.ninni.blockstar.server.item.SheetMusicItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;

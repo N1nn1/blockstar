@@ -1,6 +1,7 @@
 package com.ninni.blockstar.registry;
 
 import com.ninni.blockstar.server.packet.PlaySoundPacket;
+import com.ninni.blockstar.server.packet.SheetNoteEditPacket;
 import com.ninni.blockstar.server.packet.StopSoundPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkRegistry;
@@ -22,5 +23,6 @@ public class BNetwork {
     public static void register() {
         INSTANCE.registerMessage(id++, PlaySoundPacket.class, PlaySoundPacket::encode, PlaySoundPacket::decode, PlaySoundPacket::handle);
         INSTANCE.registerMessage(id++, StopSoundPacket.class, StopSoundPacket::encode, StopSoundPacket::decode, StopSoundPacket::handle);
+        INSTANCE.registerMessage(id++, SheetNoteEditPacket.class, SheetNoteEditPacket::encode, SheetNoteEditPacket::decode, SheetNoteEditPacket::handle);
     }
 }
