@@ -2,7 +2,6 @@ package com.ninni.blockstar.server.inventory;
 
 import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
 import com.ninni.blockstar.registry.BMenuRegistry;
-import com.ninni.blockstar.server.instrument.InstrumentType;
 import com.ninni.blockstar.server.item.SheetMusicItem;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -11,40 +10,44 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
-public class KeyboardMenu extends AbstractContainerMenu {
+public class ComposingTableMenu extends AbstractContainerMenu {
     private final Container container;
-    final Slot soundfontSlot;
     final Slot sheetMusicSlot;
-    final InstrumentType instrumentType;
+    final Slot inkSlot;
 
-    public KeyboardMenu(int id, Inventory inventory) {
-        this(id, inventory, new SimpleContainer(2));
+    public ComposingTableMenu(int id, Inventory inventory) {
+        this(id, inventory, new SimpleContainer(4));
     }
 
-    public KeyboardMenu(int id, Inventory inventory, Container container) {
-        super(BMenuRegistry.KEYBOARD.get(), id);
+    public ComposingTableMenu(int id, Inventory inventory, Container container) {
+        super(BMenuRegistry.COMPOSING_TABLE.get(), id);
         this.container = container;
-        this.instrumentType = BInstrumentTypeRegistry.KEYBOARD.get();
 
-        soundfontSlot = this.addSlot(new SoundfontSlot(this.container, 0, 7, 43, this.instrumentType));
-        sheetMusicSlot = this.addSlot(new Slot(this.container, 1, 160, 43) {
+        sheetMusicSlot = this.addSlot(new Slot(this.container, 0, 8, 29) {
             public boolean mayPlace(ItemStack stack) {
-                return stack.getItem() instanceof SheetMusicItem;
+                return stack.getItem() instanceof SheetMusicItem || stack.is(Items.PAPER);
             }
             public int getMaxStackSize() {
                 return 1;
             }
         });
 
+        inkSlot = this.addSlot(new Slot(this.container, 1, 152, 29) {
+            public boolean mayPlace(ItemStack stack) {
+                return stack.is(Items.INK_SAC);
+            }
+        });
+
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(inventory, j + i * 9 + 9, 12 + j * 18, 172 + i * 18));
+                this.addSlot(new Slot(inventory, j + i * 9 + 9, 8 + j * 18, 172 + i * 18));
             }
         }
 
         for (int k = 0; k < 9; ++k) {
-            this.addSlot(new Slot(inventory, k, 12 + k * 18, 230));
+            this.addSlot(new Slot(inventory, k, 8 + k * 18, 230));
         }
 
     }
@@ -58,13 +61,13 @@ public class KeyboardMenu extends AbstractContainerMenu {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
 
-            if (i != this.soundfontSlot.index && i != this.sheetMusicSlot.index) {
-                if (itemstack1.getItem() instanceof SheetMusicItem) {
+            if (i != this.inkSlot.index && i != this.sheetMusicSlot.index) {
+                if (itemstack1.getItem() instanceof SheetMusicItem || itemstack1.is(Items.PAPER)) {
                     if (!this.moveItemStackTo(itemstack1, this.sheetMusicSlot.index, this.sheetMusicSlot.index + 1, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (this.instrumentType.isValidSoundfontForInstrumentType(itemstack1)) {
-                    if (!this.moveItemStackTo(itemstack1, this.soundfontSlot.index, this.soundfontSlot.index + 1, false)) {
+                } else if (itemstack1.is(Items.INK_SAC)) {
+                    if (!this.moveItemStackTo(itemstack1, this.inkSlot.index, this.inkSlot.index + 1, false)) {
                         return ItemStack.EMPTY;
                     }
                 } else if (i >= 2 && i < 29) {
@@ -99,15 +102,11 @@ public class KeyboardMenu extends AbstractContainerMenu {
         return this.container.stillValid(p_38874_);
     }
 
-    public Slot getSoundfontSlot() {
-        return soundfontSlot;
-    }
-
     public Slot getSheetMusicSlot() {
         return sheetMusicSlot;
     }
 
-    public InstrumentType getInstrumentType() {
-        return instrumentType;
+    public Slot getInkSlot() {
+        return inkSlot;
     }
 }

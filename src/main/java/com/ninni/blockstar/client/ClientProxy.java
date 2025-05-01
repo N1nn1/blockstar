@@ -3,6 +3,7 @@ package com.ninni.blockstar.client;
 import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.CommonProxy;
 import com.ninni.blockstar.client.event.ClientEvents;
+import com.ninni.blockstar.client.gui.ComposingTableScreen;
 import com.ninni.blockstar.client.midi.MidiSettingsConfig;
 import com.ninni.blockstar.client.gui.KeyboardScreen;
 import com.ninni.blockstar.client.misc.text.ResonantPrismTooltip;
@@ -40,6 +41,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void clientSetup() {
+        MenuScreens.register(BMenuRegistry.COMPOSING_TABLE.get(), ComposingTableScreen::new);
         MenuScreens.register(BMenuRegistry.KEYBOARD.get(), KeyboardScreen::new);
 
         ItemProperties.register(BItemRegistry.RESONANT_PRISM.get(), new ResourceLocation(Blockstar.MODID, "attuned"), (stack, level, player, i) -> {

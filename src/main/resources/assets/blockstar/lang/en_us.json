@@ -7,6 +7,9 @@
 
   "item.blockstar.sheet_music": "Sheet Music",
 
+  "block.blockstar.composing_table": "Composing Table",
+  "blockstar.container.composing_table": "Composing Table",
+
   "item.blockstar.resonant_prism": "Resonant Prism",
   "item.blockstar.resonant_prism.more": "and %s more...",
   "subtitles.blockstar.item.resonant_prism.tune": "Resonant Prism tuned",
