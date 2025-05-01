@@ -1,13 +1,14 @@
 package com.ninni.blockstar.server.block.entity;
 
 import com.ninni.blockstar.registry.BBlockEntityRegistry;
+import com.ninni.blockstar.server.block.ComposingTableBlock;
 import com.ninni.blockstar.server.inventory.ComposingTableMenu;
-import com.ninni.blockstar.server.inventory.KeyboardMenu;
-import com.ninni.blockstar.server.item.SheetMusicItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
@@ -45,6 +46,21 @@ public class ComposingTableBlockEntity extends BaseContainerBlockEntity {
         ContainerHelper.saveAllItems(p_187498_, this.items);
     }
 
+    public void updateSheetMusicState() {
+        if (level != null && !level.isClientSide) {
+            boolean hasItem = !this.getItem(0).isEmpty();
+            BlockState currentState = level.getBlockState(worldPosition);
+
+            if (currentState.getBlock() instanceof ComposingTableBlock) {
+                if (currentState.getValue(ComposingTableBlock.HAS_PAPER) != hasItem) {
+                    level.setBlock(worldPosition, currentState.setValue(ComposingTableBlock.HAS_PAPER, hasItem), 3);
+                    if (hasItem) level.playSound(null, worldPosition, SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1, 1);
+                    else level.playSound(null, worldPosition, SoundEvents.BOOK_PUT, SoundSource.BLOCKS, 1, 1);
+                }
+            }
+        }
+    }
+
     @Override
     public int getContainerSize() {
         return 4;
@@ -61,18 +77,14 @@ public class ComposingTableBlockEntity extends BaseContainerBlockEntity {
     }
 
     @Override
-    public ItemStack removeItem(int p_18942_, int p_18943_) {
-        return ContainerHelper.removeItem(this.items, p_18942_, p_18943_);
-    }
-
-    @Override
     public ItemStack removeItemNoUpdate(int p_18951_) {
         return ContainerHelper.takeItem(this.items, p_18951_);
     }
 
     @Override
-    public void setItem(int p_18944_, ItemStack p_18945_) {
-        items.set(p_18944_, p_18945_);
+    public void setItem(int slot, ItemStack stack) {
+        items.set(slot, stack);
+        if (slot == 0) updateSheetMusicState();
     }
 
     @Override
@@ -81,7 +93,15 @@ public class ComposingTableBlockEntity extends BaseContainerBlockEntity {
     }
 
     @Override
+    public ItemStack removeItem(int index, int count) {
+        ItemStack result = ContainerHelper.removeItem(this.items, index, count);
+        if (index == 0) updateSheetMusicState();
+        return result;
+    }
+
+    @Override
     public void clearContent() {
         items.clear();
+        updateSheetMusicState();
     }
 }

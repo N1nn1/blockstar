@@ -1,7 +1,6 @@
 package com.ninni.blockstar.server.block;
 
 import com.ninni.blockstar.server.block.entity.ComposingTableBlockEntity;
-import com.ninni.blockstar.server.block.entity.KeyboardBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;
@@ -11,6 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
@@ -23,15 +23,52 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class ComposingTableBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    public static final BooleanProperty HAS_PAPER = BooleanProperty.create("paper");
+    protected static final VoxelShape SHAPE =  Shapes.or(Block.box(0, 0, 0, 16, 2, 16), Block.box(4, 2, 4, 12, 13, 12));
+    protected static final VoxelShape SHAPE_NORTH = Shapes.or(
+            Block.box(0, 8, 0, 16, 12, 5),
+            Block.box(0, 9, 3, 16, 13, 8),
+            Block.box(0, 10, 6, 16, 14, 11),
+            Block.box(0, 11, 8, 16, 15, 13),
+            Block.box(0, 12, 11, 16, 16, 16),
+            SHAPE
+    );
+    protected static final VoxelShape SHAPE_WEST = Shapes.or(
+            Block.box(0, 8, 0, 5, 12, 16),
+            Block.box(3, 9, 0, 8, 13, 16),
+            Block.box(6, 10, 0, 11, 14, 16),
+            Block.box(8, 11, 0, 13, 15, 16),
+            Block.box(11, 12, 0, 16, 16, 16),
+            SHAPE
+    );
+    protected static final VoxelShape SHAPE_EAST = Shapes.or(
+            Block.box(11, 8, 0, 16, 12, 16),
+            Block.box(8, 9, 0, 13, 13, 16),
+            Block.box(5, 10, 0, 10, 14, 16),
+            Block.box(3, 11, 0, 8, 15, 16),
+            Block.box(0, 12, 0, 5, 16, 16),
+            SHAPE
+    );
+    protected static final VoxelShape SHAPE_SOUTH = Shapes.or(
+            Block.box(0, 8, 11, 16, 12, 16),
+            Block.box(0, 9, 8, 16, 13, 13),
+            Block.box(0, 10, 5, 16, 14, 10),
+            Block.box(0, 11, 3, 16, 15, 8),
+            Block.box(0, 12, 0, 16, 16, 5),
+            SHAPE
+    );
 
     public ComposingTableBlock() {
         super(Properties.of().strength(2.0F, 3.0F).sound(SoundType.WOOD).ignitedByLava());
-        this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false).setValue(FACING, Direction.NORTH));
+        this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false).setValue(HAS_PAPER, false).setValue(FACING, Direction.NORTH));
     }
 
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
@@ -45,6 +82,16 @@ public class ComposingTableBlock extends BaseEntityBlock implements SimpleWaterl
             }
             return InteractionResult.CONSUME;
         }
+    }
+
+    public VoxelShape getShape(BlockState p_54561_, BlockGetter p_54562_, BlockPos p_54563_, CollisionContext p_54564_) {
+        return switch (p_54561_.getValue(FACING)) {
+            case NORTH -> SHAPE_NORTH;
+            case SOUTH -> SHAPE_SOUTH;
+            case EAST -> SHAPE_EAST;
+            case WEST -> SHAPE_WEST;
+            default -> SHAPE;
+        };
     }
 
     public void setPlacedBy(Level p_52676_, BlockPos p_52677_, BlockState p_52678_, LivingEntity p_52679_, ItemStack p_52680_) {
@@ -80,7 +127,7 @@ public class ComposingTableBlock extends BaseEntityBlock implements SimpleWaterl
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_56388_) {
-        p_56388_.add(WATERLOGGED, FACING);
+        p_56388_.add(WATERLOGGED, FACING, HAS_PAPER);
     }
 
     @Nullable

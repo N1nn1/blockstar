@@ -45,7 +45,6 @@ public class SheetNoteEditPacket {
     }
 
     public static void handle(SheetNoteEditPacket msg, Supplier<NetworkEvent.Context> ctx) {
-
         ctx.get().enqueueWork(() -> {
             if (ctx.get().getDirection().getReceptionSide().isServer()) {
                 if (ctx.get().getSender() != null && ctx.get().getSender().containerMenu instanceof ComposingTableMenu menu) {

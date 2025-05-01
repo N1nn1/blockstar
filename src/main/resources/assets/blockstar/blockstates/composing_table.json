@@ -1,18 +1,34 @@
 {
   "variants": {
-    "facing=east": {
+    "facing=east,paper=false": {
       "model": "blockstar:block/composing_table",
       "y": 90
     },
-    "facing=north": {
+    "facing=north,paper=false": {
       "model": "blockstar:block/composing_table"
     },
-    "facing=south": {
+    "facing=south,paper=false": {
       "model": "blockstar:block/composing_table",
       "y": 180
     },
-    "facing=west": {
+    "facing=west,paper=false": {
       "model": "blockstar:block/composing_table",
+      "y": 270
+    },
+
+    "facing=east,paper=true": {
+      "model": "blockstar:block/composing_table_paper",
+      "y": 90
+    },
+    "facing=north,paper=true": {
+      "model": "blockstar:block/composing_table_paper"
+    },
+    "facing=south,paper=true": {
+      "model": "blockstar:block/composing_table_paper",
+      "y": 180
+    },
+    "facing=west,paper=true": {
+      "model": "blockstar:block/composing_table_paper",
       "y": 270
     }
   }

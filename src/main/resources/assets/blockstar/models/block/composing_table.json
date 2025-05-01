@@ -11,7 +11,7 @@
 		"10": "blockstar:block/composing_bottom",
 		"11": "blockstar:block/composing_table_cloth",
 		"12": "blockstar:block/composing_table_top_deco",
-		"particle": "blockstar:block/composing_table_front"
+		"particle": "#3"
 	},
 	"elements": [
 		{

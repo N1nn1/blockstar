@@ -11,6 +11,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -91,13 +92,7 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
 
         guiGraphics.blit(TEXTURE_BG, i, j, 0, 0, this.imageWidth, this.imageHeight);
 
-        if (!this.menu.getInkSlot().hasItem()) {
-            guiGraphics.blit(TEXTURE_WIDGETS, i + 152, j + 29, 208, 0, 16, 16);
-        }
-
-        if (getSheetMusic().isEmpty()) {
-            guiGraphics.blit(TEXTURE_WIDGETS, i + 8, j + 29, 224, 0, 16, 16);
-        } else {
+        if (!getSheetMusic().isEmpty()) {
 
             int paperX = i + 8;
             int paperY = j + 49;
@@ -158,8 +153,14 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
         }
 
         int k = (int)((116 - 34) * (scrollOffsetY / (float) maxScroll()));
-        guiGraphics.blit(TEXTURE_WIDGETS, i + 152, j + 49 + k, 178, !this.getSheetMusic().isEmpty() ? 0 : 15, 16, 15);
+        guiGraphics.blit(TEXTURE_WIDGETS, i + 152, j + 49 + k, 32, !this.getSheetMusic().isEmpty() ? 224 : 224 + 15, 16, 15);
+
+        int gearX = this.leftPos + 151;
+        int gearY = this.topPos + 149;
+        boolean hovered = mouseX >= gearX && mouseX < gearX + 18 && mouseY >= gearY && mouseY < gearY + 18;
+        guiGraphics.blit(TEXTURE_WIDGETS, gearX, gearY, 178, getSheetMusic().isEmpty() ? 36 : hovered ? 18 : 0, 18, 18);
     }
+
 
     private int pitchToY(int pitch) {
         int stepIndex = 0;
@@ -214,6 +215,16 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
             isDraggingScrollbar = true;
             scrollbarStartY = (int) mouseY;
             scrollOffsetStart = scrollOffsetY;
+            return true;
+        }
+
+
+        int gearX = this.leftPos + 151;
+        int gearY = this.topPos + 149;
+
+        if (mouseX >= gearX && mouseX < gearX + 18 && mouseY >= gearY && mouseY < gearY + 18 && !getSheetMusic().isEmpty()) {
+            this.minecraft.player.playNotifySound(SoundEvents.UI_BUTTON_CLICK.get(), SoundSource.MASTER, 0.15F,1);
+            this.minecraft.setScreen(new SheetSettingsScreen(Component.empty(),this, getSheetMusic()));
             return true;
         }
 
@@ -347,7 +358,7 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
     private boolean isInPaperBounds(double mouseX, double mouseY) {
         int paperX = this.leftPos + PAPER_OFFSET_X + STAFF_INNER_X;
         int paperY = this.topPos + PAPER_OFFSET_Y;
-        return mouseX >= paperX && mouseX < paperX + PAPER_WIDTH - 15 && mouseY >= paperY + 3 && mouseY < paperY + PAPER_HEIGHT - 15;
+        return mouseX >= paperX && mouseX < paperX + PAPER_WIDTH - 15 && mouseY >= paperY + 3 && mouseY < paperY + PAPER_HEIGHT - 17;
     }
 
     private SheetNote findNoteAtLocation(double mouseX, double mouseY) {
@@ -369,7 +380,7 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
         return null;
     }
 
-    private ItemStack getSheetMusic() {
+    public ItemStack getSheetMusic() {
         return this.menu.getSheetMusicSlot().getItem();
     }
 
