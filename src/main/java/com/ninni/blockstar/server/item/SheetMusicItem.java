@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SheetMusicItem extends Item {
+
     public SheetMusicItem(Properties properties) {
         super(properties);
     }

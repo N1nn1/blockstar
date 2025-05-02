@@ -46,23 +46,38 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
     private static final int TICK_WIDTH = 9;
     private static final int TOTAL_STAFFS = 12;
 
-    private static final int[] DIATONIC_STEPS = {
-            83, // B5
-            81, // A5
-            79, // G5
-            77, // F5
-            76, // E5
-            74, // D5
-            72, // C5
-            71, // B4
-            69, // A4
-            67, // G4
-            65, // F4
-            64, // E4
-            62, // D4
-            60, // C4
+    public int[] majorSteps = {
+            23, //B5
+            21, //A5
+            19, //G5
+            17, //F5
+            16, //E5
+            14, //D5
+            12, //C5
+            11, //B4
+            9,  //A4
+            7,  //G4
+            5,  //F4
+            4,  //E4
+            2,  //D4
+            0,  //C4
     };
-
+    public int[] minorSteps = {
+            22, //Bb5
+            20, //Ab5
+            19, //G5
+            17, //F5
+            15, //Eb5
+            14, //D5
+            12, //C5
+            10, //Bb4
+            8,  //Ab4
+            7,  //G4
+            5,  //F4
+            3,  //Eb4
+            2,  //D4
+            0   //C4
+    };
 
     public ComposingTableScreen(ComposingTableMenu menu, Inventory inventory, Component component) {
         super(menu, inventory, component);
@@ -157,22 +172,17 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
                 }
             }
 
+            guiGraphics.enableScissor(paperX ,paperY + 4,paperX + paperWidth,paperY + paperHeight - 4);
+
             // pentagram
             for (int s = 0; s <= 11; s++) {
                 int staffY = paperY + 6 + s * 33 - scrollOffsetY;
 
-                if (isInPaperBounds(paperX + 6, staffY - 12))  {
-                    guiGraphics.blit(TEXTURE_PAPER, paperX + 4, staffY - 2, 0, 162, 130, 1);
-                }
-                if (isInPaperBounds(paperX + 6, paperY + 6 - scrollOffsetY))  {
-                    guiGraphics.blit(TEXTURE_PAPER, paperX + 4, paperY + 6 - scrollOffsetY, 0, 162, 130, 1);
-                }
-                if (isInPaperBounds(paperX + 6, staffY + 9) && s != 11)  {
-                    for (int r = 0; r <= 5; r++) {
-                        guiGraphics.blit(TEXTURE_PAPER, paperX + 4, staffY - 2 + (r * 4) + 9, 0, 137 + (r * 4), 130, 1);
-                    }
-                }
+                if (s > 0) guiGraphics.blit(TEXTURE_PAPER, paperX + 4, staffY - 2, 0, 162, 130, 1);
 
+                for (int r = 0; r <= 5; r++) {
+                    if (s != 11) guiGraphics.blit(TEXTURE_PAPER, paperX + 4, staffY - 2 + (r * 4) + 9, 0, 137 + (r * 4), 130, 1);
+                }
             }
 
             //measures
@@ -189,7 +199,7 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
 
                     if (currentTick % ticksPerMeasure == 0 && t != 0) {
                         int x = paperX + 4 + (t * tickWidth);
-                        if (isInPaperBounds(x, measureY + 10)) guiGraphics.fill(x, measureY + 6, x + 1, measureY + 25, 0xFF888888);
+                        guiGraphics.fill(x, measureY + 6, x + 1, measureY + 25, 0xFF888888);
                     }
                 }
                 tickOffset += ticksPerStaff;
@@ -203,13 +213,12 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
                 int tickInStaff = noteTick % ticksPerStaff;
 
                 int x = paperX + 7 + tickInStaff * tickWidth;
-                int y = paperY + 2 + staffIndex * 33 + pitchToY(note.pitch) - scrollOffsetY;
+                int y = paperY + 6 + staffIndex * 33 + pitchToY(note.pitch) - scrollOffsetY;
                 int width = Math.max(4, (note.duration - 1) * tickWidth);
 
-                if (isInPaperBounds(x, y)) {
-                    drawNote(guiGraphics, x, y, width);
-                }
+                drawNote(guiGraphics, x, y, width);
             }
+            guiGraphics.disableScissor();
         }
 
         int k = (int)((116 - 34) * (scrollOffsetY / (float) maxScroll()));
@@ -240,8 +249,10 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
 
 
     private int pitchToY(int pitch) {
-        for (int i = 0; i < DIATONIC_STEPS.length; i++) {
-            if (DIATONIC_STEPS[i] == pitch) return i * 2;
+        int[] diatonicSteps = SheetMusicItem.isKeyMinor(getSheetMusic()) ? minorSteps : majorSteps;
+
+        for (int i = 0; i < diatonicSteps.length; i++) {
+            if (diatonicSteps[i] == (pitch - 60)) return i * 2;
         }
         return 2;
     }
@@ -268,8 +279,7 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
     private SheetNote findNoteAtTickAndPitch(ItemStack sheet, int tick, int pitch) {
         List<SheetNote> notes = SheetMusicItem.getNotes(sheet);
         for (SheetNote note : notes) {
-            //if (note.pitch == pitch && tick >= note.tick && tick <= note.tick + (note.duration - 1)) {
-            if (note.pitch == pitch && note.tick == tick) {
+            if (tick >= 0 && note.pitch == pitch && tick >= note.tick && tick <= note.tick + (note.duration - 1)) {
                 return note;
             }
         }
@@ -344,7 +354,7 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
 
                     draggedNote = new SheetNote(tick, pitch, 1, 100);
 
-                    int duration = lastModifiedNote.duration + tick > 14 ? lastModifiedNote.duration - (lastModifiedNote.duration + tick - 14) : lastModifiedNote.duration;
+                    int duration = lastModifiedNote.duration > 0 ? lastModifiedNote.duration : 1;
 
                     this.minecraft.player.playSound(SoundEvents.NOTE_BLOCK_HARP.get(), 1.0F, (float) Math.pow(2.0D, (pitch - 69) / 12.0D));
                     if (getSheetMusic().is(Items.PAPER)) this.minecraft.player.playSound(SoundEvents.BOOK_PAGE_TURN, 1.0F, 1.0F);
@@ -380,11 +390,19 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
         } else {
             if (draggedNote != null) {
                 int paperX = this.leftPos + PAPER_OFFSET_X + STAFF_INNER_X;
-                int localX = (int) (mouseX - paperX);
-                int currentTick = (localX / TICK_WIDTH);
+                int localX = (int)(mouseX - paperX);
 
-                int newDuration = lastModifiedNote.duration + draggedNote.tick > 14 ? lastModifiedNote.duration - (lastModifiedNote.duration + draggedNote.tick - 14) : lastModifiedNote.duration;
-                if (isInPaperBounds(mouseX, mouseY)) newDuration = Math.max(1, currentTick - draggedNote.tick + 1);
+                int ticksPerStaff = 14;
+                int tickWidth = 9;
+
+                int tickInStaff = localX / tickWidth;
+                int staffNum = getStaffNumber((int)mouseX, (int)mouseY, this.leftPos, this.topPos);
+                if (staffNum == -1) return false;
+
+                int tick = staffNum * ticksPerStaff + tickInStaff;
+
+                int newDuration = 1;
+                if (isInPaperBounds(mouseX, mouseY)) newDuration = Math.max(1, tick - draggedNote.tick + 1);
 
                 lastModifiedNote = new SheetNote(draggedNote.tick, draggedNote.pitch, newDuration, draggedNote.velocity);
 
@@ -436,14 +454,15 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
     }
 
     private int getDiatonicPitchFromY(double mouseY) {
-        int paperY = this.topPos + PAPER_OFFSET_Y;
-        int localY = (int)(mouseY - paperY + 2 + scrollOffsetY);
+        int topStaffY = this.topPos + 53;
+        int localY = (int)(mouseY - topStaffY + scrollOffsetY);
         int yWithinStaff = localY % 33;
         int rowInStaff = (yWithinStaff - 2) / 2;
+        int[] diatonicSteps = SheetMusicItem.isKeyMinor(getSheetMusic()) ? minorSteps : majorSteps;
 
-        rowInStaff = Mth.clamp(rowInStaff, 0, DIATONIC_STEPS.length - 1);
+        rowInStaff = Mth.clamp(rowInStaff, 0, diatonicSteps.length - 1);
 
-        return DIATONIC_STEPS[rowInStaff];
+        return diatonicSteps[rowInStaff] + 60;
     }
 
     private boolean isInPaperBounds(double mouseX, double mouseY) {

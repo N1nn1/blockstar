@@ -10,11 +10,23 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import java.awt.*;
-
 public abstract class InstrumentType {
     private int lowestNote;
     private int highestNote;
+    public int[] major               = {0, 2, 4, 5, 7, 9, 11, 12};
+    public int[] minor               = {0, 2, 3, 5, 7, 8, 10, 12};
+    public int[] pentatonic          = {0, 3, 5, 7, 10, 12};
+    public int[] dorian              = {0, 2, 3, 5, 7, 9, 10, 12};
+    public int[] phrygian            = {0, 1, 3, 5, 7, 8, 10, 12};
+    public int[] lydian              = {0, 2, 4, 6, 7, 9, 11, 12};
+    public int[] mixolydian          = {0, 2, 4, 5, 7, 9, 10, 12};
+    public int[] blues               = {0, 3, 5, 6, 7, 10, 12};
+    public int[] harmonicMinor       = {0, 2, 3, 5, 7, 8, 11, 12};
+    public int[] chromatic           = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+    public int[] doubleHarmonic      = {0, 1, 4, 5, 7, 8, 11, 12};
+    public int[] doubleHarmonicMinor = {0, 1, 3, 5, 7, 8, 11, 12};
+    public int[] locrian             = {0, 1, 3, 5, 6, 8, 10, 12};
+    public int[] superLocrian        = {0, 1, 3, 4, 6, 8, 10, 12};
 
     public InstrumentType(int lowestNote, int highestNote) {
         this.lowestNote = lowestNote;
@@ -63,21 +75,6 @@ public abstract class InstrumentType {
     }
 
     int[] getScaleForPlayer(LivingEntity entity, Level level) {
-        int[] major               = {0, 2, 4, 5, 7, 9, 11, 12};
-        int[] minor               = {0, 2, 3, 5, 7, 8, 10, 12};
-        int[] pentatonic          = {0, 3, 5, 7, 10, 12};
-        int[] dorian              = {0, 2, 3, 5, 7, 9, 10, 12};
-        int[] phrygian            = {0, 1, 3, 5, 7, 8, 10, 12};
-        int[] lydian              = {0, 2, 4, 6, 7, 9, 11, 12};
-        int[] mixolydian          = {0, 2, 4, 5, 7, 9, 10, 12};
-        int[] blues               = {0, 3, 5, 6, 7, 10, 12};
-        int[] harmonicMinor       = {0, 2, 3, 5, 7, 8, 11, 12};
-        int[] chromatic           = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-        int[] doubleHarmonic      = {0, 1, 4, 5, 7, 8, 11, 12};
-        int[] doubleHarmonicMinor = {0, 1, 3, 5, 7, 8, 11, 12};
-        int[] locrian             = {0, 1, 3, 5, 6, 8, 10, 12};
-        int[] superLocrian        = {0, 1, 3, 4, 6, 8, 10, 12};
-
         if (entity.getHealth() < 2) {
             return harmonicMinor;
         } else if (level.isRaining()) {
