@@ -203,7 +203,7 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
         int gearX = this.leftPos + 151;
         int gearY = this.topPos + 149;
         boolean hovered = mouseX >= gearX && mouseX < gearX + 18 && mouseY >= gearY && mouseY < gearY + 18;
-        guiGraphics.blit(TEXTURE_WIDGETS, gearX, gearY, 178, getSheetMusic().isEmpty() ? 36 : hovered ? 18 : 0, 18, 18);
+        guiGraphics.blit(TEXTURE_WIDGETS, gearX, gearY, 160, getSheetMusic().isEmpty() ? 36 : hovered ? 18 : 0, 18, 18);
     }
 
 
@@ -443,7 +443,7 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (this.nameField != null && this.nameField.keyPressed(keyCode, scanCode, modifiers)) {
+        if (this.nameField != null && this.nameField.isFocused()) {
             if (keyCode == 256) this.minecraft.player.closeContainer();
             return this.nameField.keyPressed(keyCode, scanCode, modifiers);
         }
@@ -453,12 +453,6 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
     public ItemStack getSheetMusic() {
         return this.menu.getSheetMusicSlot().getItem();
     }
-
-    @Override
-    public void onClose() {
-        super.onClose();
-    }
-
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {

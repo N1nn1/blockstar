@@ -58,7 +58,7 @@ public class SheetNote {
         int relativePitch = (pitch - 54) % 25;
         if (relativePitch < 0) relativePitch += 25;
 
-        float brightness = ((float) velocity / 127) * 0.5F + 0.5F;
+        float brightness = ((float) velocity / 127) * 0.75F + 0.25F;
 
         int rgb = java.awt.Color.HSBtoRGB(relativePitch / 24.0f, 1.0f, brightness);
         return 0xFF000000 | (rgb & 0x00FFFFFF);
