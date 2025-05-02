@@ -16,6 +16,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.PacketDistributor;
 
+import java.util.Optional;
+
 public class Keyboard extends InstrumentType {
     public Keyboard() {
         super(48, 76);
@@ -47,7 +49,7 @@ public class Keyboard extends InstrumentType {
 
                 BNetwork.INSTANCE.send(
                         PacketDistributor.NEAR.with(() -> PacketDistributor.TargetPoint.p(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), 32, livingEntity.level().dimension()).get()),
-                        new PlaySoundPacket(resourceLocation, pitch, livingEntity.getId(), note)
+                        new PlaySoundPacket(resourceLocation, pitch, livingEntity.getId(), note, Optional.of(20))
                 );
 
                 if (livingEntity instanceof ServerPlayer player) {

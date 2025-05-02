@@ -1,8 +1,13 @@
 package com.ninni.blockstar.server.inventory;
 
+import com.ninni.blockstar.Blockstar;
+import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
 import com.ninni.blockstar.registry.BMenuRegistry;
+import com.ninni.blockstar.server.data.SoundfontManager;
+import com.ninni.blockstar.server.instrument.InstrumentType;
 import com.ninni.blockstar.server.item.ResonantPrismItem;
 import com.ninni.blockstar.server.item.SheetMusicItem;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -132,6 +137,27 @@ public class ComposingTableMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(Player player) {
         return this.container.stillValid(player);
+    }
+
+    public SoundfontManager.SoundfontDefinition getSoundfont() {
+        ItemStack soundfontStack = this.getSoundfontSlot().getItem();
+
+        if (((InstrumentSlot)this.getInstrumentSlot()).getInstrument() != null) {
+            return getInstrumentType().getSoundfont(soundfontStack);
+        }
+        else if (this.getSoundfontSlot().hasItem() && !this.getInstrumentSlot().hasItem() && soundfontStack.hasTag() && soundfontStack.getTag().contains("Soundfont")) {
+            return Blockstar.PROXY.getSoundfontManager().get(new ResourceLocation(soundfontStack.getTag().getString("Soundfont")));
+        }
+        else {
+            return Blockstar.PROXY.getSoundfontManager().get(new ResourceLocation(Blockstar.MODID, "note_block-harp"));
+        }
+    }
+
+    public InstrumentType getInstrumentType() {
+        if (this.getInstrumentSlot().hasItem() && ((InstrumentSlot)this.getInstrumentSlot()).getInstrument() != null) {
+            return ((InstrumentSlot)this.getInstrumentSlot()).getInstrument();
+        }
+        return BInstrumentTypeRegistry.KEYBOARD.get();
     }
 
     public Slot getSheetMusicSlot() {

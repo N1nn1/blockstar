@@ -1,13 +1,12 @@
 package com.ninni.blockstar.client.sound;
 
-import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
-import com.ninni.blockstar.server.data.SoundfontManager;
-import com.ninni.blockstar.server.instrument.InstrumentType;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
+
+import java.util.Optional;
 
 public class SoundfontSound extends AbstractTickableSoundInstance {
     private final ResourceLocation soundLocation;
@@ -17,7 +16,7 @@ public class SoundfontSound extends AbstractTickableSoundInstance {
     private int releaseTicks = 0;
     private final float initialVolume;
 
-    public SoundfontSound(int note, ResourceLocation soundLocation, float volume, float pitch, LivingEntity user) {
+    public SoundfontSound(int note, ResourceLocation soundLocation, float volume, float pitch, LivingEntity user, Optional<Integer> autoFadeTicks) {
         super(SoundEvent.createVariableRangeEvent(soundLocation), SoundSource.RECORDS, user.getRandom());
         this.soundLocation = soundLocation;
         this.note = note;
@@ -32,6 +31,11 @@ public class SoundfontSound extends AbstractTickableSoundInstance {
         this.z = user.getZ();
 
         SoundManagerHelper.register(this);
+
+        if (autoFadeTicks.isPresent()) {
+            released = true;
+            releaseTicks = autoFadeTicks.get();
+        }
     }
 
     @Override

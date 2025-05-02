@@ -2,16 +2,21 @@ package com.ninni.blockstar.client.gui;
 
 import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.client.gui.components.CenteredEditBox;
+import com.ninni.blockstar.client.sound.SoundfontSound;
+import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
 import com.ninni.blockstar.registry.BItemRegistry;
 import com.ninni.blockstar.registry.BNetwork;
+import com.ninni.blockstar.server.data.SoundfontManager;
 import com.ninni.blockstar.server.inventory.ComposingTableMenu;
 import com.ninni.blockstar.server.item.SheetMusicItem;
 import com.ninni.blockstar.server.packet.SheetNoteEditPacket;
 import com.ninni.blockstar.server.packet.SheetRenamePacket;
 import com.ninni.blockstar.server.sheetmusic.SheetNote;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -24,6 +29,8 @@ import net.minecraft.world.item.Items;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+
+import static com.ninni.blockstar.client.sound.key.Key.getVelocity;
 
 public class ComposingTableScreen extends AbstractContainerScreen<ComposingTableMenu> {
     public static final ResourceLocation TEXTURE_BG = new ResourceLocation(Blockstar.MODID, "textures/gui/composing_table/bg.png");
@@ -305,27 +312,43 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
                     if (staffNum == -1) return false;
 
                     int tick = staffNum * ticksPerStaff + tickInStaff;
-                    int pitch = getDiatonicPitchFromY(mouseY);
+                    int note = getDiatonicPitchFromY(mouseY);
 
-                    SheetNote toDrag = findNoteAtTickAndPitch(sheet, tick, pitch);
+                    SheetNote toDrag = findNoteAtTickAndPitch(sheet, tick, note);
 
                     if (toDrag != null) {
                         draggedNote = toDrag;
                         return true;
                     }
 
-                    draggedNote = new SheetNote(tick, pitch, 1, 100);
+                    draggedNote = new SheetNote(tick, note, 1, 100);
 
                     int duration = lastModifiedNote.duration > 0 ? lastModifiedNote.duration : 1;
 
                     if (getSheetMusic().is(Items.PAPER)) this.minecraft.player.playSound(SoundEvents.BOOK_PAGE_TURN, 1.0F, 1.0F);
 
                     if (this.menu.getInkAmount() > 0) {
-                        this.minecraft.player.playSound(SoundEvents.NOTE_BLOCK_HARP.get(), 1.0F, (float) Math.pow(2.0D, (pitch - 69) / 12.0D));
-                        this.minecraft.player.playSound(SoundEvents.SQUID_HURT, 0.5F, 1);
+                        SoundfontManager.SoundfontDefinition soundfont = menu.getSoundfont();
+                        SoundfontManager.InstrumentSoundfontData forInstrument = soundfont.getForInstrument(menu.getInstrumentType());
+                        int sampleNote = forInstrument.getClosestSampleNote(note);
+                        float pitch = (float) Math.pow(2, (note - sampleNote) / 12.0);
+
+                        String velocitySuffix = getVelocity(menu.getInstrumentType(), soundfont, lastModifiedNote.velocity);
+
+                        ResourceLocation resourceLocation = new ResourceLocation(
+                                soundfont.name().getNamespace(),
+                                "soundfont." + BInstrumentTypeRegistry.get(menu.getInstrumentType()).getPath()
+                                        + "." + soundfont.name().getPath()
+                                        + "." + sampleNote
+                                        + velocitySuffix
+                        );
+
+                        LocalPlayer player = Minecraft.getInstance().player;
+
+                        this.minecraft.getSoundManager().play(new SoundfontSound(note, resourceLocation, lastModifiedNote.velocity, pitch, player, Optional.of(10)));
                     }
                     BNetwork.INSTANCE.sendToServer(new SheetNoteEditPacket(
-                            SheetNoteEditPacket.Action.ADD, tick, pitch, duration, lastModifiedNote.velocity
+                            SheetNoteEditPacket.Action.ADD, tick, note, duration, lastModifiedNote.velocity
                     ));
 
                     return true;

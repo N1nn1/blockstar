@@ -5,6 +5,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class PlaySoundPacket {
@@ -12,12 +13,14 @@ public class PlaySoundPacket {
     public final float pitch;
     public final int playerId;
     public final int note;
+    public final Optional<Integer> autoFadeTicks;
 
-    public PlaySoundPacket(ResourceLocation soundLocation, float pitch, int playerId, int note) {
+    public PlaySoundPacket(ResourceLocation soundLocation, float pitch, int playerId, int note, Optional<Integer> autoFadeTicks) {
         this.soundLocation = soundLocation;
         this.pitch = pitch;
         this.playerId = playerId;
         this.note = note;
+        this.autoFadeTicks = autoFadeTicks;
     }
 
     public static void encode(PlaySoundPacket msg, FriendlyByteBuf buf) {
@@ -25,10 +28,11 @@ public class PlaySoundPacket {
         buf.writeFloat(msg.pitch);
         buf.writeInt(msg.playerId);
         buf.writeInt(msg.note);
+        buf.writeOptional(msg.autoFadeTicks, FriendlyByteBuf::writeInt);
     }
 
     public static PlaySoundPacket decode(FriendlyByteBuf buf) {
-        return new PlaySoundPacket(buf.readResourceLocation(), buf.readFloat(), buf.readInt(), buf.readInt());
+        return new PlaySoundPacket(buf.readResourceLocation(), buf.readFloat(), buf.readInt(), buf.readInt(), buf.readOptional(FriendlyByteBuf::readInt));
     }
 
     public static void handle(PlaySoundPacket msg, Supplier<NetworkEvent.Context> ctx) {

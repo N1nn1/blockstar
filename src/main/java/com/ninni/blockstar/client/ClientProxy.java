@@ -60,7 +60,7 @@ public class ClientProxy extends CommonProxy {
         if (player != null) {
             Entity playerEntity = player.level().getEntity(msg.playerId);
             if (playerEntity instanceof LocalPlayer targetPlayer) {
-                mc.getSoundManager().play(new SoundfontSound(msg.note, msg.soundLocation, 1.0f, msg.pitch, targetPlayer));
+                mc.getSoundManager().play(new SoundfontSound(msg.note, msg.soundLocation, 1.0f, msg.pitch, targetPlayer, msg.autoFadeTicks));
             }
         }
     }

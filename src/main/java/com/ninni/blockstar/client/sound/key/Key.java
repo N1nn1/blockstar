@@ -4,6 +4,7 @@ import com.ninni.blockstar.client.midi.MidiSettingsConfig;
 import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
 import com.ninni.blockstar.registry.BNetwork;
 import com.ninni.blockstar.server.data.SoundfontManager;
+import com.ninni.blockstar.server.instrument.InstrumentType;
 import com.ninni.blockstar.server.inventory.KeyboardMenu;
 import com.ninni.blockstar.server.packet.PlaySoundPacket;
 import com.ninni.blockstar.server.packet.StopSoundPacket;
@@ -80,7 +81,7 @@ public abstract class Key {
         String velocitySuffix = "";
 
         if (velocity.isPresent()) {
-            velocitySuffix = getVelocity(menu, soundfont, velocity.get());
+            velocitySuffix = getVelocity(menu.getInstrumentType(), soundfont, velocity.get());
         } else {
             if (forInstrument.velocityLayers().isPresent()) velocitySuffix = "_" + forInstrument.default_velocity().orElse(forInstrument.velocityLayers().get());
         }
@@ -97,11 +98,10 @@ public abstract class Key {
 
         BNetwork.INSTANCE.send(
                 PacketDistributor.NEAR.with(() -> PacketDistributor.TargetPoint.p(player.getX(), player.getY(), player.getZ(), 32, player.level().dimension()).get()),
-                new PlaySoundPacket(resourceLocation, pitch, player.getId(), note)
+                new PlaySoundPacket(resourceLocation, pitch, player.getId(), note, Optional.empty())
         );
 
         isPressed = true;
-
     }
 
     public void release(KeyboardMenu menu, boolean sustained) {
@@ -120,9 +120,9 @@ public abstract class Key {
         );
     }
 
-    private static String getVelocity(KeyboardMenu menu, SoundfontManager.SoundfontDefinition soundfont, int inputVelocity) {
-        if (soundfont.getForInstrument(menu.getInstrumentType()).velocityLayers().isPresent()) {
-            int layers = soundfont.getForInstrument(menu.getInstrumentType()).velocityLayers().get();
+    public static String getVelocity(InstrumentType type, SoundfontManager.SoundfontDefinition soundfont, int inputVelocity) {
+        if (soundfont.getForInstrument(type).velocityLayers().isPresent()) {
+            int layers = soundfont.getForInstrument(type).velocityLayers().get();
 
             float sensitivity = MidiSettingsConfig.pressureSensitivity * 2.0f;
             sensitivity = Math.max(0.1f, Math.min(sensitivity, 2.0f));

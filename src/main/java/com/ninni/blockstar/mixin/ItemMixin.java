@@ -63,7 +63,7 @@ public class ItemMixin {
                     String velocity = forInstrument.velocityLayers().isPresent() ? "_" + forInstrument.velocityLayers().get() : "";
                     ResourceLocation resourceLocation = new ResourceLocation(soundfont.name().getNamespace(), "soundfont." + BInstrumentTypeRegistry.get(instrumentType).getPath() + "." + soundfont.name().getPath() + "." + forInstrument.getClosestSampleNote(60) + velocity);
 
-                    Minecraft.getInstance().getSoundManager().play(new SoundfontSound(60, resourceLocation, 1, 1, player));
+                    Minecraft.getInstance().getSoundManager().play(new SoundfontSound(60, resourceLocation, 1, 1, player, Optional.empty()));
                     player.playNotifySound(BSoundEventRegistry.RESONANT_PRISM_TUNE.get(), SoundSource.PLAYERS, 1,1);
                 }
 
