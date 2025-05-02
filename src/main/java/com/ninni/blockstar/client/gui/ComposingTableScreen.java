@@ -119,9 +119,11 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
         guiGraphics.blit(TEXTURE_BG, i, j, 0, 0, this.imageWidth, this.imageHeight);
         this.inputIcon.render(this.menu, guiGraphics, partialTicks, this.leftPos, this.topPos);
 
-        int inkAmount = (int) (this.menu.getInkAmount()/1.25);
+        int inkAmount = (int) (this.menu.getInkAmount()/3.5);
         if (!this.menu.getInkSlot().hasItem()) guiGraphics.blit(TEXTURE_WIDGETS, i + 152, j + 29, 0, 224, 16, 16);
-        guiGraphics.blit(TEXTURE_WIDGETS, i + 152, j + 29 + (16 - inkAmount), 192, 64 + (16 - inkAmount), 16, inkAmount);
+        guiGraphics.blit(TEXTURE_WIDGETS, i + 152, j + 49 + (57 - inkAmount), 240, 64 + (57 - inkAmount), 16, inkAmount);
+        if (!this.menu.getInstrumentSlot().hasItem()) guiGraphics.blit(TEXTURE_WIDGETS, i + 152, j + 110, 16, 224, 16, 16);
+        if (!this.menu.getSoundfontSlot().hasItem()) guiGraphics.blit(TEXTURE_WIDGETS, i + 152, j + 130, 0, 240, 16, 16);
 
         if (!getSheetMusic().isEmpty()) {
 
@@ -197,9 +199,6 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
             guiGraphics.disableScissor();
         }
 
-        int k = (int)((116 - 34) * (scrollOffsetY / (float) maxScroll()));
-        guiGraphics.blit(TEXTURE_WIDGETS, i + 152, j + 49 + k, 32, !this.getSheetMusic().isEmpty() ? 224 : 224 + 15, 16, 15);
-
         int gearX = this.leftPos + 151;
         int gearY = this.topPos + 149;
         boolean hovered = mouseX >= gearX && mouseX < gearX + 18 && mouseY >= gearY && mouseY < gearY + 18;
@@ -264,11 +263,6 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        int scrollBarX = this.leftPos + 152;
-        int scrollBarY = this.topPos + 49;
-        int thumbHeight = 15;
-        int thumbY = scrollBarY + (int)((116 - thumbHeight) * (scrollOffsetY / (float) maxScroll()));
-
         if (this.nameField != null) {
             if (this.nameField.mouseClicked(mouseX, mouseY, button)) {
                 this.nameField.setFocused(true);
@@ -276,14 +270,6 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
             }
             this.nameField.setFocused(false);
         }
-
-        if (mouseX >= scrollBarX && mouseX < scrollBarX + 16 && mouseY >= thumbY && mouseY < thumbY + thumbHeight) {
-            isDraggingScrollbar = true;
-            scrollbarStartY = (int) mouseY;
-            scrollOffsetStart = scrollOffsetY;
-            return true;
-        }
-
 
         int gearX = this.leftPos + 151;
         int gearY = this.topPos + 149;

@@ -13,5 +13,5 @@ public class BBlockRegistry {
 
     public static final RegistryObject<Block> COMPOSING_TABLE = DEF_REG.register("composing_table", ComposingTableBlock::new);
 
-    public static final RegistryObject<Block> KEYBOARD = DEF_REG.register("keyboard", () -> new KeyboardBlock(BInstrumentTypeRegistry.KEYBOARD));
+    public static final RegistryObject<Block> KEYBOARD = DEF_REG.register("keyboard", KeyboardBlock::new);
 }

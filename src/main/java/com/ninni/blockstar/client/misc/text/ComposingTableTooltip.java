@@ -31,9 +31,8 @@ public class ComposingTableTooltip implements ClientTooltipComponent {
     }
 
     public void renderImage(Font font, int x, int y, GuiGraphics guiGraphics) {
-        int inkAmount = (int) (this.inkAmount/1.25);
+        int inkAmount = (int) (this.inkAmount/12.5);
         guiGraphics.blit(TEXTURE_WIDGETS, x + 1, y - 1, 208, 64, 18, 18);
-        guiGraphics.blit(TEXTURE_WIDGETS, x + 2, y , 1, 224, 16, 16);
         guiGraphics.blit(TEXTURE_WIDGETS, x + 2, y + (16 - inkAmount), 192, 64 + (16 - inkAmount), 16, inkAmount);
     }
 }

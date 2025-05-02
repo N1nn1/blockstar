@@ -1,7 +1,7 @@
 package com.ninni.blockstar.server.block;
 
+import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
 import com.ninni.blockstar.server.block.entity.KeyboardBlockEntity;
-import com.ninni.blockstar.server.instrument.InstrumentType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;
@@ -28,9 +28,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Supplier;
-
-public class KeyboardBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
+public class KeyboardBlock extends InstrumentBlock implements SimpleWaterloggedBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty BOTTOM = BooleanProperty.create("bottom");
@@ -39,11 +37,9 @@ public class KeyboardBlock extends BaseEntityBlock implements SimpleWaterloggedB
     protected static final VoxelShape TOP_SHAPE = Block.box(0.0D, 8.0D, 0.0D, 16.0D, 16.0D, 16.0D);
     protected static final VoxelShape STAND_SHAPE = Block.box(3, 0, 3, 13, 8, 13);
     public static final VoxelShape TOP_STAND_SHAPE = Shapes.or(TOP_SHAPE, STAND_SHAPE);
-    private final Supplier<InstrumentType> instrumentType;
 
-    public KeyboardBlock(Supplier<InstrumentType> instrumentType) {
-        super(Properties.of().strength(2.0F, 3.0F).sound(SoundType.WOOD).ignitedByLava());
-        this.instrumentType = instrumentType;
+    public KeyboardBlock() {
+        super(Properties.of().strength(2.0F, 3.0F).sound(SoundType.WOOD).ignitedByLava(), BInstrumentTypeRegistry.KEYBOARD);
         this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false).setValue(BOTTOM, true).setValue(TYPE, KeyboardType.SINGLE).setValue(FACING, Direction.NORTH));
     }
 
@@ -58,10 +54,6 @@ public class KeyboardBlock extends BaseEntityBlock implements SimpleWaterloggedB
             }
             return InteractionResult.CONSUME;
         }
-    }
-
-    public InstrumentType getInstrumentType() {
-        return instrumentType.get();
     }
 
     @Override

@@ -13,25 +13,19 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.entity.ExperienceOrb;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
@@ -148,8 +142,8 @@ public class ComposingTableBlockEntity extends BaseContainerBlockEntity {
 
     public static void tick(Level level, BlockPos pos, BlockState state, ComposingTableBlockEntity entity) {
         ItemStack stack = entity.getItem(1);
-        if (!stack.isEmpty() && entity.inkAmount == 0) {
-            entity.dataAccess.set(0, 20);
+        if (!stack.isEmpty() && entity.inkAmount <= 180) {
+            entity.dataAccess.set(0, entity.inkAmount + 40);
             stack.shrink(1);
             entity.level.playSound(null, entity.worldPosition, SoundEvents.SQUID_HURT, SoundSource.BLOCKS, 1, 1);
             entity.sync();

@@ -1,6 +1,7 @@
 package com.ninni.blockstar.server.inventory;
 
 import com.ninni.blockstar.registry.BMenuRegistry;
+import com.ninni.blockstar.server.item.ResonantPrismItem;
 import com.ninni.blockstar.server.item.SheetMusicItem;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -18,6 +19,8 @@ public class ComposingTableMenu extends AbstractContainerMenu {
     private final ContainerData composingTableData;
     final Slot sheetMusicSlot;
     final Slot inkSlot;
+    final Slot instrumentSlot;
+    final Slot soundfontSlot;
 
     public ComposingTableMenu(int id, Inventory inventory) {
         this(id, inventory, new SimpleContainer(4), new SimpleContainerData(1));
@@ -44,6 +47,20 @@ public class ComposingTableMenu extends AbstractContainerMenu {
             }
         });
 
+        instrumentSlot = this.addSlot(new InstrumentSlot(this.container, 2, 152, 110){
+            public int getMaxStackSize() {
+                return 1;
+            }
+        });
+        soundfontSlot = this.addSlot(new Slot(this.container, 3, 152, 130) {
+            public boolean mayPlace(ItemStack stack) {
+                return stack.getItem() instanceof ResonantPrismItem;
+            }
+            public int getMaxStackSize() {
+                return 1;
+            }
+        });
+
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
                 this.addSlot(new Slot(inventory, j + i * 9 + 9, 8 + j * 18, 172 + i * 18));
@@ -65,24 +82,35 @@ public class ComposingTableMenu extends AbstractContainerMenu {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
 
-            if (i != this.inkSlot.index && i != this.sheetMusicSlot.index) {
+            if (i == this.sheetMusicSlot.index || i == this.inkSlot.index ||
+                    i == this.instrumentSlot.index || i == this.soundfontSlot.index) {
+                if (!this.moveItemStackTo(itemstack1, 4, 40, true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else {
                 if (itemstack1.getItem() instanceof SheetMusicItem || itemstack1.is(Items.PAPER)) {
                     if (!this.moveItemStackTo(itemstack1, this.sheetMusicSlot.index, this.sheetMusicSlot.index + 1, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (itemstack1.is(Items.INK_SAC)) {
+                } else if (this.inkSlot.mayPlace(itemstack1)) {
                     if (!this.moveItemStackTo(itemstack1, this.inkSlot.index, this.inkSlot.index + 1, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (i >= 2 && i < 29) {
-                    if (!this.moveItemStackTo(itemstack1, 29, 38, false)) {
+                } else if (this.instrumentSlot.mayPlace(itemstack1)) {
+                    if (!this.moveItemStackTo(itemstack1, this.instrumentSlot.index, this.instrumentSlot.index + 1, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (i >= 29 && i < 38 && !this.moveItemStackTo(itemstack1, 2, 29, false)) {
+                } else if (this.soundfontSlot.mayPlace(itemstack1)) {
+                    if (!this.moveItemStackTo(itemstack1, this.soundfontSlot.index, this.soundfontSlot.index + 1, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (i >= 4 && i < 31) {
+                    if (!this.moveItemStackTo(itemstack1, 31, 40, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (i >= 31 && i < 40 && !this.moveItemStackTo(itemstack1, 4, 31, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.moveItemStackTo(itemstack1, 2, 38, false)) {
-                return ItemStack.EMPTY;
             }
 
             if (itemstack1.isEmpty()) {
@@ -102,19 +130,23 @@ public class ComposingTableMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public boolean stillValid(Player p_38874_) {
-        return this.container.stillValid(p_38874_);
+    public boolean stillValid(Player player) {
+        return this.container.stillValid(player);
     }
 
     public Slot getSheetMusicSlot() {
         return sheetMusicSlot;
     }
-
     public int getInkAmount() {
         return this.composingTableData.get(0);
     }
-
     public Slot getInkSlot() {
         return inkSlot;
+    }
+    public Slot getInstrumentSlot() {
+        return instrumentSlot;
+    }
+    public Slot getSoundfontSlot() {
+        return soundfontSlot;
     }
 }
