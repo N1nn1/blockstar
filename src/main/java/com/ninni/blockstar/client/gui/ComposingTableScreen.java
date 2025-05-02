@@ -11,6 +11,7 @@ import com.ninni.blockstar.server.packet.SheetRenamePacket;
 import com.ninni.blockstar.server.sheetmusic.SheetNote;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -22,11 +23,15 @@ import net.minecraft.world.item.Items;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class ComposingTableScreen extends AbstractContainerScreen<ComposingTableMenu> {
     public static final ResourceLocation TEXTURE_BG = new ResourceLocation(Blockstar.MODID, "textures/gui/composing_table/bg.png");
     public static final ResourceLocation TEXTURE_WIDGETS = new ResourceLocation(Blockstar.MODID, "textures/gui/composing_table/widgets.png");
     public static final ResourceLocation TEXTURE_PAPER = new ResourceLocation(Blockstar.MODID, "textures/gui/composing_table/paper.png");
+    private static final Function<String, ResourceLocation> FUNCTION = s -> new ResourceLocation(Blockstar.MODID, "item/empty_slot_" + s);
+    private static final List<ResourceLocation> INPUT_LIST = List.of(FUNCTION.apply("paper"), FUNCTION.apply("sheet_music"));
+    private final CyclingSlotBackground inputIcon =  new CyclingSlotBackground(0);
 
     private int scrollOffsetY = 0;
     private boolean isDraggingScrollbar = false;
@@ -37,47 +42,10 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
     private CenteredEditBox nameField;
     private boolean hasNameField = false;
 
-    private static final int PENTAGRAM_HEIGHT = 17;
-    private static final int PENTAGRAM_SPACING = 16;
-    private static final int PAPER_HEIGHT = 116;
-    private static final int PAPER_OFFSET_X = 8;
-    private static final int PAPER_OFFSET_Y = 49;
-    private static final int STAFF_INNER_X = 4;
-    private static final int TICK_WIDTH = 9;
     private static final int TOTAL_STAFFS = 12;
 
-    public int[] majorSteps = {
-            23, //B5
-            21, //A5
-            19, //G5
-            17, //F5
-            16, //E5
-            14, //D5
-            12, //C5
-            11, //B4
-            9,  //A4
-            7,  //G4
-            5,  //F4
-            4,  //E4
-            2,  //D4
-            0,  //C4
-    };
-    public int[] minorSteps = {
-            22, //Bb5
-            20, //Ab5
-            19, //G5
-            17, //F5
-            15, //Eb5
-            14, //D5
-            12, //C5
-            10, //Bb4
-            8,  //Ab4
-            7,  //G4
-            5,  //F4
-            3,  //Eb4
-            2,  //D4
-            0   //C4
-    };
+    public int[] majorSteps = {23, 21, 19, 17, 16, 14, 12, 11, 9, 7, 5, 4, 2, 0};
+    public int[] minorSteps = {22, 20, 19, 17, 15, 14, 12, 10, 8, 7, 5, 3, 2, 0};
 
     public ComposingTableScreen(ComposingTableMenu menu, Inventory inventory, Component component) {
         super(menu, inventory, component);
@@ -104,7 +72,7 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
             if (!hasNameField) {
                 this.nameField = new CenteredEditBox(this.font, this.leftPos + 28, this.topPos + 29, 120, 16, Component.literal("Sheet Name"));
                 this.nameField.setValue(sheet.getHoverName().getString());
-                this.nameField.setMaxLength(32);
+                this.nameField.setMaxLength(20);
                 this.nameField.setTextColor(0xffffff);
                 this.nameField.setTextColorUneditable(0xffffff);
                 this.nameField.setBordered(false);
@@ -126,11 +94,14 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
                 hasNameField = false;
             }
         }
+
+        this.inputIcon.tick(INPUT_LIST);
     }
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
+
         this.renderTooltip(guiGraphics, mouseX, mouseY);
 
         SheetNote note = findNoteAtLocation(mouseX, mouseY);
@@ -146,6 +117,11 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
         int j = this.topPos;
 
         guiGraphics.blit(TEXTURE_BG, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        this.inputIcon.render(this.menu, guiGraphics, partialTicks, this.leftPos, this.topPos);
+
+        int inkAmount = (int) (this.menu.getInkAmount()/1.25);
+        if (!this.menu.getInkSlot().hasItem()) guiGraphics.blit(TEXTURE_WIDGETS, i + 152, j + 29, 0, 224, 16, 16);
+        guiGraphics.blit(TEXTURE_WIDGETS, i + 152, j + 29 + (16 - inkAmount), 192, 64 + (16 - inkAmount), 16, inkAmount);
 
         if (!getSheetMusic().isEmpty()) {
 
@@ -163,7 +139,7 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
 
             //quarter notes
             for (int t = 0; t < totalTicks; t++) {
-                int x = staffX + (t * TICK_WIDTH);
+                int x = staffX + (t * 9);
 
                 if (x >= staffX && x < staffX + 131) {
                     for (int s = 0; s < 3; s++) {
@@ -260,20 +236,20 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
     private void drawNote(GuiGraphics guiGraphics, int x, int y, int width) {
 
         if (width <= 4) {
-            guiGraphics.blit(TEXTURE_PAPER, x, y, 144, 0, width, 4);
+            guiGraphics.blit(TEXTURE_PAPER, x, y, 144, 0, width, 3);
             return;
         }
 
         // Head
-        guiGraphics.blit(TEXTURE_PAPER, x, y, 144, 0, 1, 4);
+        guiGraphics.blit(TEXTURE_PAPER, x, y, 144, 0, 1, 3);
 
         // Middle
         for (int i = 0; i < width + 2; i++) {
-            guiGraphics.blit(TEXTURE_PAPER, x + 1 + i, y, 145, 0, 1, 4);
+            guiGraphics.blit(TEXTURE_PAPER, x + 1 + i, y, 145, 0, 1, 3);
         }
 
         // Tail
-        guiGraphics.blit(TEXTURE_PAPER, x + width + 3, y, 147, 0, 1, 4);
+        guiGraphics.blit(TEXTURE_PAPER, x + width + 3, y, 147, 0, 1, 3);
     }
 
     private SheetNote findNoteAtTickAndPitch(ItemStack sheet, int tick, int pitch) {
@@ -332,7 +308,7 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
                         return true;
                     }
                 } else {
-                    int paperX = this.leftPos + PAPER_OFFSET_X + STAFF_INNER_X;
+                    int paperX = this.leftPos + 12;
                     int localX = (int)(mouseX - paperX);
 
                     int ticksPerStaff = 14;
@@ -356,8 +332,12 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
 
                     int duration = lastModifiedNote.duration > 0 ? lastModifiedNote.duration : 1;
 
-                    this.minecraft.player.playSound(SoundEvents.NOTE_BLOCK_HARP.get(), 1.0F, (float) Math.pow(2.0D, (pitch - 69) / 12.0D));
                     if (getSheetMusic().is(Items.PAPER)) this.minecraft.player.playSound(SoundEvents.BOOK_PAGE_TURN, 1.0F, 1.0F);
+
+                    if (this.menu.getInkAmount() > 0) {
+                        this.minecraft.player.playSound(SoundEvents.NOTE_BLOCK_HARP.get(), 1.0F, (float) Math.pow(2.0D, (pitch - 69) / 12.0D));
+                        this.minecraft.player.playSound(SoundEvents.SQUID_HURT, 0.5F, 1);
+                    }
                     BNetwork.INSTANCE.sendToServer(new SheetNoteEditPacket(
                             SheetNoteEditPacket.Action.ADD, tick, pitch, duration, lastModifiedNote.velocity
                     ));
@@ -389,7 +369,7 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
             ));
         } else {
             if (draggedNote != null) {
-                int paperX = this.leftPos + PAPER_OFFSET_X + STAFF_INNER_X;
+                int paperX = this.leftPos + 12;
                 int localX = (int)(mouseX - paperX);
 
                 int ticksPerStaff = 14;
@@ -449,8 +429,7 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
     }
 
     private int maxScroll() {
-        int totalHeight = TOTAL_STAFFS * (PENTAGRAM_HEIGHT + PENTAGRAM_SPACING);
-        return Math.max(0, totalHeight - PAPER_HEIGHT);
+        return Math.max(0, TOTAL_STAFFS * (33) - 116);
     }
 
     private int getDiatonicPitchFromY(double mouseY) {
@@ -468,14 +447,14 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
     private boolean isInPaperBounds(double mouseX, double mouseY) {
         int paperX = this.leftPos + 8 + 4;
         int paperY = this.topPos + 49 + 1;
-        return mouseX >= paperX && mouseX < paperX + 139 - 6 && mouseY >= paperY + 3 && mouseY < paperY + PAPER_HEIGHT - 4;
+        return mouseX >= paperX && mouseX < paperX + 139 - 6 && mouseY >= paperY + 3 && mouseY < paperY + 116 - 4;
     }
 
     private SheetNote findNoteAtLocation(double mouseX, double mouseY) {
         if (isInPaperBounds(mouseX, mouseY)) {
             ItemStack sheet = this.getSheetMusic();
             if (!sheet.isEmpty()) {
-                int paperX = this.leftPos + PAPER_OFFSET_X + STAFF_INNER_X;
+                int paperX = this.leftPos + 12;
                 int localX = (int)(mouseX - paperX);
                 int staffNum = getStaffNumber(mouseX, mouseY, this.leftPos, this.topPos);
 

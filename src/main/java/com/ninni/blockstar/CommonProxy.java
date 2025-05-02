@@ -3,6 +3,8 @@ package com.ninni.blockstar;
 import com.ninni.blockstar.server.data.SoundfontManager;
 import com.ninni.blockstar.server.packet.PlaySoundPacket;
 import com.ninni.blockstar.server.packet.StopSoundPacket;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 public class CommonProxy {
     private final SoundfontManager soundfontManager = new SoundfontManager();
@@ -20,6 +22,10 @@ public class CommonProxy {
     }
 
     public void handleStopSoundPacket(StopSoundPacket msg) {
+    }
+
+    public Level getWorld() {
+        return ServerLifecycleHooks.getCurrentServer().overworld();
     }
 
     public boolean isScreenShiftDown() {

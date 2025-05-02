@@ -1,5 +1,6 @@
 package com.ninni.blockstar.server.block;
 
+import com.ninni.blockstar.registry.BBlockEntityRegistry;
 import com.ninni.blockstar.server.block.entity.ComposingTableBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,6 +16,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -92,6 +95,12 @@ public class ComposingTableBlock extends BaseEntityBlock implements SimpleWaterl
             case WEST -> SHAPE_WEST;
             default -> SHAPE;
         };
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+        return createTickerHelper(type, BBlockEntityRegistry.COMPOSING_TABLE.get(), ComposingTableBlockEntity::tick);
     }
 
     public void setPlacedBy(Level p_52676_, BlockPos p_52677_, BlockState p_52678_, LivingEntity p_52679_, ItemStack p_52680_) {

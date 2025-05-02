@@ -24,5 +24,6 @@ public class BNetwork {
         INSTANCE.registerMessage(id++, SheetNoteEditPacket.class, SheetNoteEditPacket::encode, SheetNoteEditPacket::decode, SheetNoteEditPacket::handle);
         INSTANCE.registerMessage(id++, SheetSettingsUpdatePacket.class, SheetSettingsUpdatePacket::encode, SheetSettingsUpdatePacket::decode, SheetSettingsUpdatePacket::handle);
         INSTANCE.registerMessage(id++, SheetRenamePacket.class, SheetRenamePacket::encode, SheetRenamePacket::decode, SheetRenamePacket::handle);
+        INSTANCE.registerMessage(id++, BlockEntitySyncPacket.class, BlockEntitySyncPacket::encode, BlockEntitySyncPacket::decode, BlockEntitySyncPacket::handle);
     }
 }

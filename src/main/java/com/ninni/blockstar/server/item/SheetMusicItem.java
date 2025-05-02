@@ -104,9 +104,9 @@ public class SheetMusicItem extends Item {
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, level, list, tooltipFlag);
 
-        list.add(Component.translatable("item.blockstar.sheet_music.key", getKey(stack)).withStyle(Style.EMPTY.withColor(isKeyMinor(stack) ? 0x9672a0 : 0xd44a62)));
-        list.add(Component.translatable("item.blockstar.sheet_music.bpm", getBPM(stack)).withStyle(Style.EMPTY.withColor(0x5cb167)));
-        list.add(Component.translatable("item.blockstar.sheet_music.time_sig", getTimeSig(stack)).withStyle(Style.EMPTY.withColor(0x4f75ac)));
+        list.add(Component.translatable("item.blockstar.sheet_music.key", getKey(stack)).withStyle(Style.EMPTY.withColor(isKeyMinor(stack) ? 0x9672a0 : 0xb05c6a)));
+        list.add(Component.translatable("item.blockstar.sheet_music.bpm", getBPM(stack)).withStyle(Style.EMPTY.withColor(0x434a60)));
+        list.add(Component.translatable("item.blockstar.sheet_music.time_sig", getTimeSig(stack)).withStyle(Style.EMPTY.withColor(0x434a60)));
     }
 }
 

@@ -7,6 +7,7 @@ import com.ninni.blockstar.server.inventory.ComposingTableMenu;
 import com.ninni.blockstar.server.item.SheetMusicItem;
 import com.ninni.blockstar.server.sheetmusic.SheetNote;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.network.NetworkEvent;
@@ -63,7 +64,10 @@ public class SheetNoteEditPacket {
 
                         if (msg.action == Action.ADD) {
                             boolean exists = notes.stream().anyMatch(n -> n.tick == msg.tick && n.pitch == msg.pitch);
-                            if (!exists) notes.add(new SheetNote(msg.tick, msg.pitch, msg.duration, msg.velocity));
+                            if (!exists && menu.getInkAmount() > 0) {
+                                menu.setData(0, menu.getInkAmount() - 1);
+                                notes.add(new SheetNote(msg.tick, msg.pitch, msg.duration, msg.velocity));
+                            }
                         } else if (msg.action == Action.UPDATE) {
                             notes.stream()
                                     .filter(n -> n.tick == msg.tick && n.pitch == msg.pitch)

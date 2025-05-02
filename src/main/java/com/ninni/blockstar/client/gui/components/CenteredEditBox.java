@@ -57,7 +57,7 @@ public class CenteredEditBox extends AbstractWidget implements Renderable {
     private Component hint;
 
     public CenteredEditBox(Font p_94114_, int p_94115_, int p_94116_, int p_94117_, int p_94118_, Component p_94119_) {
-        this(p_94114_, p_94115_, p_94116_, p_94117_, p_94118_, (EditBox)null, p_94119_);
+        this(p_94114_, p_94115_, p_94116_, p_94117_, p_94118_, null, p_94119_);
     }
 
     public CenteredEditBox(Font p_94106_, int p_94107_, int p_94108_, int p_94109_, int p_94110_, @Nullable EditBox p_94111_, Component p_94112_) {
@@ -388,6 +388,7 @@ public class CenteredEditBox extends AbstractWidget implements Renderable {
             }
 
             boolean $$15 = this.cursorPos < this.value.length() || this.value.length() >= this.getMaxLength();
+            //TODO
             int $$16 = $$11 + this.font.width($$8.substring(0, $$6));
             if (!$$9) {
                 $$16 = $$6 > 0 ? $$11 + this.width : $$11;

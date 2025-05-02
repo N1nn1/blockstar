@@ -7,11 +7,13 @@ import com.ninni.blockstar.client.gui.ComposingTableScreen;
 import com.ninni.blockstar.client.gui.SheetSettingsScreen;
 import com.ninni.blockstar.client.midi.MidiSettingsConfig;
 import com.ninni.blockstar.client.gui.KeyboardScreen;
+import com.ninni.blockstar.client.misc.text.ComposingTableTooltip;
 import com.ninni.blockstar.client.misc.text.ResonantPrismTooltip;
 import com.ninni.blockstar.client.sound.SoundManagerHelper;
 import com.ninni.blockstar.client.sound.SoundfontSound;
 import com.ninni.blockstar.registry.BItemRegistry;
 import com.ninni.blockstar.registry.BMenuRegistry;
+import com.ninni.blockstar.server.item.ComposingTableItem;
 import com.ninni.blockstar.server.item.ResonantPrismItem;
 import com.ninni.blockstar.server.midi.MidiInputHandler;
 import com.ninni.blockstar.server.packet.PlaySoundPacket;
@@ -23,6 +25,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -68,11 +71,17 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
+    public Level getWorld() {
+        return Minecraft.getInstance().level;
+    }
+
+    @Override
     public void handleStopSoundPacket(StopSoundPacket msg) {
         SoundManagerHelper.releaseMatchingSound(msg.note, msg.userId, msg.releaseTicks);
     }
 
     private void registerTooltips(RegisterClientTooltipComponentFactoriesEvent registry) {
         registry.register(ResonantPrismItem.SoundfontTooltip.class, ResonantPrismTooltip::new);
+        registry.register(ComposingTableItem.ComposingTableTooltip.class, ComposingTableTooltip::new);
     }
 }

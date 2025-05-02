@@ -1,6 +1,5 @@
 package com.ninni.blockstar.server.inventory;
 
-import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
 import com.ninni.blockstar.registry.BMenuRegistry;
 import com.ninni.blockstar.server.item.SheetMusicItem;
 import net.minecraft.world.Container;
@@ -8,22 +7,27 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public class ComposingTableMenu extends AbstractContainerMenu {
     private final Container container;
+    private final ContainerData composingTableData;
     final Slot sheetMusicSlot;
     final Slot inkSlot;
 
     public ComposingTableMenu(int id, Inventory inventory) {
-        this(id, inventory, new SimpleContainer(4));
+        this(id, inventory, new SimpleContainer(4), new SimpleContainerData(1));
     }
 
-    public ComposingTableMenu(int id, Inventory inventory, Container container) {
+    public ComposingTableMenu(int id, Inventory inventory, Container container, ContainerData containerData) {
         super(BMenuRegistry.COMPOSING_TABLE.get(), id);
         this.container = container;
+        this.composingTableData = containerData;
+        this.addDataSlots(containerData);
 
         sheetMusicSlot = this.addSlot(new Slot(this.container, 0, 8, 29) {
             public boolean mayPlace(ItemStack stack) {
@@ -104,6 +108,10 @@ public class ComposingTableMenu extends AbstractContainerMenu {
 
     public Slot getSheetMusicSlot() {
         return sheetMusicSlot;
+    }
+
+    public int getInkAmount() {
+        return this.composingTableData.get(0);
     }
 
     public Slot getInkSlot() {
