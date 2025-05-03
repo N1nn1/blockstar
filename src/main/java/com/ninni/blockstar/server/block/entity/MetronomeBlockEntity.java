@@ -14,16 +14,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.UUID;
 
 public class MetronomeBlockEntity extends BlockEntity {
-    private long lastTickTime = 0;
-    private int beatCounter = 0;
-    private int bpm = 100;
-    private String timeSig = "4/4";
-    private UUID uuid;
-    private boolean swingPhase = true;
-    private boolean pulsing = false;
-    private boolean ticking;
-    private int pulseTicksRemaining = 0;
-    private int currentSignalStrength = 0;
+    public long lastTickTime = 0;
+    public int beatCounter = 0;
+    public int bpm = 100;
+    public String timeSig = "4/4";
+    public UUID uuid;
+    public boolean swingPhase = true;
+    public boolean pulsing = false;
+    public boolean ticking;
+    public int pulseTicksRemaining = 0;
+    public int currentSignalStrength = 0;
 
     public MetronomeBlockEntity(BlockPos pos, BlockState state) {
         super(BBlockEntityRegistry.METRONOME.get(), pos, state);
@@ -34,7 +34,7 @@ public class MetronomeBlockEntity extends BlockEntity {
 
         if (ticking) {
             int beatsPerMeasure = MetronomeItem.getTimeSigValues(timeSig, true);
-            int tickInterval = Math.max(1, (int) (60000L / bpm / 2 / 50));
+            int tickInterval = Math.max(1, (int) ((double) 60000L / bpm / 2 / 50));
 
             if (level.getGameTime() - lastTickTime >= tickInterval) {
                 lastTickTime = level.getGameTime();
@@ -75,6 +75,8 @@ public class MetronomeBlockEntity extends BlockEntity {
                     level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
                 }
             }
+        } else {
+            if (getBlockState().getValue(MetronomeBlock.ROD) != RodType.MIDDLE) level.setBlock(worldPosition, getBlockState().setValue(MetronomeBlock.ROD, RodType.MIDDLE), 3);
         }
     }
 

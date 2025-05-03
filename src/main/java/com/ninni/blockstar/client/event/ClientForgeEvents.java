@@ -100,7 +100,7 @@ public class ClientForgeEvents {
         if (!(stack.getItem() instanceof MetronomeItem) || !MetronomeItem.isTicking(stack)) return;
 
         int bpm = MetronomeItem.getBPM(stack);
-        int tickInterval = Math.max(1, (int) (60000L / bpm / 2 / 50));
+        int tickInterval = Math.max(1, (int) ((double) 60000L / bpm / 2 / 50));
         UUID id = MetronomeItem.getOrCreateUniqueID(stack);
 
         activeUUIDs.add(id);

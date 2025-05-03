@@ -1,6 +1,6 @@
 package com.ninni.blockstar.server.item;
 
-import com.ninni.blockstar.client.gui.MetronomeItemScreen;
+import com.ninni.blockstar.client.gui.MetronomeScreen;
 import com.ninni.blockstar.registry.BBlockRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -33,7 +33,7 @@ public class MetronomeItem extends BlockItem {
         ItemStack itemStack = player.getItemInHand(interactionHand);
         if (player instanceof LocalPlayer localPlayer) {
             localPlayer.playNotifySound(SoundEvents.UI_BUTTON_CLICK.get(), SoundSource.MASTER, 0.15F, 1);
-            Minecraft.getInstance().setScreen(new MetronomeItemScreen(itemStack));
+            Minecraft.getInstance().setScreen(new MetronomeScreen(itemStack));
             return InteractionResultHolder.success(itemStack);
         }
         return super.use(level, player, interactionHand);

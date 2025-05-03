@@ -4,12 +4,10 @@ import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.client.gui.components.CenteredEditBox;
 import com.ninni.blockstar.registry.BNetwork;
 import com.ninni.blockstar.server.item.MetronomeItem;
-import com.ninni.blockstar.server.item.MetronomeItem;
 import com.ninni.blockstar.server.packet.MetronomeUpdatePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -19,14 +17,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 
-public class MetronomeItemScreen extends Screen {
+public class MetronomeScreen extends Screen {
     public static final ResourceLocation TEXTURE_WIDGETS = new ResourceLocation(Blockstar.MODID, "textures/gui/metronome/bg.png");
     private final ItemStack metronome;
     private CenteredEditBox bpmField;
     private CenteredEditBox timeSigField;
     Font font = Minecraft.getInstance().font;
 
-    public MetronomeItemScreen(ItemStack metronome) {
+    public MetronomeScreen(ItemStack metronome) {
         super(Component.empty());
         this.metronome = metronome;
     }
