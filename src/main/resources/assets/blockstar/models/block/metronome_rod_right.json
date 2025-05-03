@@ -1,0 +1,17 @@
+{
+	"render_type": "cutout",
+	"textures": {
+		"rod": "blockstar:block/metronome_rod"
+	},
+	"elements": [
+		{
+			"from": [6, 5, 9],
+			"to": [13, 12, 9],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 5, 3]},
+			"faces": {
+				"north": {"uv": [4, 0, 11, 7], "texture": "#rod"},
+				"south": {"uv": [11, 0, 4, 7], "texture": "#rod"}
+			}
+		}
+	]
+}

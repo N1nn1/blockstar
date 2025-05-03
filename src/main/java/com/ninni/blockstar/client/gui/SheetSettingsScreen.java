@@ -1,7 +1,9 @@
 package com.ninni.blockstar.client.gui;
 
 import com.ninni.blockstar.Blockstar;
+import com.ninni.blockstar.client.gui.components.CenteredEditBox;
 import com.ninni.blockstar.registry.BNetwork;
+import com.ninni.blockstar.server.item.MetronomeItem;
 import com.ninni.blockstar.server.item.SheetMusicItem;
 import com.ninni.blockstar.server.packet.SheetSettingsUpdatePacket;
 import net.minecraft.client.Minecraft;
@@ -18,8 +20,8 @@ public class SheetSettingsScreen extends Screen {
     public static final ResourceLocation TEXTURE_WIDGETS = new ResourceLocation(Blockstar.MODID, "textures/gui/composing_table/widgets.png");
     private Screen parent;
     private final ItemStack sheet;
-    private EditBox bpmField;
-    private EditBox timeSigField;
+    private CenteredEditBox bpmField;
+    private CenteredEditBox timeSigField;
     Font font = Minecraft.getInstance().font;
     private int selectedKeyIndex = 0;
     private int hoveredKeyIndex = 0;
@@ -49,16 +51,21 @@ public class SheetSettingsScreen extends Screen {
         int i = (this.width - 156) / 2;
         int j = (this.height - 94) / 2;
 
-        this.bpmField = new EditBox(this.font, i + 108, j + 18, 30, 14, Component.empty());
+        this.bpmField = new CenteredEditBox(this.font, i + 109, j + 19, 28, 14, Component.empty());
         this.bpmField.setValue(String.valueOf(SheetMusicItem.getBPM(sheet)));
         this.bpmField.setFilter(s -> s.matches("\\d{0,3}"));
         this.bpmField.setTextColor(0x72a078);
+        this.bpmField.setTextColor(0xffffff);
+        this.bpmField.setTextColorUneditable(0xffffff);
+        this.bpmField.setBordered(false);
         this.addRenderableWidget(this.bpmField);
 
-        this.timeSigField = new EditBox(this.font, i + 108, j + 62, 30, 14, Component.empty());
+        this.timeSigField = new CenteredEditBox(this.font, i + 109, j + 63, 28, 14, Component.empty());
         this.timeSigField.setValue(SheetMusicItem.getTimeSig(sheet));
         this.timeSigField.setFilter(s -> s.matches("^\\d{0,2}(/\\d{0,2})?$"));
-        this.timeSigField.setTextColor(0x7285a0);
+        this.timeSigField.setTextColor(0xffffff);
+        this.timeSigField.setTextColorUneditable(0xffffff);
+        this.timeSigField.setBordered(false);
         this.addRenderableWidget(this.timeSigField);
 
         String currentKey = SheetMusicItem.getKey(sheet);
@@ -127,7 +134,7 @@ public class SheetSettingsScreen extends Screen {
         if (bpmField != null) bpmField.tick();
         if (timeSigField != null) {
             timeSigField.tick();
-            timeSigField.setTextColor(SheetMusicItem.isTimeSigValid(timeSigField.getValue()) ? 0x7285a0 : 0x9e4563);
+            timeSigField.setTextColor(MetronomeItem.isTimeSigValid(timeSigField.getValue()) ? 0xffffff : 0xc94f4f);
         }
     }
 

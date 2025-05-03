@@ -1,0 +1,156 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "blockstar:block/metronome",
+        "y": 90
+      },
+      "when": {
+        "facing": "east"
+      }
+    },
+    {
+      "apply": {
+        "model": "blockstar:block/metronome"
+      },
+      "when": {
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "blockstar:block/metronome",
+        "y": 180
+      },
+      "when": {
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "blockstar:block/metronome",
+        "y": 270
+      },
+      "when": {
+        "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "blockstar:block/metronome_rod",
+        "y": 90
+      },
+      "when": {
+        "facing": "east",
+        "rod": "middle"
+      }
+    },
+    {
+      "apply": {
+        "model": "blockstar:block/metronome_rod"
+      },
+      "when": {
+        "facing": "north",
+        "rod": "middle"
+      }
+    },
+    {
+      "apply": {
+        "model": "blockstar:block/metronome_rod",
+        "y": 180
+      },
+      "when": {
+        "facing": "south",
+        "rod": "middle"
+      }
+    },
+    {
+      "apply": {
+        "model": "blockstar:block/metronome_rod",
+        "y": 270
+      },
+      "when": {
+        "facing": "west",
+        "rod": "middle"
+      }
+    },
+    {
+      "apply": {
+        "model": "blockstar:block/metronome_rod_left",
+        "y": 90
+      },
+      "when": {
+        "facing": "east",
+        "rod": "left"
+      }
+    },
+    {
+      "apply": {
+        "model": "blockstar:block/metronome_rod_left"
+      },
+      "when": {
+        "facing": "north",
+        "rod": "left"
+      }
+    },
+    {
+      "apply": {
+        "model": "blockstar:block/metronome_rod_left",
+        "y": 180
+      },
+      "when": {
+        "facing": "south",
+        "rod": "left"
+      }
+    },
+    {
+      "apply": {
+        "model": "blockstar:block/metronome_rod_left",
+        "y": 270
+      },
+      "when": {
+        "facing": "west",
+        "rod": "left"
+      }
+    },
+    {
+      "apply": {
+        "model": "blockstar:block/metronome_rod_right",
+        "y": 90
+      },
+      "when": {
+        "facing": "east",
+        "rod": "right"
+      }
+    },
+    {
+      "apply": {
+        "model": "blockstar:block/metronome_rod_right"
+      },
+      "when": {
+        "facing": "north",
+        "rod": "right"
+      }
+    },
+    {
+      "apply": {
+        "model": "blockstar:block/metronome_rod_right",
+        "y": 180
+      },
+      "when": {
+        "facing": "south",
+        "rod": "right"
+      }
+    },
+    {
+      "apply": {
+        "model": "blockstar:block/metronome_rod_right",
+        "y": 270
+      },
+      "when": {
+        "facing": "west",
+        "rod": "right"
+      }
+    }
+  ]
+}

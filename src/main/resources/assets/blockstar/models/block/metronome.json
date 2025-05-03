@@ -1,0 +1,37 @@
+{
+	"textures": {
+		"back": "blockstar:block/metronome_back",
+		"bottom": "blockstar:block/metronome_bottom",
+		"front": "blockstar:block/metronome_front",
+		"side": "blockstar:block/metronome_side",
+		"top": "blockstar:block/metronome_top",
+		"particle": "#top"
+	},
+	"elements": [
+		{
+			"from": [2, 0, 2],
+			"to": [14, 5, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [12, 0, 2]},
+			"faces": {
+				"north": {"uv": [2, 11, 14, 16], "texture": "#front"},
+				"east": {"uv": [14, 11, 2, 16], "texture": "#side"},
+				"south": {"uv": [2, 11, 14, 16], "texture": "#back"},
+				"west": {"uv": [2, 11, 14, 16], "texture": "#side"},
+				"up": {"uv": [2, 14, 14, 2], "texture": "#top"},
+				"down": {"uv": [2, 2, 14, 14], "texture": "#bottom"}
+			}
+		},
+		{
+			"from": [2, 5, 11],
+			"to": [14, 14, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [12, 5, 2]},
+			"faces": {
+				"north": {"uv": [2, 2, 14, 11], "texture": "#front"},
+				"east": {"uv": [14, 2, 11, 11], "texture": "#side"},
+				"south": {"uv": [2, 2, 14, 11], "texture": "#back"},
+				"west": {"uv": [11, 2, 14, 11], "texture": "#side"},
+				"up": {"uv": [2, 5, 14, 2], "texture": "#top"}
+			}
+		}
+	]
+}

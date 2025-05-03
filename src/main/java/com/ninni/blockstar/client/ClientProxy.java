@@ -4,7 +4,6 @@ import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.CommonProxy;
 import com.ninni.blockstar.client.event.ClientEvents;
 import com.ninni.blockstar.client.gui.ComposingTableScreen;
-import com.ninni.blockstar.client.gui.SheetSettingsScreen;
 import com.ninni.blockstar.client.midi.MidiSettingsConfig;
 import com.ninni.blockstar.client.gui.KeyboardScreen;
 import com.ninni.blockstar.client.misc.text.ComposingTableTooltip;

@@ -5,13 +5,17 @@
   "blockstar.options.midi.select_midi_device": "Selected MIDI Device: ",
   "blockstar.options.midi.pressure_sensitivity": "Pressure Sensitivity: %s",
 
-  "item.blockstar.sheet_music": "Sheet Music",
-  "item.blockstar.sheet_music.bpm": "BPM: %s",
-  "item.blockstar.sheet_music.time_sig": "Time Signature: %s",
-  "item.blockstar.sheet_music.key": "Key: %s",
+  "item.blockstar.desc.bpm": "BPM: %s",
+  "item.blockstar.desc.time_sig": "Time Signature: %s",
+  "item.blockstar.desc.key": "Key: %s",
+
 
   "block.blockstar.composing_table": "Composing Table",
   "blockstar.container.composing_table": "Composing Table",
+
+  "block.blockstar.metronome": "Metronome",
+
+  "item.blockstar.sheet_music": "Sheet Music",
 
   "item.blockstar.resonant_prism": "Resonant Prism",
   "item.blockstar.resonant_prism.more": "and %s more...",

@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "blockstar:composing_table",
+    "blockstar:metronome",
     "blockstar:keyboard"
   ]
 }
