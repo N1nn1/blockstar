@@ -14,15 +14,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.UUID;
 
 public class MetronomeBlockEntity extends BlockEntity {
+    private long lastTickTime = 0;
     private int beatCounter = 0;
     private int bpm = 100;
     private String timeSig = "4/4";
     private UUID uuid;
+    private boolean swingPhase = true;
     private boolean pulsing = false;
     private boolean ticking;
     private int pulseTicksRemaining = 0;
     private int currentSignalStrength = 0;
-    private long lastTickTime = 0;
 
     public MetronomeBlockEntity(BlockPos pos, BlockState state) {
         super(BBlockEntityRegistry.METRONOME.get(), pos, state);
@@ -32,25 +33,38 @@ public class MetronomeBlockEntity extends BlockEntity {
         ticking = level != null && !level.isClientSide && bpm > 0 && level.getBlockState(worldPosition).getValue(MetronomeBlock.POWERED) != level.getBlockState(worldPosition).getValue(MetronomeBlock.INVERTED);
 
         if (ticking) {
-            int intervalTicks = 1200 / bpm;
-            long gameTime = level.getGameTime();
+            int beatsPerMeasure = MetronomeItem.getTimeSigValues(timeSig, true);
+            int tickInterval = Math.max(1, (int) (60000L / bpm / 2 / 50));
 
-            if (gameTime - lastTickTime >= intervalTicks) {
-                lastTickTime = gameTime;
+            if (level.getGameTime() - lastTickTime >= tickInterval) {
+                lastTickTime = level.getGameTime();
 
-                int beatsPerMeasure = MetronomeItem.getTimeSigValues(timeSig, true);
-                RodType rod = (beatCounter % 2 == 0) ? RodType.LEFT : RodType.RIGHT;
+                RodType rod;
+                if (!swingPhase) rod = RodType.MIDDLE;
+                else rod = (beatCounter % 2 == 0) ? RodType.LEFT : RodType.RIGHT;
 
-                boolean isDownbeat = (beatCounter % beatsPerMeasure) == 0;
-                beatCounter++;
+                swingPhase = !swingPhase;
+                if (!swingPhase) {
+                    beatCounter++;
+                    boolean isDownbeat = (beatCounter % beatsPerMeasure) == 0;
+                    pulsing = true;
+                    pulseTicksRemaining = 2;
 
-                pulsing = true;
-                pulseTicksRemaining = 2;
-                currentSignalStrength = isDownbeat ? 15 : 4;
-                level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
+                    if (isDownbeat) currentSignalStrength = 15;
+                    else currentSignalStrength = 4;
+
+                    level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
+                }
 
                 level.setBlock(worldPosition, getBlockState().setValue(MetronomeBlock.ROD, rod), 3);
-                level.playSound(null, worldPosition, isDownbeat ? BSoundEventRegistry.METRONOME_DOWNBEAT.get() : BSoundEventRegistry.METRONOME_BEAT.get(), SoundSource.BLOCKS, 0.8F, 1.0F);
+
+                if (rod != RodType.MIDDLE) {
+                    boolean isDownbeat = (beatCounter % beatsPerMeasure) == 0;
+                    level.playSound(null, worldPosition,
+                            isDownbeat ? BSoundEventRegistry.METRONOME_DOWNBEAT.get() : BSoundEventRegistry.METRONOME_BEAT.get(),
+                            SoundSource.BLOCKS, 0.8F, 1.0F
+                    );
+                }
             }
 
             if (pulsing) {

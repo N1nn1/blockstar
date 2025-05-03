@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -56,6 +57,16 @@ public class MetronomeBlock extends BaseEntityBlock {
         }
         return InteractionResult.SUCCESS;
     }
+
+    @Override
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
+        ItemStack stack = new ItemStack(this);
+        if (level.getBlockEntity(pos) instanceof MetronomeBlockEntity blockEntity) {
+            blockEntity.saveToItem(stack);
+        }
+        return stack;
+    }
+
 
     @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
