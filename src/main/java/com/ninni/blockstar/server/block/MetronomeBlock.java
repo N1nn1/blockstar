@@ -3,6 +3,7 @@ package com.ninni.blockstar.server.block;
 import com.ninni.blockstar.server.block.entity.MetronomeBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -78,8 +79,8 @@ public class MetronomeBlock extends BaseEntityBlock {
 
     public void setPlacedBy(Level level, BlockPos blockPos, BlockState state, LivingEntity entity, ItemStack stack) {
         if (stack.getTag() != null && stack.getTag().contains("BlockEntityTag")) {
-            BlockEntity blockentity = level.getBlockEntity(blockPos);
-            blockentity.load(stack.getTag().getCompound("BlockEntityTag"));
+            CompoundTag blockEntityTag = stack.getTag().getCompound("BlockEntityTag");
+            level.getBlockEntity(blockPos).load(blockEntityTag);
         }
     }
 

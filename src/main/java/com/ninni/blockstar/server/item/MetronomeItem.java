@@ -11,6 +11,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -38,6 +39,11 @@ public class MetronomeItem extends BlockItem {
         return super.use(level, player, interactionHand);
     }
 
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
+        getOrCreateUniqueID(stack);
+        super.inventoryTick(stack, level, entity, slot, selected);
+    }
 
     public static int getBPM(ItemStack stack) {
         CompoundTag tag = getOrCreateBlockEntityTag(stack);
@@ -85,7 +91,7 @@ public class MetronomeItem extends BlockItem {
     }
 
     public static UUID getOrCreateUniqueID(ItemStack stack) {
-        CompoundTag tag = stack.getOrCreateTag();
+        CompoundTag tag = getOrCreateBlockEntityTag(stack);
         if (!tag.hasUUID("UUID")) {
             UUID uuid = UUID.randomUUID();
             tag.putUUID("UUID", uuid);

@@ -1,7 +1,5 @@
 package com.ninni.blockstar.server.packet;
 
-import com.ninni.blockstar.server.inventory.ComposingTableMenu;
-import com.ninni.blockstar.server.item.MetronomeItem;
 import com.ninni.blockstar.server.item.MetronomeItem;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;

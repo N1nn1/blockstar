@@ -3,15 +3,33 @@
   "pools": [
     {
       "bonus_rolls": 0.0,
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ],
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "blockstar:metronome"
+          "name": "blockstar:metronome",
+          "functions": [
+            {
+              "function": "minecraft:copy_nbt",
+              "source": "block_entity",
+              "ops": [
+                {
+                  "op": "replace",
+                  "source": "BPM",
+                  "target": "BlockEntityTag.BPM"
+                },
+                {
+                  "op": "replace",
+                  "source": "TimeSig",
+                  "target": "BlockEntityTag.TimeSig"
+                },
+                {
+                  "op": "replace",
+                  "source": "UUID",
+                  "target": "BlockEntityTag.UUID"
+                }
+              ]
+            }
+          ]
         }
       ],
       "rolls": 1.0

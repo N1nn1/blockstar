@@ -1,21 +1,24 @@
 package com.ninni.blockstar.server.block.entity;
 
 import com.ninni.blockstar.registry.BBlockEntityRegistry;
+import com.ninni.blockstar.registry.BSoundEventRegistry;
 import com.ninni.blockstar.server.block.MetronomeBlock;
 import com.ninni.blockstar.server.block.RodType;
 import com.ninni.blockstar.server.item.MetronomeItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.UUID;
 
 public class MetronomeBlockEntity extends BlockEntity {
     private long lastTickTime = 0;
     private int beatCounter = 0;
     private int bpm = 100;
     private String timeSig = "4/4";
+    private UUID uuid;
     private boolean swingPhase = true;
     private boolean pulsing = false;
     private int pulseTicksRemaining = 0;
@@ -56,8 +59,9 @@ public class MetronomeBlockEntity extends BlockEntity {
             if (rod != RodType.MIDDLE) {
                 boolean isDownbeat = (beatCounter % beatsPerMeasure) == 0;
                 level.playSound(null, worldPosition,
-                        isDownbeat ? SoundEvents.NOTE_BLOCK_BASEDRUM.value() : SoundEvents.NOTE_BLOCK_HAT.value(),
-                        SoundSource.BLOCKS, 0.8F, 1.0F);
+                        isDownbeat ? BSoundEventRegistry.METRONOME_DOWNBEAT.get() : BSoundEventRegistry.METRONOME_BEAT.get(),
+                        SoundSource.BLOCKS, 0.8F, 1.0F
+                );
             }
         }
 
@@ -80,6 +84,8 @@ public class MetronomeBlockEntity extends BlockEntity {
         super.load(tag);
         if (tag.contains("BPM")) this.bpm = tag.getInt("BPM");
         if (tag.contains("TimeSig")) this.timeSig = tag.getString("TimeSig");
+        if (tag.hasUUID("UUID")) this.uuid = tag.getUUID("UUID");
+        else this.uuid = UUID.randomUUID();
     }
 
     @Override
@@ -87,6 +93,9 @@ public class MetronomeBlockEntity extends BlockEntity {
         super.saveAdditional(tag);
         tag.putInt("BPM", bpm);
         tag.putString("TimeSig", timeSig);
+        if (uuid != null) {
+            tag.putUUID("UUID", uuid);
+        }
     }
 }
 

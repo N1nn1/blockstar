@@ -8,6 +8,14 @@
     ],
     "subtitle": "subtitles.blockstar.item.resonant_prism.tune"
   },
+  "block.metronome.downbeat": {
+    "sounds": ["blockstar:block/metronome/downbeat"],
+    "subtitle": "subtitles.blockstar.block.metronome.tick"
+  },
+  "block.metronome.beat": {
+    "sounds": ["blockstar:block/metronome/beat"],
+    "subtitle": "subtitles.blockstar.block.metronome.tick"
+  },
   "soundfont.keyboard.base.48_1": {
     "sounds": ["blockstar:soundfont/keyboard/base/48_1"]
   },

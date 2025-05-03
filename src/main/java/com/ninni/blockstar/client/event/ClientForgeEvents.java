@@ -3,8 +3,11 @@ package com.ninni.blockstar.client.event;
 import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.client.midi.MidiSettingsConfig;
 import com.ninni.blockstar.client.midi.MidiSettingsScreen;
+import com.ninni.blockstar.registry.BNetwork;
+import com.ninni.blockstar.registry.BSoundEventRegistry;
 import com.ninni.blockstar.server.block.RodType;
 import com.ninni.blockstar.server.item.MetronomeItem;
+import com.ninni.blockstar.server.packet.MetronomeTogglePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.SoundOptionsScreen;
@@ -60,9 +63,7 @@ public class ClientForgeEvents {
                     if (isPointInRegion(screen, slot.x, slot.y, 16, 16, mouseX, mouseY)) {
                         ItemStack stack = slot.getItem();
                         if (stack.getItem() instanceof MetronomeItem && event.getButton() == 1) {
-                            boolean current = MetronomeItem.isActive(stack);
-                            MetronomeItem.setActive(stack, !current);
-                            Minecraft.getInstance().player.playNotifySound(SoundEvents.UI_BUTTON_CLICK.get(), SoundSource.MASTER, 0.15F, current ? 0.8f : 1.2f);
+                            BNetwork.INSTANCE.sendToServer(new MetronomeTogglePacket(MetronomeItem.getOrCreateUniqueID(stack)));
                             event.setCanceled(true);
                             return;
                         }
@@ -123,9 +124,9 @@ public class ClientForgeEvents {
                 rod = (beat % 2 == 0) ? RodType.LEFT : RodType.RIGHT;
 
                 player.playSound(
-                        isDownbeat ? SoundEvents.NOTE_BLOCK_BASEDRUM.value() : SoundEvents.NOTE_BLOCK_HAT.value(),
+                        isDownbeat ? BSoundEventRegistry.METRONOME_DOWNBEAT.get() : BSoundEventRegistry.METRONOME_BEAT.get(),
                         0.5F,
-                        isDownbeat ? 1.0F : 1.2F
+                        1.0F
                 );
 
                 beatCounters.put(id, (beat + 1) % beatsPerMeasure);
