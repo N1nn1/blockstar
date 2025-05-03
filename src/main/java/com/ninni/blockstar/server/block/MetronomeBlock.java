@@ -1,14 +1,21 @@
 package com.ninni.blockstar.server.block;
 
-import com.ninni.blockstar.server.block.entity.ComposingTableBlockEntity;
 import com.ninni.blockstar.server.block.entity.MetronomeBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -17,6 +24,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -26,6 +34,8 @@ import org.jetbrains.annotations.Nullable;
 public class MetronomeBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+    public static final BooleanProperty INVERTED = BlockStateProperties.INVERTED;
     public static final EnumProperty<RodType> ROD = EnumProperty.create("rod", RodType.class);
     protected static final VoxelShape SHAPE_NORTH = Shapes.or(Block.box(2, 5, 11, 14, 14, 14), Block.box(2, 0, 2, 14, 5, 14));
     protected static final VoxelShape SHAPE_SOUTH = Shapes.or(Block.box(2, 5, 2, 14, 14, 5), Block.box(2, 0, 2, 14, 5, 14));
@@ -34,7 +44,79 @@ public class MetronomeBlock extends BaseEntityBlock {
 
     public MetronomeBlock() {
         super(Properties.of().strength(2.0F, 3.0F).sound(SoundType.WOOD).ignitedByLava());
-        this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false).setValue(ROD, RodType.MIDDLE).setValue(FACING, Direction.NORTH));
+        this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false).setValue(INVERTED, false).setValue(POWERED, false).setValue(ROD, RodType.MIDDLE).setValue(FACING, Direction.NORTH));
+    }
+
+    @Override
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!level.isClientSide) {
+            level.setBlock(pos, state.setValue(INVERTED, !state.getValue(INVERTED)), 3);
+        }
+        return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+        if (level.isClientSide) return;
+
+        Direction inputDirection = state.getValue(FACING);
+
+        if (fromPos.equals(pos.relative(inputDirection))) {
+            boolean isPowered = level.hasSignal(fromPos, inputDirection);
+            if (isPowered != state.getValue(POWERED)) {
+                level.setBlock(pos, state.setValue(POWERED, isPowered), 3);
+            }
+        }
+    }
+
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return level.isClientSide ? null : (lvl, pos, st, blockEntity) -> {
+            if (blockEntity instanceof MetronomeBlockEntity metronome) metronome.tickServer();
+        };
+    }
+
+    public void setPlacedBy(Level level, BlockPos blockPos, BlockState state, LivingEntity entity, ItemStack stack) {
+        if (stack.getTag() != null && stack.getTag().contains("BlockEntityTag")) {
+            BlockEntity blockentity = level.getBlockEntity(blockPos);
+            blockentity.load(stack.getTag().getCompound("BlockEntityTag"));
+        }
+    }
+
+    @Override
+    public boolean isSignalSource(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+        Direction back = state.getValue(FACING);
+        if (direction == back) {
+            if (level.getBlockEntity(pos) instanceof MetronomeBlockEntity metronome) {
+                return metronome.getSignalStrength();
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction side) {
+        if (side == null) return false;
+
+        Direction facing = state.getValue(FACING);
+        Direction left = facing.getCounterClockWise();
+        Direction right = facing.getClockWise();
+
+        return side == left || side == right;
+    }
+
+    public boolean hasAnalogOutputSignal(BlockState p_49058_) {
+        return true;
+    }
+
+    @Override
+    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        return state.getValue(INVERTED) != state.getValue(POWERED) ? 15 : 0;
     }
 
     public FluidState getFluidState(BlockState p_56397_) {
@@ -49,7 +131,7 @@ public class MetronomeBlock extends BaseEntityBlock {
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_56388_) {
-        p_56388_.add(WATERLOGGED, FACING, ROD);
+        p_56388_.add(WATERLOGGED, FACING, POWERED, INVERTED, ROD);
     }
 
     public VoxelShape getShape(BlockState p_54561_, BlockGetter p_54562_, BlockPos p_54563_, CollisionContext p_54564_) {
@@ -62,10 +144,15 @@ public class MetronomeBlock extends BaseEntityBlock {
     }
 
     @Nullable
-    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        BlockPos blockpos = ctx.getClickedPos();
-        FluidState fluidstate = ctx.getLevel().getFluidState(blockpos);
-        return this.defaultBlockState().setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER).setValue(FACING, ctx.getHorizontalDirection().getOpposite());
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        BlockPos blockpos = context.getClickedPos();
+        FluidState fluidstate = context.getLevel().getFluidState(blockpos);
+        BlockState blockstate = this.defaultBlockState();
+
+        if (context.getLevel().hasNeighborSignal(context.getClickedPos())) {
+            blockstate = blockstate.setValue(POWERED, true);
+        }
+        return blockstate.setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER).setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     public BlockState rotate(BlockState p_54540_, Rotation p_54541_) {

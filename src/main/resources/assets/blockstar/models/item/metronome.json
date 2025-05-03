@@ -1,6 +1,20 @@
 {
-  "parent": "minecraft:item/generated",
+  "parent": "item/generated",
   "textures": {
     "layer0": "blockstar:item/metronome"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "swing": 1.0
+      },
+      "model": "blockstar:item/metronome_rod_left"
+    },
+    {
+      "predicate": {
+        "swing": 2.0
+      },
+      "model": "blockstar:item/metronome_rod_right"
+    }
+  ]
 }

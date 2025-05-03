@@ -3,6 +3,7 @@ package com.ninni.blockstar.client;
 import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.CommonProxy;
 import com.ninni.blockstar.client.event.ClientEvents;
+import com.ninni.blockstar.client.event.ClientForgeEvents;
 import com.ninni.blockstar.client.gui.ComposingTableScreen;
 import com.ninni.blockstar.client.midi.MidiSettingsConfig;
 import com.ninni.blockstar.client.gui.KeyboardScreen;
@@ -12,7 +13,9 @@ import com.ninni.blockstar.client.sound.SoundManagerHelper;
 import com.ninni.blockstar.client.sound.SoundfontSound;
 import com.ninni.blockstar.registry.BItemRegistry;
 import com.ninni.blockstar.registry.BMenuRegistry;
+import com.ninni.blockstar.server.block.RodType;
 import com.ninni.blockstar.server.item.ComposingTableItem;
+import com.ninni.blockstar.server.item.MetronomeItem;
 import com.ninni.blockstar.server.item.ResonantPrismItem;
 import com.ninni.blockstar.server.midi.MidiInputHandler;
 import com.ninni.blockstar.server.packet.PlaySoundPacket;
@@ -28,6 +31,8 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+
+import java.util.UUID;
 
 public class ClientProxy extends CommonProxy {
 
@@ -49,6 +54,20 @@ public class ClientProxy extends CommonProxy {
 
         ItemProperties.register(BItemRegistry.RESONANT_PRISM.get(), new ResourceLocation(Blockstar.MODID, "attuned"), (stack, level, player, i) -> {
             return stack.getOrCreateTag().contains("Soundfont") ? 1.0F : 0.0F;
+        });
+
+        ItemProperties.register(BItemRegistry.METRONOME.get(), new ResourceLocation("swing"), (stack, level, entity, seed) -> {
+            if (!(stack.getItem() instanceof MetronomeItem)) return 0.0F;
+            if (!MetronomeItem.isActive(stack)) return 0.0F;
+
+            UUID id = MetronomeItem.getOrCreateUniqueID(stack);
+            RodType rod = ClientForgeEvents.getItemRod(id);
+
+            return switch (rod) {
+                case LEFT -> 1.0F;
+                case RIGHT -> 2.0F;
+                case MIDDLE -> 0.0F;
+            };
         });
     }
 

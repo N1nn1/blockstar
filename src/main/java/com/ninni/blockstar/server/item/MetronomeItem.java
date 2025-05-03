@@ -1,8 +1,6 @@
 package com.ninni.blockstar.server.item;
 
-import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.client.gui.MetronomeItemScreen;
-import com.ninni.blockstar.client.gui.SheetSettingsScreen;
 import com.ninni.blockstar.registry.BBlockRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -21,6 +19,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.UUID;
 
 public class MetronomeItem extends BlockItem {
 
@@ -38,6 +37,7 @@ public class MetronomeItem extends BlockItem {
         }
         return super.use(level, player, interactionHand);
     }
+
 
     public static int getBPM(ItemStack stack) {
         CompoundTag tag = getOrCreateBlockEntityTag(stack);
@@ -76,10 +76,29 @@ public class MetronomeItem extends BlockItem {
         return tag.getCompound("BlockEntityTag");
     }
 
+    public static boolean isActive(ItemStack stack) {
+        return getOrCreateBlockEntityTag(stack).getBoolean("Ticking");
+    }
+
+    public static void setActive(ItemStack stack, boolean active) {
+        getOrCreateBlockEntityTag(stack).putBoolean("Ticking", active);
+    }
+
+    public static UUID getOrCreateUniqueID(ItemStack stack) {
+        CompoundTag tag = stack.getOrCreateTag();
+        if (!tag.hasUUID("UUID")) {
+            UUID uuid = UUID.randomUUID();
+            tag.putUUID("UUID", uuid);
+            return uuid;
+        }
+        return tag.getUUID("UUID");
+    }
+
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
         super.appendHoverText(stack, level, list, flag);
 
+        if (isActive(stack)) list.add(Component.translatable("item.blockstar.metronome.active").withStyle(Style.EMPTY.withColor(0x66cc66)));
         list.add(Component.translatable("item.blockstar.desc.bpm", getBPM(stack)).withStyle(Style.EMPTY.withColor(0x616a83)));
         list.add(Component.translatable("item.blockstar.desc.time_sig", getTimeSig(stack)).withStyle(Style.EMPTY.withColor(0x616a83)));
     }
