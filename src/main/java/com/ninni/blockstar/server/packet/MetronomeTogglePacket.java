@@ -1,7 +1,6 @@
 package com.ninni.blockstar.server.packet;
 
 import com.ninni.blockstar.server.item.MetronomeItem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -38,8 +37,8 @@ public class MetronomeTogglePacket {
                         stack.hasTag() && stack.getTag().getCompound("BlockEntityTag").hasUUID("UUID") &&
                         stack.getTag().getCompound("BlockEntityTag").getUUID("UUID").equals(msg.metronomeID)) {
 
-                    boolean current = MetronomeItem.isActive(stack);
-                    MetronomeItem.setActive(stack, !current);
+                    boolean current = MetronomeItem.isTicking(stack);
+                    MetronomeItem.setTicking(stack, !current);
                     player.playNotifySound(SoundEvents.UI_BUTTON_CLICK.get(), SoundSource.MASTER, 0.15F, current ? 0.8F : 1.2F);
                     return;
                 }
@@ -52,8 +51,8 @@ public class MetronomeTogglePacket {
                             stack.getTag().getCompound("BlockEntityTag").getUUID("UUID").equals(msg.metronomeID))
                     .findFirst()
                     .ifPresent(stack -> {
-                        boolean current = MetronomeItem.isActive(stack);
-                        MetronomeItem.setActive(stack, !current);
+                        boolean current = MetronomeItem.isTicking(stack);
+                        MetronomeItem.setTicking(stack, !current);
                         player.playNotifySound(SoundEvents.UI_BUTTON_CLICK.get(), SoundSource.MASTER, 0.15F, current ? 0.8F : 1.2F);
                     });
         });

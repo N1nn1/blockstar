@@ -1,6 +1,7 @@
 package com.ninni.blockstar.server.block;
 
 import com.ninni.blockstar.server.block.entity.MetronomeBlockEntity;
+import com.ninni.blockstar.server.item.MetronomeItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -80,6 +81,7 @@ public class MetronomeBlock extends BaseEntityBlock {
     public void setPlacedBy(Level level, BlockPos blockPos, BlockState state, LivingEntity entity, ItemStack stack) {
         if (stack.getTag() != null && stack.getTag().contains("BlockEntityTag")) {
             CompoundTag blockEntityTag = stack.getTag().getCompound("BlockEntityTag");
+            if (MetronomeItem.isTicking(stack)) level.setBlock(blockPos, state.setValue(INVERTED, true), 3);
             level.getBlockEntity(blockPos).load(blockEntityTag);
         }
     }

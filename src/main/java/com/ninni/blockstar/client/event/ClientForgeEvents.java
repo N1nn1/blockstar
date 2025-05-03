@@ -13,8 +13,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.SoundOptionsScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +27,6 @@ import java.util.*;
 public class ClientForgeEvents {
     private static final Set<UUID> activeUUIDs = new HashSet<>();
     private static final Map<UUID, Integer> beatCounters = new HashMap<>();
-    private static final Map<UUID, Boolean> swingPhase = new HashMap<>();
     private static final Map<UUID, Long> lastTickPhaseTime = new HashMap<>();
     private static final Map<UUID, RodType> itemRodState = new HashMap<>();
 
@@ -40,7 +37,7 @@ public class ClientForgeEvents {
             int y = MidiSettingsConfig.parse(MidiSettingsConfig.buttonY.replace("height", String.valueOf(screen.height)));
 
             Button button1 = Button.builder(Component.translatable("blockstar.options.midi.title"), (button) ->
-                            Minecraft.getInstance().setScreen(new MidiSettingsScreen(screen, screen.options))).bounds(x, y, 80, 20).build();
+                    Minecraft.getInstance().setScreen(new MidiSettingsScreen(screen, screen.options))).bounds(x, y, 80, 20).build();
 
             screen.children.add(button1);
             screen.narratables.add(button1);
@@ -48,18 +45,14 @@ public class ClientForgeEvents {
         }
     }
 
-
     @SubscribeEvent
     public static void onRightClickItemInInventory(ScreenEvent.MouseButtonPressed.Pre event) {
-
         if (event.getScreen() instanceof AbstractContainerScreen<?> screen) {
-
             double mouseX = event.getMouseX();
             double mouseY = event.getMouseY();
 
             for (Slot slot : screen.getMenu().slots) {
                 if (slot.isActive() && slot.hasItem()) {
-
                     if (isPointInRegion(screen, slot.x, slot.y, 16, 16, mouseX, mouseY)) {
                         ItemStack stack = slot.getItem();
                         if (stack.getItem() instanceof MetronomeItem && event.getButton() == 1) {
@@ -79,7 +72,7 @@ public class ClientForgeEvents {
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
-        long now = System.currentTimeMillis();
+        long now = Minecraft.getInstance().level.getGameTime();
 
         for (ItemStack stack : player.getInventory().items) {
             tickMetronome(stack, player, now);
@@ -92,48 +85,35 @@ public class ClientForgeEvents {
         }
 
         beatCounters.keySet().removeIf(uuid -> !activeUUIDs.contains(uuid));
-        swingPhase.keySet().removeIf(uuid -> !activeUUIDs.contains(uuid));
         lastTickPhaseTime.keySet().removeIf(uuid -> !activeUUIDs.contains(uuid));
         itemRodState.keySet().removeIf(uuid -> !activeUUIDs.contains(uuid));
         activeUUIDs.clear();
     }
 
     private static void tickMetronome(ItemStack stack, Player player, long now) {
-        if (!(stack.getItem() instanceof MetronomeItem) || !MetronomeItem.isActive(stack)) return;
+        if (!(stack.getItem() instanceof MetronomeItem) || !MetronomeItem.isTicking(stack)) return;
 
         int bpm = MetronomeItem.getBPM(stack);
-        long interval = 60000L / bpm / 2;
+        long intervalTicks = 1200L / bpm;
         UUID id = MetronomeItem.getOrCreateUniqueID(stack);
 
         activeUUIDs.add(id);
 
         long lastTick = lastTickPhaseTime.getOrDefault(id, 0L);
-        boolean isSwing = swingPhase.getOrDefault(id, true);
 
-        if (now - lastTick >= interval) {
+        if (now - lastTick >= intervalTicks) {
             lastTickPhaseTime.put(id, now);
 
-            RodType rod;
-            if (!isSwing) {
-                rod = RodType.MIDDLE;
-            } else {
-                int beat = getCurrentBeat(id);
-                int beatsPerMeasure = MetronomeItem.getTimeSigValues(MetronomeItem.getTimeSig(stack), true);
-                boolean isDownbeat = (beat % beatsPerMeasure) == 0;
+            int beat = getCurrentBeat(id);
+            int beatsPerMeasure = MetronomeItem.getTimeSigValues(MetronomeItem.getTimeSig(stack), true);
+            boolean isDownbeat = (beat % beatsPerMeasure) == 0;
 
-                rod = (beat % 2 == 0) ? RodType.LEFT : RodType.RIGHT;
+            RodType rod = (beat % 2 == 0) ? RodType.LEFT : RodType.RIGHT;
 
-                player.playSound(
-                        isDownbeat ? BSoundEventRegistry.METRONOME_DOWNBEAT.get() : BSoundEventRegistry.METRONOME_BEAT.get(),
-                        0.5F,
-                        1.0F
-                );
+            player.playSound(isDownbeat ? BSoundEventRegistry.METRONOME_DOWNBEAT.get() : BSoundEventRegistry.METRONOME_BEAT.get(), 0.5F, 1.0F);
 
-                beatCounters.put(id, (beat + 1) % beatsPerMeasure);
-            }
-
+            beatCounters.put(id, (beat + 1) % beatsPerMeasure);
             itemRodState.put(id, rod);
-            swingPhase.put(id, !isSwing);
         }
     }
 

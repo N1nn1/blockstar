@@ -14,63 +14,52 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.UUID;
 
 public class MetronomeBlockEntity extends BlockEntity {
-    private long lastTickTime = 0;
     private int beatCounter = 0;
     private int bpm = 100;
     private String timeSig = "4/4";
     private UUID uuid;
-    private boolean swingPhase = true;
     private boolean pulsing = false;
+    private boolean ticking;
     private int pulseTicksRemaining = 0;
     private int currentSignalStrength = 0;
+    private long lastTickTime = 0;
 
     public MetronomeBlockEntity(BlockPos pos, BlockState state) {
         super(BBlockEntityRegistry.METRONOME.get(), pos, state);
     }
 
     public void tickServer() {
-        if (level == null || level.isClientSide || bpm <= 0 || level.getBlockState(worldPosition).getValue(MetronomeBlock.POWERED) == level.getBlockState(worldPosition).getValue(MetronomeBlock.INVERTED)) return;
+        ticking = level != null && !level.isClientSide && bpm > 0 && level.getBlockState(worldPosition).getValue(MetronomeBlock.POWERED) != level.getBlockState(worldPosition).getValue(MetronomeBlock.INVERTED);
 
-        int beatsPerMeasure = MetronomeItem.getTimeSigValues(timeSig, true);
-        long interval = 60000L / bpm / 2;
+        if (ticking) {
+            int intervalTicks = 1200 / bpm;
+            long gameTime = level.getGameTime();
 
-        if (level.getGameTime() - lastTickTime >= interval / 50) {
-            lastTickTime = level.getGameTime();
+            if (gameTime - lastTickTime >= intervalTicks) {
+                lastTickTime = gameTime;
 
-            RodType rod;
-            if (!swingPhase) rod = RodType.MIDDLE;
-            else rod = (beatCounter % 2 == 0) ? RodType.LEFT : RodType.RIGHT;
+                int beatsPerMeasure = MetronomeItem.getTimeSigValues(timeSig, true);
+                RodType rod = (beatCounter % 2 == 0) ? RodType.LEFT : RodType.RIGHT;
 
-            swingPhase = !swingPhase;
-            if (!swingPhase) {
-                beatCounter++;
                 boolean isDownbeat = (beatCounter % beatsPerMeasure) == 0;
+                beatCounter++;
+
                 pulsing = true;
                 pulseTicksRemaining = 2;
-
-                if (isDownbeat) currentSignalStrength = 15;
-                else currentSignalStrength = 4;
-
+                currentSignalStrength = isDownbeat ? 15 : 4;
                 level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
+
+                level.setBlock(worldPosition, getBlockState().setValue(MetronomeBlock.ROD, rod), 3);
+                level.playSound(null, worldPosition, isDownbeat ? BSoundEventRegistry.METRONOME_DOWNBEAT.get() : BSoundEventRegistry.METRONOME_BEAT.get(), SoundSource.BLOCKS, 0.8F, 1.0F);
             }
 
-            level.setBlock(worldPosition, getBlockState().setValue(MetronomeBlock.ROD, rod), 3);
-
-            if (rod != RodType.MIDDLE) {
-                boolean isDownbeat = (beatCounter % beatsPerMeasure) == 0;
-                level.playSound(null, worldPosition,
-                        isDownbeat ? BSoundEventRegistry.METRONOME_DOWNBEAT.get() : BSoundEventRegistry.METRONOME_BEAT.get(),
-                        SoundSource.BLOCKS, 0.8F, 1.0F
-                );
-            }
-        }
-
-        if (pulsing) {
-            pulseTicksRemaining--;
-            if (pulseTicksRemaining <= 0) {
-                pulsing = false;
-                currentSignalStrength = 0;
-                level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
+            if (pulsing) {
+                pulseTicksRemaining--;
+                if (pulseTicksRemaining <= 0) {
+                    pulsing = false;
+                    currentSignalStrength = 0;
+                    level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
+                }
             }
         }
     }
@@ -86,6 +75,7 @@ public class MetronomeBlockEntity extends BlockEntity {
         if (tag.contains("TimeSig")) this.timeSig = tag.getString("TimeSig");
         if (tag.hasUUID("UUID")) this.uuid = tag.getUUID("UUID");
         else this.uuid = UUID.randomUUID();
+        this.ticking = tag.getBoolean("Ticking");
     }
 
     @Override
@@ -93,9 +83,9 @@ public class MetronomeBlockEntity extends BlockEntity {
         super.saveAdditional(tag);
         tag.putInt("BPM", bpm);
         tag.putString("TimeSig", timeSig);
+        tag.putBoolean("Ticking", ticking);
         if (uuid != null) {
             tag.putUUID("UUID", uuid);
         }
     }
 }
-

@@ -58,7 +58,7 @@ public class ClientProxy extends CommonProxy {
 
         ItemProperties.register(BItemRegistry.METRONOME.get(), new ResourceLocation("swing"), (stack, level, entity, seed) -> {
             if (!(stack.getItem() instanceof MetronomeItem)) return 0.0F;
-            if (!MetronomeItem.isActive(stack)) return 0.0F;
+            if (!MetronomeItem.isTicking(stack)) return 0.0F;
 
             UUID id = MetronomeItem.getOrCreateUniqueID(stack);
             RodType rod = ClientForgeEvents.getItemRod(id);

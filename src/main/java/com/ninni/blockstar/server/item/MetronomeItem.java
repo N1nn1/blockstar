@@ -82,11 +82,11 @@ public class MetronomeItem extends BlockItem {
         return tag.getCompound("BlockEntityTag");
     }
 
-    public static boolean isActive(ItemStack stack) {
+    public static boolean isTicking(ItemStack stack) {
         return getOrCreateBlockEntityTag(stack).getBoolean("Ticking");
     }
 
-    public static void setActive(ItemStack stack, boolean active) {
+    public static void setTicking(ItemStack stack, boolean active) {
         getOrCreateBlockEntityTag(stack).putBoolean("Ticking", active);
     }
 
@@ -104,7 +104,7 @@ public class MetronomeItem extends BlockItem {
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
         super.appendHoverText(stack, level, list, flag);
 
-        if (isActive(stack)) list.add(Component.translatable("item.blockstar.metronome.active").withStyle(Style.EMPTY.withColor(0x66cc66)));
+        if (isTicking(stack)) list.add(Component.translatable("item.blockstar.metronome.ticking").withStyle(Style.EMPTY.withColor(0x66cc66)));
         list.add(Component.translatable("item.blockstar.desc.bpm", getBPM(stack)).withStyle(Style.EMPTY.withColor(0x616a83)));
         list.add(Component.translatable("item.blockstar.desc.time_sig", getTimeSig(stack)).withStyle(Style.EMPTY.withColor(0x616a83)));
     }

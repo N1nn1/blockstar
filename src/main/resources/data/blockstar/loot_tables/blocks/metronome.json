@@ -26,6 +26,11 @@
                   "op": "replace",
                   "source": "UUID",
                   "target": "BlockEntityTag.UUID"
+                },
+                {
+                  "op": "replace",
+                  "source": "Ticking",
+                  "target": "BlockEntityTag.Ticking"
                 }
               ]
             }
