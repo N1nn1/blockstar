@@ -166,9 +166,6 @@ public abstract class Key {
         return "";
     }
 
-
-
-
     public boolean isMouseHoveringOver(int leftPos, int topPos, double mouseX, double mouseY) {
         return mouseX >= (leftPos + x) && mouseX <= (leftPos + x) + width && mouseY >= (topPos + y) && mouseY <= (topPos + y) + height;
     }
