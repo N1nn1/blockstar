@@ -10,10 +10,10 @@ public class PianoKey extends Key {
     }
 
     public static void initPianoKeys(List<PianoKey> pianoKeys) {
-        int baseX = 23;
+        int baseX = 7;
         int baseY = 125;
         int startingNote = 48; // C3
-        int maxNote = 76; // E5
+        int maxNote = 83; // B5
 
         // Standard white key offsets in a 12-note octave (C, D, E, F, G, A, B)
         int[] whiteNoteOffsets = {0, 2, 4, 5, 7, 9, 11};

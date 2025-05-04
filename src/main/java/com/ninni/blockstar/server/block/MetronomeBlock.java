@@ -9,7 +9,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -63,13 +62,7 @@ public class MetronomeBlock extends BaseEntityBlock {
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
         ItemStack stack = new ItemStack(this);
         if (level.getBlockEntity(pos) instanceof MetronomeBlockEntity blockEntity) {
-            CompoundTag tag = new CompoundTag();
-            tag.putInt("BPM", blockEntity.bpm);
-            tag.putString("TimeSig", blockEntity.timeSig);
-            tag.putBoolean("Ticking", blockEntity.ticking);
-            if (blockEntity.uuid != null) tag.putUUID("UUID", blockEntity.uuid);
-
-            stack.addTagElement("BlockEntityTag", tag);
+            blockEntity.saveToItem(stack);
         }
         return stack;
     }

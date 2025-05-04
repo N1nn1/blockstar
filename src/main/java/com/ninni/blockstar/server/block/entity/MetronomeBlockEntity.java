@@ -97,11 +97,10 @@ public class MetronomeBlockEntity extends BlockEntity {
     @Override
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
+
         tag.putInt("BPM", bpm);
         tag.putString("TimeSig", timeSig);
         tag.putBoolean("Ticking", ticking);
-        if (uuid != null) {
-            tag.putUUID("UUID", uuid);
-        }
+        if (uuid != null) tag.putUUID("UUID", uuid);
     }
 }

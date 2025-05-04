@@ -76,6 +76,18 @@
   "soundfont.keyboard.base.65_4": {
     "sounds": ["blockstar:soundfont/keyboard/base/65_4"]
   },
+  "soundfont.keyboard.base.77_1": {
+    "sounds": ["blockstar:soundfont/keyboard/base/77_1"]
+  },
+  "soundfont.keyboard.base.77_2": {
+    "sounds": ["blockstar:soundfont/keyboard/base/77_2"]
+  },
+  "soundfont.keyboard.base.77_3": {
+    "sounds": ["blockstar:soundfont/keyboard/base/77_3"]
+  },
+  "soundfont.keyboard.base.77_4": {
+    "sounds": ["blockstar:soundfont/keyboard/base/77_4"]
+  },
 
   "soundfont.keyboard.splinter.48_1": {
     "sounds": ["blockstar:soundfont/keyboard/splinter/48_1"]
@@ -136,6 +148,18 @@
   },
   "soundfont.keyboard.splinter.65_4": {
     "sounds": ["blockstar:soundfont/keyboard/splinter/65_4"]
+  },
+  "soundfont.keyboard.splinter.77_1": {
+    "sounds": ["blockstar:soundfont/keyboard/splinter/77_1"]
+  },
+  "soundfont.keyboard.splinter.77_2": {
+    "sounds": ["blockstar:soundfont/keyboard/splinter/77_2"]
+  },
+  "soundfont.keyboard.splinter.77_3": {
+    "sounds": ["blockstar:soundfont/keyboard/splinter/77_3"]
+  },
+  "soundfont.keyboard.splinter.77_4": {
+    "sounds": ["blockstar:soundfont/keyboard/splinter/77_4"]
   },
 
   "soundfont.keyboard.meow.48": {

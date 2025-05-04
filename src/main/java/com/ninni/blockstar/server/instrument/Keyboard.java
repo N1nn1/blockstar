@@ -20,7 +20,7 @@ import java.util.Optional;
 
 public class Keyboard extends InstrumentType {
     public Keyboard() {
-        super(48, 76);
+        super(48, 83);
     }
 
     @Override
