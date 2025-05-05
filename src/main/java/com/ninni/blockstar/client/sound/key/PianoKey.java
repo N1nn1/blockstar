@@ -15,10 +15,8 @@ public class PianoKey extends Key {
         int startingNote = 48; // C3
         int maxNote = 83; // B5
 
-        // Standard white key offsets in a 12-note octave (C, D, E, F, G, A, B)
         int[] whiteNoteOffsets = {0, 2, 4, 5, 7, 9, 11};
 
-        // Mapping: index of white note in octave → black key exists after it
         Map<Integer, Integer> blackNoteOffsets = Map.of(
                 0, 1,  // C#
                 1, 3,  // D#

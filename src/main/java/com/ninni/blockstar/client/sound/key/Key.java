@@ -1,6 +1,6 @@
 package com.ninni.blockstar.client.sound.key;
 
-import com.ninni.blockstar.client.midi.MidiSettingsConfig;
+import com.ninni.blockstar.client.config.MidiSettingsConfig;
 import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
 import com.ninni.blockstar.registry.BNetwork;
 import com.ninni.blockstar.server.data.SoundfontManager;
@@ -12,9 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.PacketDistributor;
-import org.lwjgl.glfw.GLFW;
 
-import java.util.Map;
 import java.util.Optional;
 
 public abstract class Key {
@@ -23,44 +21,6 @@ public abstract class Key {
     public final int x, y, width, height;
     public final boolean isBlack;
     public boolean isPressed = false;
-    public static final Map<Integer, Integer> KEY_TO_NOTE = Map.ofEntries(
-            Map.entry(GLFW.GLFW_KEY_Z, 48), //C3
-            Map.entry(GLFW.GLFW_KEY_S, 49), //C#3
-            Map.entry(GLFW.GLFW_KEY_X, 50), //D3
-            Map.entry(GLFW.GLFW_KEY_D, 51), //D#3
-            Map.entry(GLFW.GLFW_KEY_C, 52), //E3
-            Map.entry(GLFW.GLFW_KEY_V, 53), //F3
-            Map.entry(GLFW.GLFW_KEY_G, 54), //F#3
-            Map.entry(GLFW.GLFW_KEY_B, 55), //G3
-            Map.entry(GLFW.GLFW_KEY_H, 56), //G#3
-            Map.entry(GLFW.GLFW_KEY_N, 57), //A3
-            Map.entry(GLFW.GLFW_KEY_J, 58), //A#3
-            Map.entry(GLFW.GLFW_KEY_M, 59), //B3
-            Map.entry(GLFW.GLFW_KEY_COMMA, 60), //C2
-            Map.entry(GLFW.GLFW_KEY_L, 61), //C#4
-            Map.entry(GLFW.GLFW_KEY_PERIOD, 62), //D4
-            Map.entry(GLFW.GLFW_KEY_SEMICOLON, 63), //D#4
-            Map.entry(GLFW.GLFW_KEY_SLASH, 64), //E4
-
-            Map.entry(GLFW.GLFW_KEY_Q, 60), //C4
-            Map.entry(GLFW.GLFW_KEY_2, 61), //C#4
-            Map.entry(GLFW.GLFW_KEY_W, 62), //D4
-            Map.entry(GLFW.GLFW_KEY_3, 63), //D#4
-            Map.entry(GLFW.GLFW_KEY_E, 64), //E4
-            Map.entry(GLFW.GLFW_KEY_R, 65), //F4
-            Map.entry(GLFW.GLFW_KEY_5, 66), //F#4
-            Map.entry(GLFW.GLFW_KEY_T, 67), //G4
-            Map.entry(GLFW.GLFW_KEY_6, 68), //G#4
-            Map.entry(GLFW.GLFW_KEY_Y, 69), //A4
-            Map.entry(GLFW.GLFW_KEY_7, 70), //A#4
-            Map.entry(GLFW.GLFW_KEY_U, 71),  //B4
-            Map.entry(GLFW.GLFW_KEY_I, 72), //C5
-            Map.entry(GLFW.GLFW_KEY_9, 73), //C#5
-            Map.entry(GLFW.GLFW_KEY_O, 74), //D5
-            Map.entry(GLFW.GLFW_KEY_0, 75), //D#5
-            Map.entry(GLFW.GLFW_KEY_P, 76)  //E5
-    );
-
 
     public Key(int note, int velocity, int x, int y, boolean isBlack, int width, int height) {
         this.note = note;

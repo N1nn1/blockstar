@@ -9,7 +9,6 @@
   "item.blockstar.desc.time_sig": "Time Signature: %s",
   "item.blockstar.desc.key": "Key: %s",
 
-
   "block.blockstar.composing_table": "Composing Table",
   "blockstar.container.composing_table": "Composing Table",
 
@@ -43,5 +42,9 @@
 
   "block.blockstar.keyboard": "Keyboard",
   "blockstar.container.keyboard": "Keyboard",
-  "blockstar.instrument_type.keyboard": "Keyboard"
+  "blockstar.instrument_type.keyboard": "Keyboard",
+  "blockstar.options.keyboard.title": "Keyboard Keybinds",
+  "blockstar.options.keyboard.octave_up": "Octave Up: %s",
+  "blockstar.options.keyboard.octave_down": "Octave Down: %s",
+  "blockstar.options.keyboard.sustain_pedal": "Sustain Pedal: %s"
 }

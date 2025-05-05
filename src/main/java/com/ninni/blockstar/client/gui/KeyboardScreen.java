@@ -1,14 +1,17 @@
 package com.ninni.blockstar.client.gui;
 
 import com.ninni.blockstar.Blockstar;
+import com.ninni.blockstar.client.config.KeyboardSettingsConfig;
 import com.ninni.blockstar.client.sound.key.PianoKey;
 import com.ninni.blockstar.server.inventory.KeyboardMenu;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +27,7 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
     private boolean sustainPedalVisible;
     private boolean sustainPedalPressed;
     private static KeyboardScreen instance;
+    private int octaveOffset = 0;
 
     public KeyboardScreen(KeyboardMenu menu, Inventory inventory, Component component) {
         super(menu, inventory, component);
@@ -74,6 +78,11 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
             if (key.isBlack) guiGraphics.blit(TEXTURE_WIDGETS, i + key.x, j + key.y, key.isPressed ? 25 : 18, 0, key.width, 16);
             else guiGraphics.blit(TEXTURE_WIDGETS, i + key.x,j + key.y, key.isPressed ? 9 : 0, 0, key.width, 24);
         }
+
+        int gearX = this.leftPos + 112;
+        int gearY = this.topPos + 5;
+        boolean hovered = mouseX >= gearX && mouseX < gearX + 10 && mouseY >= gearY && mouseY < gearY + 10;
+        guiGraphics.blit(TEXTURE_WIDGETS, gearX, gearY, hovered ? 80 : 64, 32, 10, 10);
     }
 
     public void playNoteFromMidi(int note, int velocity) {
@@ -91,13 +100,22 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_SPACE && !sustainPedalPressed && sustainPedalVisible) {
+        if (keyCode == KeyboardSettingsConfig.pedalKey && !sustainPedalPressed && sustainPedalVisible) {
             sustainPedalPressed = true;
             return true;
         }
 
-        if (PianoKey.KEY_TO_NOTE.containsKey(keyCode)) {
-            int note = PianoKey.KEY_TO_NOTE.get(keyCode);
+        if (keyCode == KeyboardSettingsConfig.octaveUpKey) {
+            octaveOffset = Math.min(octaveOffset + 1, 3);
+            return true;
+        }
+        if (keyCode == KeyboardSettingsConfig.octaveDownKey) {
+            octaveOffset = Math.max(octaveOffset - 1, -3);
+            return true;
+        }
+
+        if (KeyboardSettingsConfig.keyToNote.containsKey(keyCode)) {
+            int note = KeyboardSettingsConfig.keyToNote.get(keyCode) + (octaveOffset * 12);
             for (PianoKey key : pianoKeys) {
                 if (key.note == note && !key.isPressed) {
                     key.press(menu, Optional.empty());
@@ -105,12 +123,13 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
             }
             return true;
         }
+
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
     public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_SPACE && sustainPedalPressed) {
+        if (keyCode == KeyboardSettingsConfig.pedalKey && sustainPedalPressed) {
             sustainPedalPressed = false;
             for (PianoKey key : pianoKeys) {
                 if (!key.isPressed) {
@@ -120,8 +139,13 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
             return true;
         }
 
-        if (PianoKey.KEY_TO_NOTE.containsKey(keyCode)) {
-            int note = PianoKey.KEY_TO_NOTE.get(keyCode);
+        if (keyCode == KeyboardSettingsConfig.octaveUpKey || keyCode == KeyboardSettingsConfig.octaveDownKey) {
+            octaveOffset = 0;
+            return true;
+        }
+
+        if (KeyboardSettingsConfig.keyToNote.containsKey(keyCode)) {
+            int note = KeyboardSettingsConfig.keyToNote.get(keyCode) + (octaveOffset * 12);
             for (PianoKey key : pianoKeys) {
                 if (key.note == note) {
                     if (key.isPressed) {
@@ -131,12 +155,23 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
             }
             return true;
         }
+
         return super.keyReleased(keyCode, scanCode, modifiers);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == 0) {
+
+            int gearX = this.leftPos + 112;
+            int gearY = this.topPos + 5;
+
+            if (mouseX >= gearX && mouseX < gearX + 10 && mouseY >= gearY && mouseY < gearY + 10) {
+                this.minecraft.player.playNotifySound(SoundEvents.UI_BUTTON_CLICK.get(), SoundSource.MASTER, 0.15F,1);
+                Minecraft.getInstance().setScreen(new KeyboardKeybindConfigScreen(this, Minecraft.getInstance().options));
+                return true;
+            }
+
             pianoKeys.stream()
                     .sorted((a, b) -> Boolean.compare(b.isBlack, a.isBlack))
                     .filter(key -> key.isMouseHoveringOver(leftPos, topPos, mouseX, mouseY))

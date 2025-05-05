@@ -2,10 +2,11 @@ package com.ninni.blockstar.client;
 
 import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.CommonProxy;
+import com.ninni.blockstar.client.config.KeyboardSettingsConfig;
 import com.ninni.blockstar.client.event.ClientEvents;
 import com.ninni.blockstar.client.event.ClientForgeEvents;
 import com.ninni.blockstar.client.gui.ComposingTableScreen;
-import com.ninni.blockstar.client.midi.MidiSettingsConfig;
+import com.ninni.blockstar.client.config.MidiSettingsConfig;
 import com.ninni.blockstar.client.gui.KeyboardScreen;
 import com.ninni.blockstar.client.misc.text.ComposingTableTooltip;
 import com.ninni.blockstar.client.misc.text.ResonantPrismTooltip;
@@ -39,6 +40,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init() {
         MidiSettingsConfig.load();
+        KeyboardSettingsConfig.load();
         super.init();
         MidiInputHandler.startListening();
 

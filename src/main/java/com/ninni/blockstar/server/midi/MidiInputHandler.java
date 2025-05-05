@@ -2,7 +2,7 @@ package com.ninni.blockstar.server.midi;
 
 import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.client.gui.KeyboardScreen;
-import com.ninni.blockstar.client.midi.MidiSettingsConfig;
+import com.ninni.blockstar.client.config.MidiSettingsConfig;
 
 import javax.sound.midi.*;
 

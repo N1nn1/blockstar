@@ -1,4 +1,4 @@
-package com.ninni.blockstar.client.midi;
+package com.ninni.blockstar.client.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -17,7 +17,7 @@ public class MidiSettingsConfig {
     public static String buttonY = "6";
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final File CONFIG_FILE = new File(Minecraft.getInstance().gameDirectory, "config/blockstar_midi_options.json");
+    private static final File CONFIG_FILE = new File(Minecraft.getInstance().gameDirectory, "config/blockstar_midi_settings.json");
 
     public static void save() {
         try (FileWriter writer = new FileWriter(CONFIG_FILE)) {

@@ -1,8 +1,8 @@
 package com.ninni.blockstar.client.event;
 
 import com.ninni.blockstar.Blockstar;
-import com.ninni.blockstar.client.midi.MidiSettingsConfig;
-import com.ninni.blockstar.client.midi.MidiSettingsScreen;
+import com.ninni.blockstar.client.config.MidiSettingsConfig;
+import com.ninni.blockstar.client.gui.MidiSettingsScreen;
 import com.ninni.blockstar.registry.BNetwork;
 import com.ninni.blockstar.registry.BSoundEventRegistry;
 import com.ninni.blockstar.server.block.RodType;
