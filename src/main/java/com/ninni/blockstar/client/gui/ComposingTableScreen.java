@@ -16,7 +16,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -328,24 +327,8 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
                     if (getSheetMusic().is(Items.PAPER)) this.minecraft.player.playSound(SoundEvents.BOOK_PAGE_TURN, 1.0F, 1.0F);
 
                     if (this.menu.getInkAmount() > 0) {
-                        SoundfontManager.SoundfontDefinition soundfont = menu.getSoundfont();
-                        SoundfontManager.InstrumentSoundfontData forInstrument = soundfont.getForInstrument(menu.getInstrumentType());
-                        int sampleNote = forInstrument.getClosestSampleNote(note);
-                        float pitch = (float) Math.pow(2, (note - sampleNote) / 12.0);
-
-                        String velocitySuffix = getVelocity(menu.getInstrumentType(), soundfont, lastModifiedNote.velocity);
-
-                        ResourceLocation resourceLocation = new ResourceLocation(
-                                soundfont.name().getNamespace(),
-                                "soundfont." + BInstrumentTypeRegistry.get(menu.getInstrumentType()).getPath()
-                                        + "." + soundfont.name().getPath()
-                                        + "." + sampleNote
-                                        + velocitySuffix
-                        );
-
-                        LocalPlayer player = Minecraft.getInstance().player;
-
-                        this.minecraft.getSoundManager().play(new SoundfontSound(note, resourceLocation, lastModifiedNote.velocity, pitch, player, Optional.of(10)));
+                        SheetNote note1 = new SheetNote(tick, note, 1, lastModifiedNote.velocity);
+                        this.playSoundFromNote(note1, Optional.of(10));
                     }
                     BNetwork.INSTANCE.sendToServer(new SheetNoteEditPacket(
                             SheetNoteEditPacket.Action.ADD, tick, note, duration, lastModifiedNote.velocity
@@ -426,6 +409,8 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
             BNetwork.INSTANCE.sendToServer(new SheetNoteEditPacket(
                     SheetNoteEditPacket.Action.UPDATE, note.tick, note.pitch, note.duration, newVelocity
             ));
+
+            playSoundFromNote(note, Optional.of(10));
             return true;
         } else {
             if (isInPaperBounds(mouseX, mouseY)) {
@@ -504,5 +489,23 @@ public class ComposingTableScreen extends AbstractContainerScreen<ComposingTable
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         guiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
+    }
+
+    private void playSoundFromNote(SheetNote note, Optional<Integer> duration) {
+        SoundfontManager.SoundfontDefinition soundfont = menu.getSoundfont();
+        SoundfontManager.InstrumentSoundfontData forInstrument = soundfont.getForInstrument(menu.getInstrumentType());
+        int sampleNote = forInstrument.getClosestSampleNote(note.pitch);
+        float notePitch = (float) Math.pow(2, (note.pitch - sampleNote) / 12.0);
+
+        String velocitySuffix = getVelocity(menu.getInstrumentType(), soundfont, note.velocity);
+        ResourceLocation resourceLocation = new ResourceLocation(
+                soundfont.name().getNamespace(),
+                "soundfont." + BInstrumentTypeRegistry.get(menu.getInstrumentType()).getPath()
+                        + "." + soundfont.name().getPath()
+                        + "." + sampleNote
+                        + velocitySuffix
+        );
+
+        this.minecraft.getSoundManager().play(new SoundfontSound(note.pitch, resourceLocation, note.velocity, notePitch, this.minecraft.player, duration));
     }
 }
