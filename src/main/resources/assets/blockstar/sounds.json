@@ -1,4 +1,12 @@
 {
+  "music.disc.dittybit": {
+    "sounds": [
+      {
+        "name": "blockstar:music/dittybit",
+        "stream": true
+      }
+    ]
+  },
   "item.resonant_prism.tune": {
     "sounds": [
       "blockstar:item/resonant_prism/tune_0",

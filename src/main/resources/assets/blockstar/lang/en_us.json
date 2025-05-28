@@ -17,6 +17,8 @@
   "subtitles.blockstar.block.metronome.tick": "Metronome ticks",
 
   "item.blockstar.sheet_music": "Sheet Music",
+  "item.blockstar.music_disc_template": "Music Disc Template",
+  "item.blockstar.music_disc_template.desc": "Ninni - Dittybit",
 
   "item.blockstar.resonant_amethyst_shard": "Resonant Amethyst Shard",
   "block.blockstar.resonant_amethyst_block": "Block of Resonant Amethyst",

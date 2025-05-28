@@ -10,6 +10,8 @@ import net.minecraftforge.registries.RegistryObject;
 public class BSoundEventRegistry {
     public static final DeferredRegister<SoundEvent> DEF_REG = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Blockstar.MODID);
 
+    public static final RegistryObject<SoundEvent> MUSIC_DISC_DITTYBIT = createSoundEvent("music.disc.dittybit");
+
     public static final RegistryObject<SoundEvent> RESONANT_PRISM_TUNE = createSoundEvent("item.resonant_prism.tune");
     public static final RegistryObject<SoundEvent> METRONOME_DOWNBEAT = createSoundEvent("block.metronome.downbeat");
     public static final RegistryObject<SoundEvent> METRONOME_BEAT = createSoundEvent("block.metronome.beat");

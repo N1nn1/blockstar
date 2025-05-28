@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "HAH",
+    "AHA",
+    "HAH"
+  ],
+  "key": {
+    "A": {
+      "item": "blockstar:resonant_amethyst_shard"
+    },
+    "H": {
+      "item": "minecraft:honeycomb"
+    }
+  },
+  "result": {
+    "item": "blockstar:music_disc_template",
+    "count": 1
+  }
+}
