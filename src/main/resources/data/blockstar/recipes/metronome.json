@@ -3,17 +3,14 @@
   "pattern": [
     " # ",
     "#I#",
-    "#N#"
+    "#I#"
   ],
   "key": {
     "#": {
       "tag": "minecraft:planks"
     },
-    "N": {
-      "item": "minecraft:amethyst_shard"
-    },
     "I": {
-      "item": "minecraft:iron_ingot"
+      "item": "blockstar:resonant_amethyst_shard"
     }
   },
   "result": {

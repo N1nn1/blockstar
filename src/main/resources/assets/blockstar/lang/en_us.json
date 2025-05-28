@@ -18,6 +18,9 @@
 
   "item.blockstar.sheet_music": "Sheet Music",
 
+  "item.blockstar.resonant_amethyst_shard": "Resonant Amethyst Shard",
+  "block.blockstar.resonant_amethyst_block": "Block of Resonant Amethyst",
+
   "item.blockstar.resonant_prism": "Resonant Prism",
   "item.blockstar.resonant_prism.more": "and %s more...",
   "subtitles.blockstar.item.resonant_prism.tune": "Resonant Prism tuned",

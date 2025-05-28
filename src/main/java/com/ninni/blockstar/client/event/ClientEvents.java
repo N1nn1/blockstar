@@ -48,14 +48,11 @@ public class ClientEvents {
 
             categorized.sort(Comparator.comparing(data -> data.name().getPath().split("-")[0]));
 
-            Collections.reverse(uncategorized);
-            Collections.reverse(categorized);
-
-            for (SoundfontManager.SoundfontDefinition data : categorized) {
-                entries.putAfter(BItemRegistry.RESONANT_PRISM.get().getDefaultInstance(), ResonantPrismItem.getPrismItemFromSoundfont(data), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
-            }
             for (SoundfontManager.SoundfontDefinition data : uncategorized) {
-                entries.putAfter(BItemRegistry.RESONANT_PRISM.get().getDefaultInstance(), ResonantPrismItem.getPrismItemFromSoundfont(data), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+                entries.put(ResonantPrismItem.getPrismItemFromSoundfont(data), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+            }
+            for (SoundfontManager.SoundfontDefinition data : categorized) {
+                entries.put(ResonantPrismItem.getPrismItemFromSoundfont(data), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
             }
         }
     }

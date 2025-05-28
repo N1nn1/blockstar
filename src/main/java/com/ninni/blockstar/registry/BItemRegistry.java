@@ -14,11 +14,14 @@ import net.minecraftforge.registries.RegistryObject;
 public class BItemRegistry {
     public static final DeferredRegister<Item> DEF_REG = DeferredRegister.create(ForgeRegistries.ITEMS, Blockstar.MODID);
 
+    public static final RegistryObject<Item> RESONANT_AMETHYST_BLOCK = DEF_REG.register("resonant_amethyst_block", () -> new BlockItem(BBlockRegistry.RESONANT_AMETHYST_BLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<Item> RESONANT_AMETHYST_SHARD = DEF_REG.register("resonant_amethyst_shard", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> RESONANT_PRISM = DEF_REG.register("resonant_prism", () -> new ResonantPrismItem(new Item.Properties()));
+
     public static final RegistryObject<Item> COMPOSING_TABLE = DEF_REG.register("composing_table", ComposingTableItem::new);
     public static final RegistryObject<Item> METRONOME = DEF_REG.register("metronome", MetronomeItem::new);
     public static final RegistryObject<Item> SHEET_MUSIC = DEF_REG.register("sheet_music", () -> new SheetMusicItem(new Item.Properties().stacksTo(1)));
 
     public static final RegistryObject<Item> KEYBOARD = DEF_REG.register("keyboard", () -> new BlockItem(BBlockRegistry.KEYBOARD.get(), new Item.Properties()));
 
-    public static final RegistryObject<Item> RESONANT_PRISM = DEF_REG.register("resonant_prism", () -> new ResonantPrismItem(new Item.Properties()));
 }

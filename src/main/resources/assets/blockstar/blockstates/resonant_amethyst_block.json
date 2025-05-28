@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "budding=false": {
+      "model": "blockstar:block/resonant_amethyst_block",
+      "y": 90
+    },
+    "budding=true": {
+      "model": "blockstar:block/resonant_amethyst_block_budding"
+    }
+  }
+}
