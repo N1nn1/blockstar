@@ -18,8 +18,7 @@ import java.util.List;
 @JeiPlugin
 public class JEIPlugin implements IModPlugin {
     public static final ResourceLocation ID = new ResourceLocation(Blockstar.MODID, "jei_plugin");
-    public static final RecipeType<SoundfontConversionRecipe> SOUNDFONT_CONVERSION_RECIPE_TYPE =
-            RecipeType.create(Blockstar.MODID, "soundfont_conversion", SoundfontConversionRecipe.class);
+    public static final RecipeType<SoundfontConversionRecipe> SOUNDFONT_CONVERSION_RECIPE_TYPE = RecipeType.create(Blockstar.MODID, "soundfont_conversion", SoundfontConversionRecipe.class);
 
     @Override
     public ResourceLocation getPluginUid() {

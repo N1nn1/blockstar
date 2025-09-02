@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.PacketDistributor;
-import org.jetbrains.annotations.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class ComposingTableBlockEntity extends BaseContainerBlockEntity {
     private NonNullList<ItemStack> items = NonNullList.withSize(4, ItemStack.EMPTY);

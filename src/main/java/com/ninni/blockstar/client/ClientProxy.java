@@ -4,20 +4,17 @@ import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.CommonProxy;
 import com.ninni.blockstar.client.config.KeyboardSettingsConfig;
 import com.ninni.blockstar.client.event.ClientEvents;
-import com.ninni.blockstar.client.event.ClientForgeEvents;
+import com.ninni.blockstar.client.event.ForgeClientEvents;
 import com.ninni.blockstar.client.gui.ComposingTableScreen;
 import com.ninni.blockstar.client.config.MidiSettingsConfig;
 import com.ninni.blockstar.client.gui.KeyboardScreen;
-import com.ninni.blockstar.client.misc.text.ComposingTableTooltip;
-import com.ninni.blockstar.client.misc.text.ResonantPrismTooltip;
+import com.ninni.blockstar.client.gui.MetronomeScreen;
 import com.ninni.blockstar.client.sound.SoundManagerHelper;
 import com.ninni.blockstar.client.sound.SoundfontSound;
 import com.ninni.blockstar.registry.BItemRegistry;
 import com.ninni.blockstar.registry.BMenuRegistry;
 import com.ninni.blockstar.server.block.RodType;
-import com.ninni.blockstar.server.item.ComposingTableItem;
 import com.ninni.blockstar.server.item.MetronomeItem;
-import com.ninni.blockstar.server.item.ResonantPrismItem;
 import com.ninni.blockstar.server.midi.MidiInputHandler;
 import com.ninni.blockstar.server.packet.PlaySoundPacket;
 import com.ninni.blockstar.server.packet.StopSoundPacket;
@@ -27,11 +24,12 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.util.UUID;
 
@@ -43,10 +41,7 @@ public class ClientProxy extends CommonProxy {
         KeyboardSettingsConfig.load();
         super.init();
         MidiInputHandler.startListening();
-
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        bus.addListener(this::registerTooltips);
-        bus.register(new ClientEvents());
+        MinecraftForge.EVENT_BUS.register(new ClientEvents());
     }
 
     @Override
@@ -63,7 +58,7 @@ public class ClientProxy extends CommonProxy {
             if (!MetronomeItem.isTicking(stack)) return 0.0F;
 
             UUID id = MetronomeItem.getOrCreateUniqueID(stack);
-            RodType rod = ClientForgeEvents.getItemRod(id);
+            RodType rod = ForgeClientEvents.getItemRod(id);
 
             return switch (rod) {
                 case LEFT -> 1.0F;
@@ -100,8 +95,9 @@ public class ClientProxy extends CommonProxy {
         SoundManagerHelper.releaseMatchingSound(msg.note, msg.userId, msg.releaseTicks);
     }
 
-    private void registerTooltips(RegisterClientTooltipComponentFactoriesEvent registry) {
-        registry.register(ResonantPrismItem.SoundfontTooltip.class, ResonantPrismTooltip::new);
-        registry.register(ComposingTableItem.ComposingTableTooltip.class, ComposingTableTooltip::new);
+    @Override
+    public void openMetronomeScreen(LocalPlayer localPlayer, ItemStack itemStack) {
+        localPlayer.playNotifySound(SoundEvents.UI_BUTTON_CLICK.get(), SoundSource.MASTER, 0.15F, 1);
+        Minecraft.getInstance().setScreen(new MetronomeScreen(itemStack));
     }
 }

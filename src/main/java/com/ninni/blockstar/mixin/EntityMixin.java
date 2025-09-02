@@ -3,7 +3,6 @@ package com.ninni.blockstar.mixin;
 import com.ninni.blockstar.server.block.KeyboardBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;

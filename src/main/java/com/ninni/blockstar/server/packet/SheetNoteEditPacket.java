@@ -1,13 +1,11 @@
 package com.ninni.blockstar.server.packet;
 
-import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.registry.BItemRegistry;
 import com.ninni.blockstar.registry.BNetwork;
 import com.ninni.blockstar.server.inventory.ComposingTableMenu;
 import com.ninni.blockstar.server.item.SheetMusicItem;
 import com.ninni.blockstar.server.sheetmusic.SheetNote;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.network.NetworkEvent;

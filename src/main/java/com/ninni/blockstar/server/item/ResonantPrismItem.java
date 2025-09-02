@@ -13,7 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 import java.util.Optional;

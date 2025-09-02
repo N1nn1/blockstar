@@ -16,6 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -23,8 +24,8 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.*;
 
-@Mod.EventBusSubscriber(modid = Blockstar.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class ClientForgeEvents {
+@Mod.EventBusSubscriber(modid = Blockstar.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+public final class ForgeClientEvents {
     private static final Set<UUID> activeUUIDs = new HashSet<>();
     private static final Map<UUID, Integer> beatCounters = new HashMap<>();
     private static final Map<UUID, Boolean> swingPhase = new HashMap<>();

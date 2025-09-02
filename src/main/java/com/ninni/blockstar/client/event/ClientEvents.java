@@ -1,18 +1,24 @@
 package com.ninni.blockstar.client.event;
 
 import com.ninni.blockstar.Blockstar;
+import com.ninni.blockstar.client.misc.text.ComposingTableTooltip;
+import com.ninni.blockstar.client.misc.text.ResonantPrismTooltip;
 import com.ninni.blockstar.registry.BCreativeModeTabRegistry;
 import com.ninni.blockstar.registry.BItemRegistry;
 import com.ninni.blockstar.server.data.SoundfontManager;
+import com.ninni.blockstar.server.item.ComposingTableItem;
 import com.ninni.blockstar.server.item.ResonantPrismItem;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.common.util.MutableHashedLinkedMap;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.util.ArrayList;
@@ -20,6 +26,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+@Mod.EventBusSubscriber(modid = Blockstar.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientEvents {
 
     @SubscribeEvent
@@ -79,4 +86,9 @@ public class ClientEvents {
         }
     }
 
+    @SubscribeEvent
+    public static void registerTooltips(RegisterClientTooltipComponentFactoriesEvent registry) {
+        registry.register(ResonantPrismItem.SoundfontTooltip.class, ResonantPrismTooltip::new);
+        registry.register(ComposingTableItem.ComposingTableTooltip.class, ComposingTableTooltip::new);
+    }
 }

@@ -77,6 +77,9 @@ public class MetronomeBlockEntity extends BlockEntity {
             }
         } else {
             if (getBlockState().getValue(MetronomeBlock.ROD) != RodType.MIDDLE) level.setBlock(worldPosition, getBlockState().setValue(MetronomeBlock.ROD, RodType.MIDDLE), 3);
+            pulsing = false;
+            currentSignalStrength = 0;
+            level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
         }
     }
 

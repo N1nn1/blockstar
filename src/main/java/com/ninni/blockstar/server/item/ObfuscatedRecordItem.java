@@ -6,7 +6,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.RecordItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 import java.util.function.Supplier;

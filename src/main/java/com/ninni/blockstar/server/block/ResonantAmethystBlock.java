@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.MapColor;
-import org.jetbrains.annotations.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class ResonantAmethystBlock extends BuddingAmethystBlock {
     public static final BooleanProperty BUDDING = BooleanProperty.create("budding");

@@ -1,14 +1,11 @@
 package com.ninni.blockstar.server.item;
 
-import com.ninni.blockstar.client.gui.MetronomeScreen;
+import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.registry.BBlockRegistry;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -17,7 +14,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 import java.util.UUID;
@@ -32,8 +29,7 @@ public class MetronomeItem extends BlockItem {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         ItemStack itemStack = player.getItemInHand(interactionHand);
         if (player instanceof LocalPlayer localPlayer) {
-            localPlayer.playNotifySound(SoundEvents.UI_BUTTON_CLICK.get(), SoundSource.MASTER, 0.15F, 1);
-            Minecraft.getInstance().setScreen(new MetronomeScreen(itemStack));
+            Blockstar.PROXY.openMetronomeScreen(localPlayer, itemStack);
             return InteractionResultHolder.success(itemStack);
         }
         return super.use(level, player, interactionHand);

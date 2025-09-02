@@ -6,7 +6,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class SoundfontSlot extends Slot {
-    private InstrumentType instrumentType;
+    private final InstrumentType instrumentType;
 
     public SoundfontSlot(Container container, int u, int v, int i, InstrumentType instrumentType) {
         super(container, u, v, i);

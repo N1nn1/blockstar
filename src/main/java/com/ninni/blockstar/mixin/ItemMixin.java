@@ -1,14 +1,12 @@
 package com.ninni.blockstar.mixin;
 
 import com.ninni.blockstar.Blockstar;
-import com.ninni.blockstar.client.sound.SoundfontSound;
 import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
 import com.ninni.blockstar.registry.BRecipeRegistry;
 import com.ninni.blockstar.registry.BSoundEventRegistry;
 import com.ninni.blockstar.server.data.SoundfontManager;
 import com.ninni.blockstar.server.instrument.InstrumentType;
 import com.ninni.blockstar.server.item.crafting.SoundfontConversionRecipe;
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.SlotAccess;
@@ -63,7 +61,7 @@ public class ItemMixin {
                     String velocity = forInstrument.velocityLayers().isPresent() ? "_" + forInstrument.velocityLayers().get() : "";
                     ResourceLocation resourceLocation = new ResourceLocation(soundfont.name().getNamespace(), "soundfont." + BInstrumentTypeRegistry.get(instrumentType).getPath() + "." + soundfont.name().getPath() + "." + forInstrument.getClosestSampleNote(60) + velocity);
 
-                    Minecraft.getInstance().getSoundManager().play(new SoundfontSound(60, resourceLocation, 1, 1, player, Optional.empty()));
+                    //Minecraft.getInstance().getSoundManager().play(new SoundfontSound(60, resourceLocation, 1, 1, player, Optional.empty()));
                     player.playNotifySound(BSoundEventRegistry.RESONANT_PRISM_TUNE.get(), SoundSource.PLAYERS, 1,1);
                 }
 
