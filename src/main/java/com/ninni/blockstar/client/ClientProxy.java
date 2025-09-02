@@ -7,24 +7,16 @@ import com.ninni.blockstar.client.event.ForgeClientEvents;
 import com.ninni.blockstar.client.gui.ComposingTableScreen;
 import com.ninni.blockstar.client.config.MidiSettingsConfig;
 import com.ninni.blockstar.client.gui.KeyboardScreen;
-import com.ninni.blockstar.client.gui.MetronomeScreen;
-import com.ninni.blockstar.client.sound.SoundManagerHelper;
-import com.ninni.blockstar.client.sound.SoundfontSound;
 import com.ninni.blockstar.registry.BItemRegistry;
 import com.ninni.blockstar.registry.BMenuRegistry;
 import com.ninni.blockstar.server.block.RodType;
 import com.ninni.blockstar.server.item.MetronomeItem;
 import com.ninni.blockstar.server.packet.PlaySoundPacket;
 import com.ninni.blockstar.server.packet.StopSoundPacket;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
@@ -66,34 +58,26 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void handlePlaySoundPacket(PlaySoundPacket msg) {
-        Minecraft mc = Minecraft.getInstance();
-        LocalPlayer player = mc.player;
-        if (player != null) {
-            Entity playerEntity = player.level().getEntity(msg.playerId);
-            if (playerEntity instanceof LocalPlayer targetPlayer) {
-                mc.getSoundManager().play(new SoundfontSound(msg.note, msg.soundLocation, 1.0f, msg.pitch, targetPlayer, msg.autoFadeTicks));
-            }
-        }
+        MyNewThing.handlePlaySoundPacket(msg);
     }
 
     @Override
     public boolean isScreenShiftDown() {
-        return Screen.hasShiftDown();
+        return MyNewThing.isScreenShiftDown();
     }
 
     @Override
     public Level getWorld() {
-        return Minecraft.getInstance().level;
+        return MyNewThing.getWorld();
     }
 
     @Override
     public void handleStopSoundPacket(StopSoundPacket msg) {
-        SoundManagerHelper.releaseMatchingSound(msg.note, msg.userId, msg.releaseTicks);
+        MyNewThing.handleStopSoundPacket(msg);
     }
 
     @Override
     public void openMetronomeScreen(LocalPlayer localPlayer, ItemStack itemStack) {
-        localPlayer.playNotifySound(SoundEvents.UI_BUTTON_CLICK.get(), SoundSource.MASTER, 0.15F, 1);
-        Minecraft.getInstance().setScreen(new MetronomeScreen(itemStack));
+        MyNewThing.openMetronomeScreen(localPlayer, itemStack);
     }
 }

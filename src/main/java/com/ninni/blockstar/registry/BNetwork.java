@@ -2,8 +2,11 @@ package com.ninni.blockstar.registry;
 
 import com.ninni.blockstar.server.packet.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
+
+import java.util.Optional;
 
 import static com.ninni.blockstar.Blockstar.MODID;
 
@@ -24,7 +27,7 @@ public class BNetwork {
         INSTANCE.registerMessage(id++, SheetNoteEditPacket.class, SheetNoteEditPacket::encode, SheetNoteEditPacket::decode, SheetNoteEditPacket::handle);
         INSTANCE.registerMessage(id++, SheetSettingsUpdatePacket.class, SheetSettingsUpdatePacket::encode, SheetSettingsUpdatePacket::decode, SheetSettingsUpdatePacket::handle);
         INSTANCE.registerMessage(id++, SheetRenamePacket.class, SheetRenamePacket::encode, SheetRenamePacket::decode, SheetRenamePacket::handle);
-        INSTANCE.registerMessage(id++, BlockEntitySyncPacket.class, BlockEntitySyncPacket::encode, BlockEntitySyncPacket::decode, BlockEntitySyncPacket::handle);
+        INSTANCE.registerMessage(id++, BlockEntitySyncPacket.class, BlockEntitySyncPacket::encode, BlockEntitySyncPacket::decode, BlockEntitySyncPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         INSTANCE.registerMessage(id++, MetronomeUpdatePacket.class, MetronomeUpdatePacket::encode, MetronomeUpdatePacket::decode, MetronomeUpdatePacket::handle);
         INSTANCE.registerMessage(id++, MetronomeTogglePacket.class, MetronomeTogglePacket::encode, MetronomeTogglePacket::decode, MetronomeTogglePacket::handle);
         INSTANCE.registerMessage(id++, SoundfontSyncPacket.class, SoundfontSyncPacket::encode, SoundfontSyncPacket::decode, SoundfontSyncPacket::handle);
