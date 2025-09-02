@@ -52,7 +52,9 @@ public class KeyboardScreen extends AbstractContainerScreen<KeyboardMenu> {
     @Override
     protected void containerTick() {
         super.containerTick();
-        sustainPedalVisible = menu.getInstrumentType().getSoundfont(menu.getSoundfontSlot().getItem()).getForInstrument(this.menu.getInstrumentType()).held();
+        var sf = menu.getInstrumentType().getSoundfont(menu.getSoundfontSlot().getItem());
+        var data = (sf != null) ? sf.getForInstrument(this.menu.getInstrumentType()) : null;
+        sustainPedalVisible = data != null && data.held();
     }
 
     @Override
