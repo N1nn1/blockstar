@@ -3,7 +3,6 @@ package com.ninni.blockstar.client;
 import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.CommonProxy;
 import com.ninni.blockstar.client.config.KeyboardSettingsConfig;
-import com.ninni.blockstar.client.event.ClientEvents;
 import com.ninni.blockstar.client.event.ForgeClientEvents;
 import com.ninni.blockstar.client.gui.ComposingTableScreen;
 import com.ninni.blockstar.client.config.MidiSettingsConfig;
@@ -15,7 +14,6 @@ import com.ninni.blockstar.registry.BItemRegistry;
 import com.ninni.blockstar.registry.BMenuRegistry;
 import com.ninni.blockstar.server.block.RodType;
 import com.ninni.blockstar.server.item.MetronomeItem;
-import com.ninni.blockstar.server.midi.MidiInputHandler;
 import com.ninni.blockstar.server.packet.PlaySoundPacket;
 import com.ninni.blockstar.server.packet.StopSoundPacket;
 import net.minecraft.client.Minecraft;
@@ -29,7 +27,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.MinecraftForge;
 
 import java.util.UUID;
 
@@ -39,9 +36,8 @@ public class ClientProxy extends CommonProxy {
     public void init() {
         MidiSettingsConfig.load();
         KeyboardSettingsConfig.load();
+
         super.init();
-        MidiInputHandler.startListening();
-        MinecraftForge.EVENT_BUS.register(new ClientEvents());
     }
 
     @Override

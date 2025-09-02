@@ -3,7 +3,8 @@ package com.ninni.blockstar;
 import com.mojang.logging.LogUtils;
 import com.ninni.blockstar.client.ClientProxy;
 import com.ninni.blockstar.registry.*;
-import com.ninni.blockstar.server.event.CommonEvents;
+import com.ninni.blockstar.server.event.ForgeEvents;
+import com.ninni.blockstar.server.event.ModEvents;
 import com.ninni.blockstar.server.instrument.InstrumentType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -17,21 +18,20 @@ import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegistryBuilder;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Mod(Blockstar.MODID)
 public class Blockstar {
     public static final String MODID = "blockstar";
     public static final Logger LOGGER = LogUtils.getLogger();
-    public static final List<Runnable> CALLBACKS = new ArrayList<>();
     public static CommonProxy PROXY = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 
     public Blockstar() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        IEventBus bus = MinecraftForge.EVENT_BUS;
+
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::clientSetup);
         modEventBus.addListener(this::buildRegistries);
+
         BBlockRegistry.DEF_REG.register(modEventBus);
         BItemRegistry.DEF_REG.register(modEventBus);
         BBlockEntityRegistry.DEF_REG.register(modEventBus);
@@ -42,8 +42,11 @@ public class Blockstar {
         BRecipeRegistry.DEF_REG_TYPES.register(modEventBus);
         BSoundEventRegistry.DEF_REG.register(modEventBus);
         BNetwork.register();
+
         PROXY.init();
-        MinecraftForge.EVENT_BUS.register(new CommonEvents());
+        bus.register(new ForgeEvents());
+        bus.register(new ModEvents());
+        bus.register(this);
     }
 
     public void commonSetup(final FMLCommonSetupEvent event) {

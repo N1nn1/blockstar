@@ -1,6 +1,7 @@
 package com.ninni.blockstar.server.data;
 
 import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -11,14 +12,19 @@ import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ninni.blockstar.Blockstar;
 import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
+import com.ninni.blockstar.registry.BNetwork;
 import com.ninni.blockstar.server.instrument.InstrumentType;
+import com.ninni.blockstar.server.packet.SoundfontSyncPacket;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Rarity;
+import net.minecraftforge.network.PacketDistributor;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.*;
 
@@ -58,6 +64,22 @@ public class SoundfontManager extends SimpleJsonResourceReloadListener {
 
         this.soundfonts = builder.build();
         Blockstar.LOGGER.info("Loaded {} soundfonts", soundfonts.size());
+    }
+
+    public void onDatapackSync(@Nullable ServerPlayer player) {
+        if (this.soundfonts.isEmpty()) return;
+        BiMap<ResourceLocation, SoundfontDefinition> registryMap = HashBiMap.create(this.soundfonts);
+
+        if (player == null) {
+            BNetwork.INSTANCE.send(PacketDistributor.ALL.noArg(), new SoundfontSyncPacket(registryMap));
+        } else {
+            BNetwork.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new SoundfontSyncPacket(registryMap));
+        }
+    }
+
+    public void synchronizeRegistryForClient(BiMap<ResourceLocation, SoundfontDefinition> newData) {
+        this.soundfonts = ImmutableBiMap.copyOf(newData);
+        Blockstar.LOGGER.info("Client applied {} soundfonts from server", this.soundfonts.size());
     }
 
     public SoundfontDefinition get(ResourceLocation id) {

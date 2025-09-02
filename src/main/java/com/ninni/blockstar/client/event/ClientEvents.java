@@ -31,12 +31,10 @@ public class ClientEvents {
 
     @SubscribeEvent
     public void onClientSetup(final FMLClientSetupEvent event) {
-        Blockstar.CALLBACKS.forEach(Runnable::run);
-        Blockstar.CALLBACKS.clear();
     }
 
     @SubscribeEvent
-    public void registerCreativeModeTab(BuildCreativeModeTabContentsEvent event) {
+    public static void registerCreativeModeTab(BuildCreativeModeTabContentsEvent event) {
         ResourceKey<CreativeModeTab> key = event.getTabKey();
         MutableHashedLinkedMap<ItemStack, CreativeModeTab.TabVisibility> entries = event.getEntries();
 
@@ -47,10 +45,10 @@ public class ClientEvents {
             for (SoundfontManager.SoundfontDefinition data : Blockstar.PROXY.getSoundfontManager().getAll()) {
                 if (data.creativeTab()) {
                     if (!data.name().getPath().contains("-")) {
-                        if (uncategorized.stream().noneMatch(soundfontDefinition -> soundfontDefinition.name() == data.name())) uncategorized.add(data);
+                        if (uncategorized.stream().noneMatch(soundfontDefinition -> soundfontDefinition.name().equals(data.name()))) uncategorized.add(data);
                     }
                     else {
-                        if (categorized.stream().noneMatch(soundfontDefinition -> soundfontDefinition.name() == data.name())) categorized.add(data);
+                        if (categorized.stream().noneMatch(soundfontDefinition -> soundfontDefinition.name().equals(data.name()))) categorized.add(data);
                     }
                 }
             }

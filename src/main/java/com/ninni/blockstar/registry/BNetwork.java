@@ -27,5 +27,6 @@ public class BNetwork {
         INSTANCE.registerMessage(id++, BlockEntitySyncPacket.class, BlockEntitySyncPacket::encode, BlockEntitySyncPacket::decode, BlockEntitySyncPacket::handle);
         INSTANCE.registerMessage(id++, MetronomeUpdatePacket.class, MetronomeUpdatePacket::encode, MetronomeUpdatePacket::decode, MetronomeUpdatePacket::handle);
         INSTANCE.registerMessage(id++, MetronomeTogglePacket.class, MetronomeTogglePacket::encode, MetronomeTogglePacket::decode, MetronomeTogglePacket::handle);
+        INSTANCE.registerMessage(id++, SoundfontSyncPacket.class, SoundfontSyncPacket::encode, SoundfontSyncPacket::decode, SoundfontSyncPacket::handle);
     }
 }
