@@ -11,8 +11,8 @@ import com.ninni.blockstar.registry.BItemRegistry;
 import com.ninni.blockstar.registry.BMenuRegistry;
 import com.ninni.blockstar.server.block.RodType;
 import com.ninni.blockstar.server.item.MetronomeItem;
-import com.ninni.blockstar.server.packet.PlaySoundPacket;
-import com.ninni.blockstar.server.packet.StopSoundPacket;
+import com.ninni.blockstar.server.packet.S2CPlaySoundPacket;
+import com.ninni.blockstar.server.packet.S2CStopSoundPacket;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -57,27 +57,27 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void handlePlaySoundPacket(PlaySoundPacket msg) {
-        MyNewThing.handlePlaySoundPacket(msg);
+    public void handlePlaySoundPacket(S2CPlaySoundPacket msg) {
+        ClientHandler.handlePlaySoundPacket(msg);
     }
 
     @Override
     public boolean isScreenShiftDown() {
-        return MyNewThing.isScreenShiftDown();
+        return ClientHandler.isScreenShiftDown();
     }
 
     @Override
     public Level getWorld() {
-        return MyNewThing.getWorld();
+        return ClientHandler.getWorld();
     }
 
     @Override
-    public void handleStopSoundPacket(StopSoundPacket msg) {
-        MyNewThing.handleStopSoundPacket(msg);
+    public void handleStopSoundPacket(S2CStopSoundPacket msg) {
+        ClientHandler.handleStopSoundPacket(msg);
     }
 
     @Override
     public void openMetronomeScreen(LocalPlayer localPlayer, ItemStack itemStack) {
-        MyNewThing.openMetronomeScreen(localPlayer, itemStack);
+        ClientHandler.openMetronomeScreen(localPlayer, itemStack);
     }
 }

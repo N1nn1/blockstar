@@ -1,22 +1,24 @@
 package com.ninni.blockstar.server.packet;
 
-import com.ninni.blockstar.Blockstar;
+import com.ninni.blockstar.registry.BNetwork;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
 public class PlaySoundPacket {
-    public final ResourceLocation soundLocation;
+    public final ResourceLocation soundId;
     public final float pitch;
     public final int playerId;
     public final int note;
     public final Optional<Integer> autoFadeTicks;
 
-    public PlaySoundPacket(ResourceLocation soundLocation, float pitch, int playerId, int note, Optional<Integer> autoFadeTicks) {
-        this.soundLocation = soundLocation;
+    public PlaySoundPacket(ResourceLocation soundId, float pitch, int playerId, int note, Optional<Integer> autoFadeTicks) {
+        this.soundId = soundId;
         this.pitch = pitch;
         this.playerId = playerId;
         this.note = note;
@@ -24,7 +26,7 @@ public class PlaySoundPacket {
     }
 
     public static void encode(PlaySoundPacket msg, FriendlyByteBuf buf) {
-        buf.writeResourceLocation(msg.soundLocation);
+        buf.writeResourceLocation(msg.soundId);
         buf.writeFloat(msg.pitch);
         buf.writeInt(msg.playerId);
         buf.writeInt(msg.note);
@@ -36,11 +38,18 @@ public class PlaySoundPacket {
     }
 
     public static void handle(PlaySoundPacket msg, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            if (ctx.get().getDirection().getReceptionSide().isClient()) {
-                Blockstar.PROXY.handlePlaySoundPacket(msg);
+        NetworkEvent.Context c = ctx.get();
+        c.enqueueWork(() -> {
+            if (c.getDirection().getReceptionSide().isServer()) {
+                ServerPlayer sender = c.getSender();
+                if (sender == null) return;
+
+                BNetwork.INSTANCE.send(
+                        PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(sender.getX(), sender.getY(), sender.getZ(), 32, sender.level().dimension())),
+                        new S2CPlaySoundPacket(msg.soundId, msg.pitch, sender.getId(), msg.note, msg.autoFadeTicks)
+                );
             }
         });
-        ctx.get().setPacketHandled(true);
+        c.setPacketHandled(true);
     }
 }

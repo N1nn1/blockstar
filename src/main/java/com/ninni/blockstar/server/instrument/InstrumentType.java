@@ -9,6 +9,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class InstrumentType {
     private int lowestNote;
@@ -52,26 +53,56 @@ public abstract class InstrumentType {
     public abstract void playNoteSoundFromBlock(BlockPos blockpos, Level level, Entity entity);
 
     public SoundfontManager.SoundfontDefinition getSoundfont(ItemStack stack) {
-        SoundfontManager.SoundfontDefinition soundfontDefinition;
-
-        if (!stack.isEmpty() && this.isValidSoundfontForInstrumentType(stack)) {
-            soundfontDefinition = Blockstar.PROXY.getSoundfontManager().get(new ResourceLocation(stack.getTag().getString("Soundfont")));
+        SoundfontManager.SoundfontDefinition def = resolveSoundfont(stack);
+        if (def == null) {
+            def = getBaseSoundFont();
         }
-        else soundfontDefinition = getBaseSoundFont();
-
-        return soundfontDefinition != null ? soundfontDefinition : getBaseSoundFont();
+        if (def == null) {
+            Blockstar.LOGGER.error("[Soundfonts] Missing 'blockstar:base' definition! Falling back to first available.");
+            var all = Blockstar.PROXY.getSoundfontManager().getAll();
+            def = all.isEmpty() ? null : all.iterator().next();
+        }
+        return def;
     }
 
     public boolean isValidSoundfontForInstrumentType(ItemStack stack) {
-        if (stack.hasTag() && stack.getTag().contains("Soundfont")) {
-            SoundfontManager.SoundfontDefinition data = Blockstar.PROXY.getSoundfontManager().get(new ResourceLocation(stack.getTag().getString("Soundfont")));
-            return data.instrumentData().containsKey(this);
+        ResourceLocation id = readSoundfontId(stack);
+        if (id == null) return false;
+
+        SoundfontManager.SoundfontDefinition data = Blockstar.PROXY.getSoundfontManager().get(id);
+        if (data == null) {
+            Blockstar.LOGGER.debug("[Soundfonts] Unknown soundfont id on stack: {}", id);
+            return false;
         }
-        return false;
+        return data.instrumentData().containsKey(this);
     }
 
     public SoundfontManager.SoundfontDefinition getBaseSoundFont() {
         return Blockstar.PROXY.getSoundfontManager().get(new ResourceLocation(Blockstar.MODID, "base"));
+    }
+
+    @Nullable
+    private ResourceLocation readSoundfontId(ItemStack stack) {
+        if (stack.isEmpty() || !stack.hasTag()) return null;
+        if (!stack.getTag().contains("Soundfont")) return null;
+
+        String raw = stack.getTag().getString("Soundfont");
+        if (raw == null || raw.isEmpty()) return null;
+
+        ResourceLocation id = ResourceLocation.tryParse(raw);
+        if (id == null) {
+            Blockstar.LOGGER.debug("[Soundfonts] Invalid ResourceLocation in NBT: '{}'", raw);
+        }
+        return id;
+    }
+
+    private SoundfontManager.SoundfontDefinition resolveSoundfont(ItemStack stack) {
+        ResourceLocation id = readSoundfontId(stack);
+        if (id == null) return null;
+
+        SoundfontManager.SoundfontDefinition data = Blockstar.PROXY.getSoundfontManager().get(id);
+        if (data == null) return null;
+        return data.instrumentData().containsKey(this) ? data : null;
     }
 
     int[] getScaleForPlayer(LivingEntity entity, Level level) {

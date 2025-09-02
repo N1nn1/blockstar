@@ -56,10 +56,7 @@ public abstract class Key {
 
         LocalPlayer player = Minecraft.getInstance().player;
 
-        BNetwork.INSTANCE.send(
-                PacketDistributor.NEAR.with(() -> PacketDistributor.TargetPoint.p(player.getX(), player.getY(), player.getZ(), 32, player.level().dimension()).get()),
-                new PlaySoundPacket(resourceLocation, pitch, player.getId(), note, Optional.empty())
-        );
+        BNetwork.INSTANCE.sendToServer(new PlaySoundPacket(resourceLocation, pitch, player.getId(), note, Optional.empty()));
 
         isPressed = true;
     }
@@ -74,10 +71,7 @@ public abstract class Key {
 
     public void stopKeySound(KeyboardMenu menu, SoundfontManager.SoundfontDefinition soundfont) {
         LocalPlayer player = Minecraft.getInstance().player;
-        BNetwork.INSTANCE.send(
-                PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(player.getX(), player.getY(), player.getZ(), 32, player.level().dimension())),
-                new StopSoundPacket(note, soundfont.getForInstrument(menu.getInstrumentType()).releaseTicks(), player.getId())
-        );
+        BNetwork.INSTANCE.sendToServer(new StopSoundPacket(note, soundfont.getForInstrument(menu.getInstrumentType()).releaseTicks(), player.getId()));
     }
 
     public static String getVelocity(InstrumentType type, SoundfontManager.SoundfontDefinition soundfont, int inputVelocity) {

@@ -2,6 +2,8 @@ package com.ninni.blockstar;
 
 import com.ninni.blockstar.server.data.SoundfontManager;
 import com.ninni.blockstar.server.packet.PlaySoundPacket;
+import com.ninni.blockstar.server.packet.S2CPlaySoundPacket;
+import com.ninni.blockstar.server.packet.S2CStopSoundPacket;
 import com.ninni.blockstar.server.packet.StopSoundPacket;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -20,10 +22,10 @@ public class CommonProxy {
     public void clientSetup() {
     }
 
-    public void handlePlaySoundPacket(PlaySoundPacket msg) {
+    public void handlePlaySoundPacket(S2CPlaySoundPacket msg) {
     }
 
-    public void handleStopSoundPacket(StopSoundPacket msg) {
+    public void handleStopSoundPacket(S2CStopSoundPacket msg) {
     }
 
     public void openMetronomeScreen(LocalPlayer localPlayer, ItemStack itemStack) {

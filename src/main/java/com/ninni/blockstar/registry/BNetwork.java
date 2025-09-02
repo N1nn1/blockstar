@@ -22,8 +22,10 @@ public class BNetwork {
     private static int id = 0;
 
     public static void register() {
-        INSTANCE.registerMessage(id++, PlaySoundPacket.class, PlaySoundPacket::encode, PlaySoundPacket::decode, PlaySoundPacket::handle);
-        INSTANCE.registerMessage(id++, StopSoundPacket.class, StopSoundPacket::encode, StopSoundPacket::decode, StopSoundPacket::handle);
+        INSTANCE.registerMessage(id++, PlaySoundPacket.class, PlaySoundPacket::encode, PlaySoundPacket::decode, PlaySoundPacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
+        INSTANCE.registerMessage(id++, S2CPlaySoundPacket.class, S2CPlaySoundPacket::encode, S2CPlaySoundPacket::decode, S2CPlaySoundPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        INSTANCE.registerMessage(id++, StopSoundPacket.class, StopSoundPacket::encode, StopSoundPacket::decode, StopSoundPacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
+        INSTANCE.registerMessage(id++, S2CStopSoundPacket.class, S2CStopSoundPacket::encode, S2CStopSoundPacket::decode, S2CStopSoundPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         INSTANCE.registerMessage(id++, SheetNoteEditPacket.class, SheetNoteEditPacket::encode, SheetNoteEditPacket::decode, SheetNoteEditPacket::handle);
         INSTANCE.registerMessage(id++, SheetSettingsUpdatePacket.class, SheetSettingsUpdatePacket::encode, SheetSettingsUpdatePacket::decode, SheetSettingsUpdatePacket::handle);
         INSTANCE.registerMessage(id++, SheetRenamePacket.class, SheetRenamePacket::encode, SheetRenamePacket::decode, SheetRenamePacket::handle);
