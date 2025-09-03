@@ -1,6 +1,6 @@
 package com.ninni.blockstar.server.item;
 
-import com.ninni.blockstar.Blockstar;
+import com.ninni.blockstar.client.ClientHandler;
 import com.ninni.blockstar.registry.BBlockRegistry;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
@@ -29,7 +29,7 @@ public class MetronomeItem extends BlockItem {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         ItemStack itemStack = player.getItemInHand(interactionHand);
         if (player instanceof LocalPlayer localPlayer) {
-            Blockstar.PROXY.openMetronomeScreen(localPlayer, itemStack);
+            ClientHandler.openMetronomeScreen(localPlayer, itemStack);
             return InteractionResultHolder.success(itemStack);
         }
         return super.use(level, player, interactionHand);

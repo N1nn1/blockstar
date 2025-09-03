@@ -1,6 +1,7 @@
 package com.ninni.blockstar.server.packet;
 
 import com.ninni.blockstar.Blockstar;
+import com.ninni.blockstar.client.ClientHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.FriendlyByteBuf;
@@ -50,7 +51,7 @@ public class S2CPlaySoundPacket {
             ClientLevel level = mc.level;
             if (level == null) return;
 
-            Blockstar.PROXY.handlePlaySoundPacket(msg);
+            ClientHandler.handlePlaySoundPacket(msg);
         });
         context.setPacketHandled(true);
     }

@@ -1,13 +1,8 @@
 package com.ninni.blockstar.mixin;
 
-import com.ninni.blockstar.Blockstar;
-import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
 import com.ninni.blockstar.registry.BRecipeRegistry;
 import com.ninni.blockstar.registry.BSoundEventRegistry;
-import com.ninni.blockstar.server.data.SoundfontManager;
-import com.ninni.blockstar.server.instrument.InstrumentType;
 import com.ninni.blockstar.server.item.crafting.SoundfontConversionRecipe;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
@@ -53,18 +48,7 @@ public class ItemMixin {
                     }
                 }
 
-                if (recipe.get().shouldPlaySound()) {
-                    SoundfontManager.SoundfontDefinition soundfont = Blockstar.PROXY.getSoundfontManager().get(new ResourceLocation(result.getTag().getString("Soundfont")));
-
-                    InstrumentType instrumentType = soundfont.instrumentData().keySet().stream().findFirst().get();
-                    SoundfontManager.InstrumentSoundfontData forInstrument = soundfont.getForInstrument(instrumentType);
-                    String velocity = forInstrument.velocityLayers().isPresent() ? "_" + forInstrument.velocityLayers().get() : "";
-                    ResourceLocation resourceLocation = new ResourceLocation(soundfont.name().getNamespace(), "soundfont." + BInstrumentTypeRegistry.get(instrumentType).getPath() + "." + soundfont.name().getPath() + "." + forInstrument.getClosestSampleNote(60) + velocity);
-
-                    //Minecraft.getInstance().getSoundManager().play(new SoundfontSound(60, resourceLocation, 1, 1, player, Optional.empty()));
-                    player.playNotifySound(BSoundEventRegistry.RESONANT_PRISM_TUNE.get(), SoundSource.PLAYERS, 1,1);
-                }
-
+                if (recipe.get().shouldPlaySound()) player.playNotifySound(BSoundEventRegistry.RESONANT_PRISM_TUNE.get(), SoundSource.PLAYERS, 1,1);
                 cir.setReturnValue(true);
             }
         }

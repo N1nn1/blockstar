@@ -25,14 +25,10 @@ public class MidiInputHandler {
                     activeTransmitter = device.getTransmitter();
                     activeTransmitter.setReceiver(new MidiReceiver());
                     Blockstar.LOGGER.info("Listening to MIDI device: {}", info.getName());
-                    //TODO
-                    //if (Minecraft.getInstance().getSoundManager() != null) Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.VILLAGER_YES, 1.0F));
                     return;
                 }
             }
             Blockstar.LOGGER.warn("No matching MIDI input device found, not listening.");
-            //TODO
-            //if (Minecraft.getInstance().getSoundManager() != null) Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.VILLAGER_NO, 1.0F));
         } catch (MidiUnavailableException e) {
             Blockstar.LOGGER.warn("No MIDI input devices found");
         }

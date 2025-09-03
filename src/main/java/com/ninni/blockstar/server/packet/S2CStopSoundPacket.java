@@ -2,6 +2,7 @@
 package com.ninni.blockstar.server.packet;
 
 import com.ninni.blockstar.Blockstar;
+import com.ninni.blockstar.client.ClientHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.FriendlyByteBuf;
@@ -36,7 +37,7 @@ public class S2CStopSoundPacket {
             ClientLevel level = mc.level;
             if (level == null) return;
 
-            Blockstar.PROXY.handleStopSoundPacket(msg);
+            ClientHandler.handleStopSoundPacket(msg);
         });
         ctx.get().setPacketHandled(true);
     }

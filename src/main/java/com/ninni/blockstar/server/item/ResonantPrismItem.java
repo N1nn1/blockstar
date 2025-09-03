@@ -1,6 +1,7 @@
 package com.ninni.blockstar.server.item;
 
 import com.ninni.blockstar.Blockstar;
+import com.ninni.blockstar.client.ClientHandler;
 import com.ninni.blockstar.registry.BInstrumentTypeRegistry;
 import com.ninni.blockstar.registry.BItemRegistry;
 import com.ninni.blockstar.server.data.SoundfontManager;
@@ -86,13 +87,13 @@ public class ResonantPrismItem extends Item {
         int shown = 0, total = 0;
         for (InstrumentType type : data.instrumentData().keySet()) {
             total++;
-            if (shown < 2 || Blockstar.PROXY.isScreenShiftDown()) {
+            if (shown < 2 || ClientHandler.isScreenShiftDown()) {
                 ResourceLocation instrument = new ResourceLocation(BInstrumentTypeRegistry.get(type).toString());
                 list.add(Component.translatable(instrument.getNamespace() + ".instrument_type." + instrument.getPath()).withStyle(ChatFormatting.BLUE));
                 shown++;
             }
         }
-        if (total - shown > 0 && !Blockstar.PROXY.isScreenShiftDown()) {
+        if (total - shown > 0 && !ClientHandler.isScreenShiftDown()) {
             list.add(Component.translatable("item.blockstar.resonant_prism.more", total - shown)
                     .withStyle(Style.EMPTY.withColor(ChatFormatting.BLUE).withItalic(true)));
         }

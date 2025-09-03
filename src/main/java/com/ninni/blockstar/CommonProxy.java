@@ -1,12 +1,6 @@
 package com.ninni.blockstar;
 
 import com.ninni.blockstar.server.data.SoundfontManager;
-import com.ninni.blockstar.server.packet.PlaySoundPacket;
-import com.ninni.blockstar.server.packet.S2CPlaySoundPacket;
-import com.ninni.blockstar.server.packet.S2CStopSoundPacket;
-import com.ninni.blockstar.server.packet.StopSoundPacket;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
@@ -22,21 +16,8 @@ public class CommonProxy {
     public void clientSetup() {
     }
 
-    public void handlePlaySoundPacket(S2CPlaySoundPacket msg) {
-    }
-
-    public void handleStopSoundPacket(S2CStopSoundPacket msg) {
-    }
-
-    public void openMetronomeScreen(LocalPlayer localPlayer, ItemStack itemStack) {
-    }
-
     public Level getWorld() {
         return ServerLifecycleHooks.getCurrentServer().overworld();
-    }
-
-    public boolean isScreenShiftDown() {
-        return false;
     }
 
     public SoundfontManager getSoundfontManager() {
