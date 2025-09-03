@@ -64,9 +64,6 @@ public class ClientEvents {
         }
 
 
-        if (key == CreativeModeTabs.BUILDING_BLOCKS) {
-            entries.putAfter(Items.AMETHYST_BLOCK.getDefaultInstance(), BItemRegistry.RESONANT_AMETHYST_BLOCK.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
-        }
         if (key == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
             entries.putAfter(Items.JUKEBOX.getDefaultInstance(), BItemRegistry.METRONOME.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
             entries.putAfter(BItemRegistry.METRONOME.get().getDefaultInstance(), BItemRegistry.KEYBOARD.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
@@ -79,8 +76,7 @@ public class ClientEvents {
             entries.putBefore(Items.MUSIC_DISC_13.getDefaultInstance(), BItemRegistry.MUSIC_DISC_TEMPLATE.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
         }
         if (key == CreativeModeTabs.INGREDIENTS) {
-            entries.putAfter(Items.AMETHYST_SHARD.getDefaultInstance(), BItemRegistry.RESONANT_AMETHYST_SHARD.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
-            entries.putAfter(BItemRegistry.RESONANT_AMETHYST_SHARD.get().getDefaultInstance(), BItemRegistry.RESONANT_PRISM.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+            entries.putAfter(Items.AMETHYST_SHARD.getDefaultInstance(), BItemRegistry.RESONANT_PRISM.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
         }
     }
 

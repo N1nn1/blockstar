@@ -12,10 +12,6 @@ import net.minecraftforge.registries.RegistryObject;
 public class BItemRegistry {
     public static final DeferredRegister<Item> DEF_REG = DeferredRegister.create(ForgeRegistries.ITEMS, Blockstar.MODID);
 
-    //Resonant Amethyst
-    public static final RegistryObject<Item> RESONANT_AMETHYST_BLOCK = DEF_REG.register("resonant_amethyst_block", () -> new BlockItem(BBlockRegistry.RESONANT_AMETHYST_BLOCK.get(), new Item.Properties()));
-    public static final RegistryObject<Item> RESONANT_AMETHYST_SHARD = DEF_REG.register("resonant_amethyst_shard", () -> new Item(new Item.Properties()));
-
     //Crafting Ingredients
     public static final RegistryObject<Item> RESONANT_PRISM = DEF_REG.register("resonant_prism", () -> new ResonantPrismItem(new Item.Properties()));
     public static final RegistryObject<Item> MUSIC_DISC_TEMPLATE = DEF_REG.register("music_disc_template", () -> new ObfuscatedRecordItem(1, BSoundEventRegistry.MUSIC_DISC_DITTYBIT, new Item.Properties().stacksTo(1), 107 * 20));
