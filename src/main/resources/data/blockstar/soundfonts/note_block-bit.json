@@ -2,7 +2,9 @@
   "name": "blockstar:note_block-bit",
   "instruments": {
     "blockstar:keyboard": {
-      "note_map": [48, 60, 72]
+      "note_map": [48, 60, 72],
+      "held": true,
+      "release_ticks": 3
     }
   }
 }
